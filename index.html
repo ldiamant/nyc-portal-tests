@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Transit Time Viewer - IBX Impact</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+        #sidebar {
+            width: 320px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        h1 {
+            font-size: 1.25rem;
+            color: #212529;
+            margin-bottom: 4px;
+        }
+        .subtitle {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .control-group {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .control-group h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .selected-tract {
+            font-size: 0.95rem;
+            color: #212529;
+            padding: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .selected-tract.empty {
+            color: #6c757d;
+            font-style: italic;
+            font-family: inherit;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+        }
+        .btn:hover {
+            background: #e9ecef;
+        }
+        .btn.active {
+            background: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background: white;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        .checkbox-group input {
+            width: 16px;
+            height: 16px;
+        }
+        #info-panel {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            flex-grow: 1;
+            min-height: 150px;
+        }
+        #info-panel h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .info-content {
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #6c757d;
+        }
+        .info-value {
+            font-weight: 500;
+            color: #212529;
+        }
+        .route-info {
+            margin-top: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            word-break: break-word;
+        }
+        .route-label {
+            font-weight: 500;
+            color: #495057;
+        }
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+        .legend {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 0.8rem;
+        }
+        .legend h4 {
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+        }
+        .legend-scale {
+            display: flex;
+            height: 12px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        .legend-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .stat-box {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+        .new-connection-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #198754;
+            color: white;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .ibx-station-popup {
+            font-size: 0.85rem;
+        }
+        .ibx-station-popup .station-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .ibx-station-popup .station-detail {
+            color: #6c757d;
+            margin-bottom: 2px;
+        }
+        .ibx-station-popup .transfers {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid #dee2e6;
+        }
+        .ibx-station-popup .transfer-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #6c757d;
+            color: white;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <div>
+            <h1>NYC Transit Viewer</h1>
+            <p class="subtitle">IBX Impact Analysis</p>
+        </div>
+
+        <div class="control-group">
+            <h3>Selected Tract</h3>
+            <div id="selected-tract" class="selected-tract empty">Click a tract on the map</div>
+            <div class="btn-group">
+                <button id="btn-origin" class="btn" disabled>Set as Origin</button>
+                <button id="btn-dest" class="btn" disabled>Set as Destination</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Active Selection</h3>
+            <div id="active-selection" class="info-content" style="color: #6c757d; font-style: italic;">
+                No origin or destination set
+            </div>
+            <div id="selection-stats" class="stats-row" style="display: none;">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-count">-</div>
+                    <div class="stat-label">Connections</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-avg">-</div>
+                    <div class="stat-label">Avg Change</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Metric</h3>
+            <select id="metric-select">
+                <option value="time_change" selected>Time Change (minutes)</option>
+                <option value="ibx_time">IBX Time (minutes)</option>
+                <option value="baseline_time">Baseline Time (minutes)</option>
+                <option value="trips">Trip Volume</option>
+                <option value="ibx_transfers">IBX Transfers</option>
+                <option value="baseline_transfers">Baseline Transfers</option>
+                <option value="transfer_change">Transfer Change</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <h3>Options</h3>
+            <label class="checkbox-group">
+                <input type="checkbox" id="show-ibx-route" checked>
+                Show IBX route & stations
+            </label>
+            <label class="checkbox-group" style="margin-top: 8px;">
+                <input type="checkbox" id="show-new-connections" checked>
+                Show new connections (no baseline)
+            </label>
+            <label class="checkbox-group" style="margin-top: 8px;">
+                <input type="checkbox" id="normalize-scale">
+                Normalize scale per selection
+            </label>
+        </div>
+
+        <div id="info-panel">
+            <h3>Hover Info</h3>
+            <div id="hover-info" class="info-content" style="color: #6c757d; font-style: italic;">
+                Hover over a tract for details
+            </div>
+        </div>
+    </div>
+
+    <div id="map">
+        <div class="loading" id="loading">Loading data...</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // State
+        let tractData = null;
+        let comparisonData = null;
+        let ibxRouteData = null;
+        let ibxStationsData = null;
+        let map = null;
+        let tractLayer = null;
+        let ibxRouteLayer = null;
+        let ibxStationsLayer = null;
+        let selectedTractId = null;
+        let activeOrigin = null;
+        let activeDestination = null;
+        let currentMode = null; // 'origin' or 'destination'
+        let globalScales = {};
+
+        // Color scales
+        const COLOR_SCALES = {
+            time_change: {
+                // Green scale for negative values (time savings)
+                colors: ['#006d2c', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#f7fcf5'],
+                domain: [-60, -50, -40, -30, -20, -10, 0],
+                reverse: true, // lower (more negative) is better
+                unit: 'min'
+            },
+            ibx_time: {
+                colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
+                domain: [0, 20, 40, 60, 80, 100, 120],
+                reverse: true, // lower is better
+                unit: 'min'
+            },
+            baseline_time: {
+                colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
+                domain: [0, 30, 60, 90, 120, 150, 180],
+                reverse: true,
+                unit: 'min'
+            },
+            trips: {
+                colors: ['#f7fbff', '#c6dbef', '#9ecae1', '#6baed6', '#3182bd', '#08519c'],
+                domain: [0, 10, 25, 50, 100, 200, 350],
+                reverse: false, // higher is more trips
+                unit: ''
+            },
+            ibx_transfers: {
+                colors: ['#f7fcf5', '#c7e9c0', '#74c476', '#31a354', '#006d2c'],
+                domain: [0, 1, 2, 3, 4, 5],
+                reverse: true,
+                unit: ''
+            },
+            baseline_transfers: {
+                colors: ['#f7fcf5', '#c7e9c0', '#74c476', '#31a354', '#006d2c'],
+                domain: [0, 1, 2, 3, 4, 5],
+                reverse: true,
+                unit: ''
+            },
+            transfer_change: {
+                colors: ['#006d2c', '#74c476', '#f7fcf5', '#fc9272', '#de2d26'],
+                domain: [-2, -1, 0, 1, 2, 3],
+                reverse: true, // negative is better (fewer transfers)
+                unit: ''
+            }
+        };
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([40.7128, -73.95], 11);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap, &copy; CARTO',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Add legend
+            const legend = L.control({ position: 'bottomright' });
+            legend.onAdd = function() {
+                const div = L.DomUtil.create('div', 'legend');
+                div.innerHTML = `
+                    <h4 id="legend-title">Time Change</h4>
+                    <div class="legend-scale" id="legend-scale"></div>
+                    <div class="legend-labels" id="legend-labels"></div>
+                `;
+                return div;
+            };
+            legend.addTo(map);
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                const [tractResponse, comparisonResponse, ibxRouteResponse, ibxStationsResponse] = await Promise.all([
+                    fetch('data/census/nyc_census.geojson'),
+                    fetch('data/tract_comparison_data.json'),
+                    fetch('data/IBX/route.geojson'),
+                    fetch('data/IBX/stations.geojson')
+                ]);
+                tractData = await tractResponse.json();
+                comparisonData = await comparisonResponse.json();
+                ibxRouteData = await ibxRouteResponse.json();
+                ibxStationsData = await ibxStationsResponse.json();
+
+                // Compute global scales
+                computeGlobalScales();
+
+                document.getElementById('loading').style.display = 'none';
+                renderTracts();
+                renderIBXLayers();
+                updateLegend();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').textContent = 'Error loading data';
+            }
+        }
+
+        // Compute global min/max for each metric
+        function computeGlobalScales() {
+            const metrics = ['time_change', 'ibx_time', 'baseline_time', 'trips',
+                           'ibx_transfers', 'baseline_transfers', 'transfer_change'];
+
+            metrics.forEach(metric => {
+                let values = [];
+                Object.values(comparisonData.by_origin).forEach(dests => {
+                    dests.forEach(d => {
+                        const val = d[metric];
+                        if (typeof val === 'number' && !isNaN(val) && val !== null) {
+                            // Filter out extreme outliers for time-based metrics
+                            if (metric.includes('time') && Math.abs(val) > 200) return;
+                            values.push(val);
+                        }
+                    });
+                });
+
+                if (values.length > 0) {
+                    globalScales[metric] = {
+                        min: Math.min(...values),
+                        max: Math.max(...values)
+                    };
+                }
+            });
+        }
+
+        // Get color for a value
+        function getColor(value, metric, localMin, localMax) {
+            if (value === null || value === undefined || value === 'NaN' || isNaN(value)) {
+                return '#cccccc';
+            }
+
+            const scale = COLOR_SCALES[metric];
+            const normalize = document.getElementById('normalize-scale').checked;
+
+            let min, max;
+            if (normalize && localMin !== undefined && localMax !== undefined) {
+                min = localMin;
+                max = localMax;
+            } else {
+                min = globalScales[metric]?.min ?? scale.domain[0];
+                max = globalScales[metric]?.max ?? scale.domain[scale.domain.length - 1];
+            }
+
+            // Normalize value to 0-1
+            let t = (value - min) / (max - min);
+            t = Math.max(0, Math.min(1, t));
+
+            if (scale.reverse) {
+                t = 1 - t;
+            }
+
+            // Interpolate color
+            const colorIndex = Math.floor(t * (scale.colors.length - 1));
+            return scale.colors[Math.min(colorIndex, scale.colors.length - 1)];
+        }
+
+        // Render census tracts
+        function renderTracts() {
+            if (tractLayer) {
+                map.removeLayer(tractLayer);
+            }
+
+            const metric = document.getElementById('metric-select').value;
+            const showNewConnections = document.getElementById('show-new-connections').checked;
+
+            // Build lookup for connected tracts
+            let connectedTracts = {};
+            let localMin = Infinity, localMax = -Infinity;
+
+            if (activeOrigin) {
+                const dests = comparisonData.by_origin[activeOrigin] || [];
+                dests.forEach(d => {
+                    if (!showNewConnections && d.baseline_time === 'NaN') return;
+                    connectedTracts[d.dest] = d;
+                    const val = d[metric];
+                    if (typeof val === 'number' && !isNaN(val)) {
+                        localMin = Math.min(localMin, val);
+                        localMax = Math.max(localMax, val);
+                    }
+                });
+            } else if (activeDestination) {
+                const origins = comparisonData.by_destination[activeDestination] || [];
+                origins.forEach(d => {
+                    if (!showNewConnections && d.baseline_time === 'NaN') return;
+                    connectedTracts[d.origin] = d;
+                    const val = d[metric];
+                    if (typeof val === 'number' && !isNaN(val)) {
+                        localMin = Math.min(localMin, val);
+                        localMax = Math.max(localMax, val);
+                    }
+                });
+            }
+
+            tractLayer = L.geoJSON(tractData, {
+                style: feature => {
+                    const geoid = feature.properties.GEOID;
+                    const isSelected = geoid === selectedTractId;
+                    const isActive = geoid === activeOrigin || geoid === activeDestination;
+                    const connectionData = connectedTracts[geoid];
+
+                    let fillColor = '#e9ecef';
+                    let fillOpacity = 0.3;
+
+                    if (isActive) {
+                        fillColor = '#0d6efd';
+                        fillOpacity = 0.7;
+                    } else if (connectionData) {
+                        const value = connectionData[metric];
+                        fillColor = getColor(value, metric, localMin, localMax);
+                        fillOpacity = 0.7;
+                    }
+
+                    return {
+                        fillColor,
+                        fillOpacity,
+                        color: isSelected ? '#000' : (isActive ? '#0d6efd' : '#6c757d'),
+                        weight: isSelected ? 3 : (isActive ? 2 : 0.5),
+                        opacity: 1
+                    };
+                },
+                onEachFeature: (feature, layer) => {
+                    layer.on({
+                        click: () => onTractClick(feature.properties.GEOID, feature.properties),
+                        mouseover: e => onTractHover(feature.properties.GEOID, feature.properties, connectedTracts, e),
+                        mouseout: () => onTractMouseOut()
+                    });
+                }
+            }).addTo(map);
+
+            // Bring IBX layers to front
+            if (ibxRouteLayer) ibxRouteLayer.bringToFront();
+            if (ibxStationsLayer) ibxStationsLayer.bringToFront();
+
+            // Update stats
+            updateStats(connectedTracts, metric);
+        }
+
+        // Update statistics display
+        function updateStats(connectedTracts, metric) {
+            const statsEl = document.getElementById('selection-stats');
+            const connections = Object.values(connectedTracts);
+
+            if (connections.length === 0) {
+                statsEl.style.display = 'none';
+                return;
+            }
+
+            statsEl.style.display = 'flex';
+            document.getElementById('stat-count').textContent = connections.length;
+
+            const validValues = connections
+                .map(c => c[metric])
+                .filter(v => typeof v === 'number' && !isNaN(v));
+
+            if (validValues.length > 0) {
+                const avg = validValues.reduce((a, b) => a + b, 0) / validValues.length;
+                document.getElementById('stat-avg').textContent = avg.toFixed(1);
+            } else {
+                document.getElementById('stat-avg').textContent = '-';
+            }
+        }
+
+        // Handle tract click
+        function onTractClick(geoid, properties) {
+            selectedTractId = geoid;
+
+            const tractEl = document.getElementById('selected-tract');
+            tractEl.textContent = `${geoid} (${properties.BoroName})`;
+            tractEl.classList.remove('empty');
+
+            document.getElementById('btn-origin').disabled = false;
+            document.getElementById('btn-dest').disabled = false;
+
+            renderTracts();
+        }
+
+        // Handle tract hover
+        function onTractHover(geoid, properties, connectedTracts, e) {
+            const connectionData = connectedTracts[geoid];
+            const hoverEl = document.getElementById('hover-info');
+
+            if (!connectionData && geoid !== activeOrigin && geoid !== activeDestination) {
+                hoverEl.innerHTML = `
+                    <div class="info-row">
+                        <span class="info-label">Tract</span>
+                        <span class="info-value">${geoid}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Borough</span>
+                        <span class="info-value">${properties.BoroName}</span>
+                    </div>
+                    <div style="margin-top: 8px; color: #6c757d; font-style: italic;">
+                        No connection data
+                    </div>
+                `;
+                return;
+            }
+
+            if (geoid === activeOrigin || geoid === activeDestination) {
+                hoverEl.innerHTML = `
+                    <div class="info-row">
+                        <span class="info-label">Tract</span>
+                        <span class="info-value">${geoid}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Borough</span>
+                        <span class="info-value">${properties.BoroName}</span>
+                    </div>
+                    <div style="margin-top: 8px; font-weight: 500; color: #0d6efd;">
+                        ${geoid === activeOrigin ? 'Selected Origin' : 'Selected Destination'}
+                    </div>
+                `;
+                return;
+            }
+
+            const isNewConnection = connectionData.baseline_time === 'NaN';
+            const formatValue = (val, suffix = '') => {
+                if (val === 'NaN' || val === null || val === undefined || (typeof val === 'number' && isNaN(val))) {
+                    return 'N/A';
+                }
+                return typeof val === 'number' ? val.toFixed(1) + suffix : val;
+            };
+
+            hoverEl.innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Tract</span>
+                    <span class="info-value">${geoid}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Borough</span>
+                    <span class="info-value">${properties.BoroName}</span>
+                </div>
+                ${isNewConnection ? '<div style="margin: 4px 0;"><span class="new-connection-badge">New Connection</span></div>' : ''}
+                <div class="info-row">
+                    <span class="info-label">Trips</span>
+                    <span class="info-value">${formatValue(connectionData.trips)}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Baseline Time</span>
+                    <span class="info-value">${formatValue(connectionData.baseline_time, ' min')}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">IBX Time</span>
+                    <span class="info-value">${formatValue(connectionData.ibx_time, ' min')}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Time Change</span>
+                    <span class="info-value" style="color: ${connectionData.time_change < 0 ? '#198754' : '#dc3545'}">
+                        ${formatValue(connectionData.time_change, ' min')}
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Transfers</span>
+                    <span class="info-value">${formatValue(connectionData.baseline_transfers)} → ${formatValue(connectionData.ibx_transfers)}</span>
+                </div>
+                <div class="route-info">
+                    <div class="route-label">Baseline Route:</div>
+                    <div>${connectionData.baseline_routes || 'N/A'}</div>
+                </div>
+                <div class="route-info">
+                    <div class="route-label">IBX Route:</div>
+                    <div>${connectionData.ibx_routes || 'N/A'}</div>
+                </div>
+            `;
+
+            // Highlight on hover
+            e.target.setStyle({ weight: 2, color: '#000' });
+        }
+
+        // Handle mouse out
+        function onTractMouseOut() {
+            renderTracts(); // Reset styles
+        }
+
+        // Update legend
+        function updateLegend() {
+            const metric = document.getElementById('metric-select').value;
+            const scale = COLOR_SCALES[metric];
+            const labels = {
+                time_change: 'Time Change (min)',
+                ibx_time: 'IBX Time (min)',
+                baseline_time: 'Baseline Time (min)',
+                trips: 'Trip Volume',
+                ibx_transfers: 'IBX Transfers',
+                baseline_transfers: 'Baseline Transfers',
+                transfer_change: 'Transfer Change'
+            };
+
+            document.getElementById('legend-title').textContent = labels[metric];
+
+            const scaleEl = document.getElementById('legend-scale');
+            scaleEl.innerHTML = scale.colors.map(c =>
+                `<div style="flex:1;background:${c}"></div>`
+            ).join('');
+
+            const labelsEl = document.getElementById('legend-labels');
+            const gs = globalScales[metric];
+            if (gs) {
+                labelsEl.innerHTML = `<span>${gs.min.toFixed(0)}</span><span>${gs.max.toFixed(0)}</span>`;
+            } else {
+                labelsEl.innerHTML = `<span>${scale.domain[0]}</span><span>${scale.domain[scale.domain.length-1]}</span>`;
+            }
+        }
+
+        // Render IBX route and stations
+        function renderIBXLayers() {
+            const showIBX = document.getElementById('show-ibx-route').checked;
+
+            // Remove existing layers
+            if (ibxRouteLayer) {
+                map.removeLayer(ibxRouteLayer);
+                ibxRouteLayer = null;
+            }
+            if (ibxStationsLayer) {
+                map.removeLayer(ibxStationsLayer);
+                ibxStationsLayer = null;
+            }
+
+            if (!showIBX) return;
+
+            // Add route layer
+            ibxRouteLayer = L.geoJSON(ibxRouteData, {
+                style: {
+                    color: '#dc3545',
+                    weight: 4,
+                    opacity: 0.9,
+                    lineCap: 'round',
+                    lineJoin: 'round'
+                }
+            }).addTo(map);
+
+            // Add stations layer
+            ibxStationsLayer = L.geoJSON(ibxStationsData, {
+                pointToLayer: (feature, latlng) => {
+                    return L.circleMarker(latlng, {
+                        radius: 7,
+                        fillColor: '#dc3545',
+                        color: '#fff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.9
+                    });
+                },
+                onEachFeature: (feature, layer) => {
+                    const props = feature.properties;
+                    const transfers = props.transfers ? props.transfers.split(',') : [];
+
+                    let transfersHtml = '';
+                    if (transfers.length > 0 && transfers[0]) {
+                        transfersHtml = `
+                            <div class="transfers">
+                                <strong>Transfers:</strong><br>
+                                ${transfers.map(t => `<span class="transfer-badge">${t.trim()}</span>`).join('')}
+                            </div>
+                        `;
+                    }
+
+                    const popupContent = `
+                        <div class="ibx-station-popup">
+                            <div class="station-name">${props.name}</div>
+                            <div class="station-detail">${props.neighborho}, ${props.borough}</div>
+                            ${transfersHtml}
+                        </div>
+                    `;
+
+                    layer.bindPopup(popupContent);
+
+                    layer.on('mouseover', function() {
+                        this.setStyle({ radius: 9, fillColor: '#b02a37' });
+                    });
+                    layer.on('mouseout', function() {
+                        this.setStyle({ radius: 7, fillColor: '#dc3545' });
+                    });
+                }
+            }).addTo(map);
+
+            // Bring stations to front
+            ibxStationsLayer.bringToFront();
+        }
+
+        // Update active selection display
+        function updateActiveSelection() {
+            const el = document.getElementById('active-selection');
+            if (activeOrigin) {
+                el.innerHTML = `<strong>Origin:</strong> ${activeOrigin}`;
+                el.style.color = '#212529';
+                el.style.fontStyle = 'normal';
+            } else if (activeDestination) {
+                el.innerHTML = `<strong>Destination:</strong> ${activeDestination}`;
+                el.style.color = '#212529';
+                el.style.fontStyle = 'normal';
+            } else {
+                el.innerHTML = 'No origin or destination set';
+                el.style.color = '#6c757d';
+                el.style.fontStyle = 'italic';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('btn-origin').addEventListener('click', () => {
+            if (!selectedTractId) return;
+            activeOrigin = selectedTractId;
+            activeDestination = null;
+            currentMode = 'origin';
+            document.getElementById('btn-origin').classList.add('active');
+            document.getElementById('btn-dest').classList.remove('active');
+            updateActiveSelection();
+            renderTracts();
+        });
+
+        document.getElementById('btn-dest').addEventListener('click', () => {
+            if (!selectedTractId) return;
+            activeDestination = selectedTractId;
+            activeOrigin = null;
+            currentMode = 'destination';
+            document.getElementById('btn-dest').classList.add('active');
+            document.getElementById('btn-origin').classList.remove('active');
+            updateActiveSelection();
+            renderTracts();
+        });
+
+        document.getElementById('metric-select').addEventListener('change', () => {
+            updateLegend();
+            renderTracts();
+        });
+
+        document.getElementById('show-new-connections').addEventListener('change', () => {
+            renderTracts();
+        });
+
+        document.getElementById('normalize-scale').addEventListener('change', () => {
+            renderTracts();
+        });
+
+        document.getElementById('show-ibx-route').addEventListener('change', () => {
+            renderIBXLayers();
+        });
+
+        // Initialize
+        initMap();
+        loadData();
+    </script>
+</body>
+</html>

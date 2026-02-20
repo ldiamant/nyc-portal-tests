@@ -263,6 +263,30 @@
             <p class="subtitle">IBX Impact Analysis</p>
         </div>
 
+        <!-- View Mode Indicator -->
+        <div class="control-group" id="view-mode-group">
+            <h3>View Mode</h3>
+            <div id="view-mode-indicator" style="font-weight: 500; margin-bottom: 8px;">Overview</div>
+            <div class="btn-group" id="overview-perspective-group">
+                <button id="btn-perspective-origin" class="btn active">As Origin</button>
+                <button id="btn-perspective-dest" class="btn">As Destination</button>
+            </div>
+        </div>
+
+        <!-- Overview Metric (shown in overview mode) -->
+        <div class="control-group" id="overview-metric-group">
+            <h3>Overview Metric</h3>
+            <select id="overview-metric-select">
+                <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
+                <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
+                <option value="pairs">Connection Pairs</option>
+                <option value="total_trips">Total Trips</option>
+                <option value="time_improved_pairs">Time-Improved Pairs</option>
+                <option value="trips_time_improved">Trips with Time Savings</option>
+            </select>
+        </div>
+
+        <!-- Tract Selection (shown in both modes) -->
         <div class="control-group">
             <h3>Selected Tract</h3>
             <div id="selected-tract" class="selected-tract empty">Click a tract on the map</div>
@@ -272,7 +296,8 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <!-- Active Selection (shown in selection mode) -->
+        <div class="control-group" id="selection-mode-group" style="display: none;">
             <h3>Active Selection</h3>
             <div id="active-selection" class="info-content" style="color: #6c757d; font-style: italic;">
                 No origin or destination set
@@ -287,10 +312,14 @@
                     <div class="stat-label">Avg Change</div>
                 </div>
             </div>
+            <button id="btn-clear-selection" class="btn" style="margin-top: 8px; background: #f8f9fa; width: 100%;">
+                ← Back to Overview
+            </button>
         </div>
 
-        <div class="control-group">
-            <h3>Metric</h3>
+        <!-- Selection Metric (shown in selection mode) -->
+        <div class="control-group" id="selection-metric-group" style="display: none;">
+            <h3>Connection Metric</h3>
             <select id="metric-select">
                 <option value="time_change" selected>Time Change (minutes)</option>
                 <option value="ibx_time">IBX Time (minutes)</option>
@@ -335,6 +364,7 @@
         // State
         let tractData = null;
         let comparisonData = null;
+        let summaryData = null;
         let ibxRouteData = null;
         let ibxStationsData = null;
         let map = null;
@@ -345,7 +375,10 @@
         let activeOrigin = null;
         let activeDestination = null;
         let currentMode = null; // 'origin' or 'destination'
+        let viewMode = 'overview'; // 'overview' or 'selection'
+        let overviewPerspective = 'origin'; // 'origin' or 'destination'
         let globalScales = {};
+        let summaryScales = {};
 
         // Color scales
         const COLOR_SCALES = {
@@ -394,6 +427,40 @@
             }
         };
 
+        // Summary metric color scales
+        const SUMMARY_COLOR_SCALES = {
+            avg_time_change_min: {
+                colors: ['#006d2c', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#f7fcf5'],
+                reverse: true,
+                unit: 'min'
+            },
+            total_time_saved_hours: {
+                colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
+                reverse: false,
+                unit: 'hrs'
+            },
+            pairs: {
+                colors: ['#f7fbff', '#c6dbef', '#9ecae1', '#6baed6', '#3182bd', '#08519c'],
+                reverse: false,
+                unit: ''
+            },
+            total_trips: {
+                colors: ['#f7fbff', '#c6dbef', '#9ecae1', '#6baed6', '#3182bd', '#08519c'],
+                reverse: false,
+                unit: ''
+            },
+            time_improved_pairs: {
+                colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
+                reverse: false,
+                unit: ''
+            },
+            trips_time_improved: {
+                colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
+                reverse: false,
+                unit: ''
+            }
+        };
+
         // Initialize map
         function initMap() {
             map = L.map('map').setView([40.7128, -73.95], 11);
@@ -419,21 +486,25 @@
         // Load data
         async function loadData() {
             try {
-                const [tractResponse, comparisonResponse, ibxRouteResponse, ibxStationsResponse] = await Promise.all([
+                const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse] = await Promise.all([
                     fetch('data/census/nyc_census.geojson'),
                     fetch('data/tract_comparison_data.json'),
+                    fetch('data/tract_summary_data.json'),
                     fetch('data/IBX/route.geojson'),
                     fetch('data/IBX/stations.geojson')
                 ]);
                 tractData = await tractResponse.json();
                 comparisonData = await comparisonResponse.json();
+                summaryData = await summaryResponse.json();
                 ibxRouteData = await ibxRouteResponse.json();
                 ibxStationsData = await ibxStationsResponse.json();
 
                 // Compute global scales
                 computeGlobalScales();
+                computeSummaryScales();
 
                 document.getElementById('loading').style.display = 'none';
+                updateViewModeUI();
                 renderTracts();
                 renderIBXLayers();
                 updateLegend();
@@ -463,6 +534,32 @@
 
                 if (values.length > 0) {
                     globalScales[metric] = {
+                        min: Math.min(...values),
+                        max: Math.max(...values)
+                    };
+                }
+            });
+        }
+
+        // Compute global scales for summary metrics
+        function computeSummaryScales() {
+            const metrics = ['avg_time_change_min', 'total_time_saved_hours', 'pairs',
+                           'total_trips', 'time_improved_pairs', 'trips_time_improved'];
+
+            metrics.forEach(metric => {
+                let values = [];
+                // Combine origin and destination data
+                ['by_origin', 'by_destination'].forEach(key => {
+                    Object.values(summaryData[key]).forEach(tract => {
+                        const val = tract[metric];
+                        if (typeof val === 'number' && !isNaN(val) && val !== null && val !== 0) {
+                            values.push(val);
+                        }
+                    });
+                });
+
+                if (values.length > 0) {
+                    summaryScales[metric] = {
                         min: Math.min(...values),
                         max: Math.max(...values)
                     };
@@ -501,12 +598,90 @@
             return scale.colors[Math.min(colorIndex, scale.colors.length - 1)];
         }
 
+        // Get color for summary metric value
+        function getColorSummary(value, metric) {
+            if (value === null || value === undefined || isNaN(value) || value === 0) {
+                return '#e9ecef';
+            }
+
+            const scale = SUMMARY_COLOR_SCALES[metric];
+            const ss = summaryScales[metric];
+
+            if (!scale || !ss) return '#e9ecef';
+
+            let min = ss.min;
+            let max = ss.max;
+
+            // Normalize value to 0-1
+            let t = (value - min) / (max - min);
+            t = Math.max(0, Math.min(1, t));
+
+            if (scale.reverse) {
+                t = 1 - t;
+            }
+
+            const colorIndex = Math.floor(t * (scale.colors.length - 1));
+            return scale.colors[Math.min(colorIndex, scale.colors.length - 1)];
+        }
+
         // Render census tracts
         function renderTracts() {
             if (tractLayer) {
                 map.removeLayer(tractLayer);
             }
 
+            if (viewMode === 'overview') {
+                renderTractsOverview();
+            } else {
+                renderTractsSelection();
+            }
+
+            // Bring IBX layers to front
+            if (ibxRouteLayer) ibxRouteLayer.bringToFront();
+            if (ibxStationsLayer) ibxStationsLayer.bringToFront();
+        }
+
+        // Render tracts in overview mode (summary data)
+        function renderTractsOverview() {
+            const metric = document.getElementById('overview-metric-select').value;
+            const dataKey = overviewPerspective === 'origin' ? 'by_origin' : 'by_destination';
+            const summaryLookup = summaryData[dataKey];
+
+            tractLayer = L.geoJSON(tractData, {
+                style: feature => {
+                    const geoid = feature.properties.GEOID;
+                    const isSelected = geoid === selectedTractId;
+                    const tractSummary = summaryLookup[geoid];
+
+                    let fillColor = '#e9ecef';
+                    let fillOpacity = 0.3;
+
+                    if (tractSummary && tractSummary.pairs > 0) {
+                        const value = tractSummary[metric];
+                        fillColor = getColorSummary(value, metric);
+                        fillOpacity = 0.7;
+                    }
+
+                    return {
+                        fillColor,
+                        fillOpacity,
+                        color: isSelected ? '#000' : '#6c757d',
+                        weight: isSelected ? 3 : 0.5,
+                        opacity: 1
+                    };
+                },
+                onEachFeature: (feature, layer) => {
+                    layer.on({
+                        click: () => onTractClick(feature.properties.GEOID, feature.properties),
+                        mouseover: e => onTractHoverOverview(feature.properties.GEOID, feature.properties, e),
+                        mouseout: () => onTractMouseOut()
+                    });
+                }
+            }).addTo(map);
+        }
+
+        // Render tracts in selection mode (comparison data)
+        function renderTractsSelection() {
             const metric = document.getElementById('metric-select').value;
             const showNewConnections = document.getElementById('show-new-connections').checked;
 
@@ -568,15 +743,11 @@
                 onEachFeature: (feature, layer) => {
                     layer.on({
                         click: () => onTractClick(feature.properties.GEOID, feature.properties),
-                        mouseover: e => onTractHover(feature.properties.GEOID, feature.properties, connectedTracts, e),
+                        mouseover: e => onTractHoverSelection(feature.properties.GEOID, feature.properties, connectedTracts, e),
                         mouseout: () => onTractMouseOut()
                     });
                 }
             }).addTo(map);
-
-            // Bring IBX layers to front
-            if (ibxRouteLayer) ibxRouteLayer.bringToFront();
-            if (ibxStationsLayer) ibxStationsLayer.bringToFront();
 
             // Update stats
             updateStats(connectedTracts, metric);
@@ -621,8 +792,80 @@
             renderTracts();
         }
 
-        // Handle tract hover
-        function onTractHover(geoid, properties, connectedTracts, e) {
+        // Handle tract hover in overview mode
+        function onTractHoverOverview(geoid, properties, e) {
+            const hoverEl = document.getElementById('hover-info');
+            const dataKey = overviewPerspective === 'origin' ? 'by_origin' : 'by_destination';
+            const tractSummary = summaryData[dataKey][geoid];
+
+            const formatValue = (val, suffix = '') => {
+                if (val === null || val === undefined || (typeof val === 'number' && isNaN(val))) {
+                    return 'N/A';
+                }
+                return typeof val === 'number' ? val.toFixed(1) + suffix : val;
+            };
+
+            if (!tractSummary || tractSummary.pairs === 0) {
+                hoverEl.innerHTML = `
+                    <div class="info-row">
+                        <span class="info-label">Tract</span>
+                        <span class="info-value">${geoid}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Borough</span>
+                        <span class="info-value">${properties.BoroName}</span>
+                    </div>
+                    <div style="margin-top: 8px; color: #6c757d; font-style: italic;">
+                        No IBX impact data
+                    </div>
+                `;
+                return;
+            }
+
+            const perspectiveLabel = overviewPerspective === 'origin' ? 'As Origin' : 'As Destination';
+
+            hoverEl.innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Tract</span>
+                    <span class="info-value">${geoid}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Borough</span>
+                    <span class="info-value">${properties.BoroName}</span>
+                </div>
+                <div style="margin: 6px 0; padding: 4px 8px; background: #e9ecef; border-radius: 4px; font-size: 0.8rem; color: #495057;">
+                    ${perspectiveLabel}
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Connection Pairs</span>
+                    <span class="info-value">${tractSummary.pairs}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Total Trips</span>
+                    <span class="info-value">${formatValue(tractSummary.total_trips)}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Avg Time Change</span>
+                    <span class="info-value" style="color: ${tractSummary.avg_time_change_min < 0 ? '#198754' : '#6c757d'}">
+                        ${formatValue(tractSummary.avg_time_change_min, ' min')}
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Total Time Saved</span>
+                    <span class="info-value">${formatValue(tractSummary.total_time_saved_hours, ' hrs')}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Time-Improved Pairs</span>
+                    <span class="info-value">${tractSummary.time_improved_pairs} / ${tractSummary.pairs}</span>
+                </div>
+            `;
+
+            // Highlight on hover
+            e.target.setStyle({ weight: 2, color: '#000' });
+        }
+
+        // Handle tract hover in selection mode
+        function onTractHoverSelection(geoid, properties, connectedTracts, e) {
             const connectionData = connectedTracts[geoid];
             const hoverEl = document.getElementById('hover-info');
 
@@ -721,6 +964,40 @@
 
         // Update legend
         function updateLegend() {
+            if (viewMode === 'overview') {
+                updateLegendOverview();
+            } else {
+                updateLegendSelection();
+            }
+        }
+
+        function updateLegendOverview() {
+            const metric = document.getElementById('overview-metric-select').value;
+            const scale = SUMMARY_COLOR_SCALES[metric];
+            const labels = {
+                avg_time_change_min: 'Avg Time Change (min)',
+                total_time_saved_hours: 'Total Time Saved (hrs)',
+                pairs: 'Connection Pairs',
+                total_trips: 'Total Trips',
+                time_improved_pairs: 'Time-Improved Pairs',
+                trips_time_improved: 'Trips Improved'
+            };
+
+            document.getElementById('legend-title').textContent = labels[metric];
+
+            const scaleEl = document.getElementById('legend-scale');
+            scaleEl.innerHTML = scale.colors.map(c =>
+                `<div style="flex:1;background:${c}"></div>`
+            ).join('');
+
+            const labelsEl = document.getElementById('legend-labels');
+            const ss = summaryScales[metric];
+            if (ss) {
+                labelsEl.innerHTML = `<span>${ss.min.toFixed(0)}</span><span>${ss.max.toFixed(0)}</span>`;
+            }
+        }
+
+        function updateLegendSelection() {
             const metric = document.getElementById('metric-select').value;
             const scale = COLOR_SCALES[metric];
             const labels = {
@@ -825,6 +1102,21 @@
             ibxStationsLayer.bringToFront();
         }
 
+        // Update view mode UI visibility
+        function updateViewModeUI() {
+            const isOverview = viewMode === 'overview';
+
+            document.getElementById('view-mode-indicator').textContent = isOverview ? 'Overview' : 'Selection Mode';
+            document.getElementById('overview-perspective-group').style.display = isOverview ? 'flex' : 'none';
+            document.getElementById('overview-metric-group').style.display = isOverview ? 'block' : 'none';
+            document.getElementById('selection-mode-group').style.display = isOverview ? 'none' : 'block';
+            document.getElementById('selection-metric-group').style.display = isOverview ? 'none' : 'block';
+
+            // Update perspective buttons
+            document.getElementById('btn-perspective-origin').classList.toggle('active', overviewPerspective === 'origin');
+            document.getElementById('btn-perspective-dest').classList.toggle('active', overviewPerspective === 'destination');
+        }
+
         // Update active selection display
         function updateActiveSelection() {
             const el = document.getElementById('active-selection');
@@ -843,29 +1135,88 @@
             }
         }
 
+        // Clear selection and return to overview
+        function clearSelection() {
+            activeOrigin = null;
+            activeDestination = null;
+            selectedTractId = null;
+            currentMode = null;
+            viewMode = 'overview';
+
+            document.getElementById('selected-tract').textContent = 'Click a tract on the map';
+            document.getElementById('selected-tract').classList.add('empty');
+            document.getElementById('btn-origin').disabled = true;
+            document.getElementById('btn-dest').disabled = true;
+            document.getElementById('btn-origin').classList.remove('active');
+            document.getElementById('btn-dest').classList.remove('active');
+            document.getElementById('selection-stats').style.display = 'none';
+
+            updateViewModeUI();
+            renderTracts();
+            updateLegend();
+        }
+
         // Event listeners
+
+        // Overview perspective toggles
+        document.getElementById('btn-perspective-origin').addEventListener('click', () => {
+            overviewPerspective = 'origin';
+            document.getElementById('btn-perspective-origin').classList.add('active');
+            document.getElementById('btn-perspective-dest').classList.remove('active');
+            renderTracts();
+            updateLegend();
+        });
+
+        document.getElementById('btn-perspective-dest').addEventListener('click', () => {
+            overviewPerspective = 'destination';
+            document.getElementById('btn-perspective-dest').classList.add('active');
+            document.getElementById('btn-perspective-origin').classList.remove('active');
+            renderTracts();
+            updateLegend();
+        });
+
+        // Overview metric change
+        document.getElementById('overview-metric-select').addEventListener('change', () => {
+            updateLegend();
+            renderTracts();
+        });
+
+        // Set as origin (enters selection mode)
         document.getElementById('btn-origin').addEventListener('click', () => {
             if (!selectedTractId) return;
             activeOrigin = selectedTractId;
             activeDestination = null;
             currentMode = 'origin';
+            viewMode = 'selection';
             document.getElementById('btn-origin').classList.add('active');
             document.getElementById('btn-dest').classList.remove('active');
+            updateViewModeUI();
             updateActiveSelection();
             renderTracts();
+            updateLegend();
         });
 
+        // Set as destination (enters selection mode)
         document.getElementById('btn-dest').addEventListener('click', () => {
             if (!selectedTractId) return;
             activeDestination = selectedTractId;
             activeOrigin = null;
             currentMode = 'destination';
+            viewMode = 'selection';
             document.getElementById('btn-dest').classList.add('active');
             document.getElementById('btn-origin').classList.remove('active');
+            updateViewModeUI();
             updateActiveSelection();
             renderTracts();
+            updateLegend();
         });
 
+        // Clear selection button
+        document.getElementById('btn-clear-selection').addEventListener('click', () => {
+            clearSelection();
+        });
+
+        // Selection metric change
         document.getElementById('metric-select').addEventListener('change', () => {
             updateLegend();
             renderTracts();

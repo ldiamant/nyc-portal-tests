@@ -20,7 +20,7 @@
             width: 320px;
             background: #f8f9fa;
             border-right: 1px solid #dee2e6;
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -39,13 +39,13 @@
             background: white;
             border: 1px solid #dee2e6;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
         }
         .control-group h3 {
             font-size: 0.75rem;
             text-transform: uppercase;
             color: #6c757d;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
         }
         .selected-tract {
@@ -111,15 +111,16 @@
             background: white;
             border: 1px solid #dee2e6;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             flex-grow: 1;
-            min-height: 150px;
+            min-height: 180px;
+            overflow-y: auto;
         }
         #info-panel h3 {
             font-size: 0.75rem;
             text-transform: uppercase;
             color: #6c757d;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
         }
         .info-content {
@@ -157,6 +158,7 @@
         #map {
             flex: 1;
             height: 100%;
+            position: relative;
         }
         .legend {
             background: white;
@@ -254,6 +256,133 @@
             margin-right: 4px;
             margin-bottom: 4px;
         }
+        .transit-route-popup {
+            font-size: 0.85rem;
+            min-width: 180px;
+        }
+        .transit-route-popup .route-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .transit-route-popup .route-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+        }
+        .transit-route-popup .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+        }
+        .transit-route-popup .stat-label {
+            color: #6c757d;
+        }
+        .transit-route-popup .stat-value {
+            font-weight: 500;
+        }
+        .transit-route-popup .change-positive {
+            color: #198754;
+        }
+        .transit-route-popup .change-negative {
+            color: #dc3545;
+        }
+        .checkbox-subgroup {
+            margin-left: 24px;
+            margin-top: 4px;
+        }
+        #tracts-controls,
+        #transit-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 12px;
+            font-size: 0.85rem;
+            max-width: 220px;
+        }
+        .map-controls h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin: 0 0 6px 0;
+            letter-spacing: 0.5px;
+        }
+        .map-controls h4:not(:first-child) {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e9ecef;
+        }
+        .map-controls .checkbox-group {
+            font-size: 0.8rem;
+        }
+        .slider-group {
+            margin-top: 8px;
+        }
+        .slider-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #dee2e6;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #0d6efd;
+            cursor: pointer;
+        }
+        .slider-value {
+            font-size: 0.75rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 2px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 6px;
+        }
+        .legend-line {
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        .legend-line.dashed {
+            background: repeating-linear-gradient(
+                90deg,
+                #9ca3af 0px,
+                #9ca3af 4px,
+                transparent 4px,
+                transparent 8px
+            );
+            height: 2px;
+        }
     </style>
 </head>
 <body>
@@ -263,92 +392,122 @@
             <p class="subtitle">IBX Impact Analysis</p>
         </div>
 
-        <!-- View Mode Indicator -->
-        <div class="control-group" id="view-mode-group">
-            <h3>View Mode</h3>
-            <div id="view-mode-indicator" style="font-weight: 500; margin-bottom: 8px;">Overview</div>
-            <div class="btn-group" id="overview-perspective-group">
-                <button id="btn-perspective-origin" class="btn active">As Origin</button>
-                <button id="btn-perspective-dest" class="btn">As Destination</button>
-            </div>
-        </div>
-
-        <!-- Overview Metric (shown in overview mode) -->
-        <div class="control-group" id="overview-metric-group">
-            <h3>Overview Metric</h3>
-            <select id="overview-metric-select">
-                <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
-                <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
-                <option value="pairs">Connection Pairs</option>
-                <option value="total_trips">Total Trips</option>
-                <option value="time_improved_pairs">Time-Improved Pairs</option>
-                <option value="trips_time_improved">Trips with Time Savings</option>
-            </select>
-        </div>
-
-        <!-- Tract Selection (shown in both modes) -->
+        <!-- Data Layer Selector -->
         <div class="control-group">
-            <h3>Selected Tract</h3>
-            <div id="selected-tract" class="selected-tract empty">Click a tract on the map</div>
+            <h3>Data Layer</h3>
             <div class="btn-group">
-                <button id="btn-origin" class="btn" disabled>Set as Origin</button>
-                <button id="btn-dest" class="btn" disabled>Set as Destination</button>
+            <button id="btn-layer-tracts" class="btn active">Census Tracts</button>
+            <button id="btn-layer-transit" class="btn">Transit</button>
             </div>
         </div>
 
-        <!-- Active Selection (shown in selection mode) -->
-        <div class="control-group" id="selection-mode-group" style="display: none;">
-            <h3>Active Selection</h3>
-            <div id="active-selection" class="info-content" style="color: #6c757d; font-style: italic;">
-                No origin or destination set
-            </div>
-            <div id="selection-stats" class="stats-row" style="display: none;">
-                <div class="stat-box">
-                    <div class="stat-value" id="stat-count">-</div>
-                    <div class="stat-label">Connections</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="stat-avg">-</div>
-                    <div class="stat-label">Avg Change</div>
+        <!-- ========== CENSUS TRACTS CONTROLS ========== -->
+        <div id="tracts-controls">
+            <!-- Tracts View Mode -->
+            <div class="control-group" id="tracts-view-mode-group">
+                <h3>View Mode</h3>
+                <div id="tracts-view-indicator" style="font-weight: 500; margin-bottom: 8px;">Overview</div>
+                <div class="btn-group" id="tracts-perspective-group">
+                    <button id="btn-perspective-origin" class="btn active">As Origin</button>
+                    <button id="btn-perspective-dest" class="btn">As Destination</button>
                 </div>
             </div>
-            <button id="btn-clear-selection" class="btn" style="margin-top: 8px; background: #f8f9fa; width: 100%;">
-                ← Back to Overview
-            </button>
+
+            <!-- Overview Metric (shown in overview mode) -->
+            <div class="control-group" id="overview-metric-group">
+                <h3>Overview Metric</h3>
+                <select id="overview-metric-select">
+                    <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
+                    <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
+                    <option value="pairs">Connection Pairs</option>
+                    <option value="total_trips">Total Trips</option>
+                    <option value="time_improved_pairs">Time-Improved Pairs</option>
+                    <option value="trips_time_improved">Trips with Time Savings</option>
+                </select>
+            </div>
+
+            <!-- Tract Selection -->
+            <div class="control-group" id="tract-selection-group">
+                <h3>Selected Tract</h3>
+                <div id="selected-tract" class="selected-tract empty">Click a tract on the map</div>
+                <div class="btn-group">
+                    <button id="btn-origin" class="btn" disabled>Set as Origin</button>
+                    <button id="btn-dest" class="btn" disabled>Set as Destination</button>
+                </div>
+            </div>
+
+            <!-- Active Selection (shown in selection mode) -->
+            <div class="control-group" id="selection-mode-group" style="display: none;">
+                <h3>Active Selection</h3>
+                <div id="active-selection" class="info-content" style="color: #6c757d; font-style: italic;">
+                    No origin or destination set
+                </div>
+                <div id="selection-stats" class="stats-row" style="display: none;">
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-count">-</div>
+                        <div class="stat-label">Connections</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-avg">-</div>
+                        <div class="stat-label">Avg Change</div>
+                    </div>
+                </div>
+                <button id="btn-clear-selection" class="btn" style="margin-top: 8px; background: #f8f9fa; width: 100%;">
+                    ← Back to Overview
+                </button>
+            </div>
+
+            <!-- Selection Metric (shown in selection mode) -->
+            <div class="control-group" id="selection-metric-group" style="display: none;">
+                <h3>Connection Metric</h3>
+                <select id="metric-select">
+                    <option value="time_change" selected>Time Change (minutes)</option>
+                    <option value="ibx_time">IBX Time (minutes)</option>
+                    <option value="baseline_time">Baseline Time (minutes)</option>
+                    <option value="trips">Trip Volume</option>
+                    <option value="ibx_transfers">IBX Transfers</option>
+                    <option value="baseline_transfers">Baseline Transfers</option>
+                    <option value="transfer_change">Transfer Change</option>
+                </select>
+            </div>
         </div>
 
-        <!-- Selection Metric (shown in selection mode) -->
-        <div class="control-group" id="selection-metric-group" style="display: none;">
-            <h3>Connection Metric</h3>
-            <select id="metric-select">
-                <option value="time_change" selected>Time Change (minutes)</option>
-                <option value="ibx_time">IBX Time (minutes)</option>
-                <option value="baseline_time">Baseline Time (minutes)</option>
-                <option value="trips">Trip Volume</option>
-                <option value="ibx_transfers">IBX Transfers</option>
-                <option value="baseline_transfers">Baseline Transfers</option>
-                <option value="transfer_change">Transfer Change</option>
-            </select>
-        </div>
+        <!-- ========== TRANSIT CONTROLS ========== -->
+        <div id="transit-controls" style="display: none;">
+            <!-- Transit View Mode -->
+            <div class="control-group">
+                <h3>View Mode</h3>
+                <div class="btn-group">
+                    <button id="btn-transit-overview" class="btn active">Overview</button>
+                    <button id="btn-transit-impact" class="btn">Route Impact</button>
+                </div>
+            </div>
 
-        <div class="control-group">
-            <h3>Options</h3>
-            <label class="checkbox-group">
-                <input type="checkbox" id="show-ibx-route" checked>
-                Show IBX route & stations
-            </label>
-            <label class="checkbox-group" style="margin-top: 8px;">
-                <input type="checkbox" id="show-new-connections" checked>
-                Show new connections (no baseline)
-            </label>
-            <label class="checkbox-group" style="margin-top: 8px;">
-                <input type="checkbox" id="normalize-scale">
-                Normalize scale per selection
-            </label>
+            <!-- Route Impact Metric (shown in impact mode) -->
+            <div class="control-group" id="transit-impact-metric-group" style="display: none;">
+                <h3>Impact Metric</h3>
+                <select id="transit-impact-metric-select">
+                    <option value="pct_change" selected>% Change</option>
+                    <option value="passenger_change">Passenger Change</option>
+                    <option value="baseline_passengers">Baseline Passengers</option>
+                    <option value="new_passengers">New Passengers</option>
+                </select>
+
+                <div class="slider-group" style="margin-top: 12px;">
+                    <label>Minimum Change Threshold</label>
+                    <input type="range" id="impact-threshold" min="0" max="50" value="0" step="1">
+                    <div class="slider-value" id="threshold-value">Show all routes</div>
+                </div>
+
+                <label class="checkbox-group" style="margin-top: 12px;">
+                    <input type="checkbox" id="hide-no-data-routes">
+                    Hide routes without data
+                </label>
+            </div>
         </div>
 
         <div id="info-panel">
-            <h3>Hover Info</h3>
+            <h3>Statistics</h3>
             <div id="hover-info" class="info-content" style="color: #6c757d; font-style: italic;">
                 Hover over a tract for details
             </div>
@@ -357,6 +516,41 @@
 
     <div id="map">
         <div class="loading" id="loading">Loading data...</div>
+        <div class="map-controls">
+            <h4>Map Layers</h4>
+            <label class="checkbox-group">
+                <input type="checkbox" id="show-ibx-route" checked>
+                IBX route & stations
+            </label>
+            <label class="checkbox-group" style="margin-top: 4px;">
+                <input type="checkbox" id="show-tracts-layer" checked>
+                Census tract boundaries
+            </label>
+            <h4>Options</h4>
+            <label class="checkbox-group">
+                <input type="checkbox" id="show-new-connections" checked>
+                Show new connections
+            </label>
+            <label class="checkbox-group" style="margin-top: 4px;">
+                <input type="checkbox" id="normalize-scale">
+                Normalize scale
+            </label>
+            <div id="route-types-panel" style="display: none;">
+                <h4>Route Types</h4>
+                <label class="checkbox-group">
+                    <input type="checkbox" id="show-subway" checked>
+                    Subway
+                </label>
+                <label class="checkbox-group" style="margin-top: 4px;">
+                    <input type="checkbox" id="show-rail" checked>
+                    Rail
+                </label>
+                <label class="checkbox-group" style="margin-top: 4px;">
+                    <input type="checkbox" id="show-bus" checked>
+                    Bus
+                </label>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -367,18 +561,38 @@
         let summaryData = null;
         let ibxRouteData = null;
         let ibxStationsData = null;
+        let transitRoutesData = null;
+        let routeSummaryData = null;
         let map = null;
         let tractLayer = null;
         let ibxRouteLayer = null;
         let ibxStationsLayer = null;
+        let transitRoutesLayer = null;
         let selectedTractId = null;
         let activeOrigin = null;
         let activeDestination = null;
         let currentMode = null; // 'origin' or 'destination'
-        let viewMode = 'overview'; // 'overview' or 'selection'
-        let overviewPerspective = 'origin'; // 'origin' or 'destination'
+
+        // Top-level data layer: 'tracts' | 'transit' | 'stops' (future)
+        let dataLayer = 'tracts';
+
+        // Tracts view state
+        let tractsViewMode = 'overview'; // 'overview' or 'selection'
+        let tractsPerspective = 'origin'; // 'origin' or 'destination'
+
+        // Transit view state
+        let transitViewMode = 'overview'; // 'overview' or 'impact'
+        let transitImpactMetric = 'pct_change'; // 'pct_change' | 'passenger_change' | 'baseline_passengers' | 'new_passengers'
+        let impactThreshold = 0; // minimum % change to show
+        let hideNoDataRoutes = false; // whether to hide routes without impact data
+        let selectedTransitRoute = null; // { name, stats, color, type } - pinned route for comparison
+
         let globalScales = {};
         let summaryScales = {};
+        let routeImpactScales = {};
+
+        // Route type mapping: 1 = subway, 2 = rail, 3 = bus
+        const ROUTE_TYPE_NAMES = { 1: 'Subway', 2: 'Rail', 3: 'Bus' };
 
         // Color scales
         const COLOR_SCALES = {
@@ -481,32 +695,51 @@
                 return div;
             };
             legend.addTo(map);
+
+            // Click on map background to deselect transit route
+            map.on('click', function(e) {
+                if (selectedTransitRoute && dataLayer === 'transit') {
+                    selectedTransitRoute = null;
+                    renderTransitRoutes();
+                    updateSelectedRouteInfo();
+                }
+            });
         }
 
         // Load data
         async function loadData() {
             try {
-                const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse] = await Promise.all([
+                const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse, transitRoutesResponse, routeSummaryResponse] = await Promise.all([
                     fetch('data/census/nyc_census.geojson'),
                     fetch('data/tract_comparison_data.json'),
                     fetch('data/tract_summary_data.json'),
                     fetch('data/IBX/route.geojson'),
-                    fetch('data/IBX/stations.geojson')
+                    fetch('data/IBX/stations.geojson'),
+                    fetch('data/transit/NYC_routes.geojson'),
+                    fetch('data/route_summary.json')
                 ]);
                 tractData = await tractResponse.json();
                 comparisonData = await comparisonResponse.json();
                 summaryData = await summaryResponse.json();
                 ibxRouteData = await ibxRouteResponse.json();
                 ibxStationsData = await ibxStationsResponse.json();
+                transitRoutesData = await transitRoutesResponse.json();
+                routeSummaryData = await routeSummaryResponse.json();
+
+                // Build route summary lookup by route name
+                routeSummaryData.lookup = {};
+                routeSummaryData.routes.forEach(r => {
+                    routeSummaryData.lookup[r.route] = r;
+                });
 
                 // Compute global scales
                 computeGlobalScales();
                 computeSummaryScales();
+                computeRouteImpactScales();
 
                 document.getElementById('loading').style.display = 'none';
-                updateViewModeUI();
-                renderTracts();
-                renderIBXLayers();
+                updateDataLayerUI();
+                renderAll();
                 updateLegend();
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -563,6 +796,46 @@
                         min: Math.min(...values),
                         max: Math.max(...values)
                     };
+                }
+            });
+        }
+
+        // Compute scales for route impact metrics
+        function computeRouteImpactScales() {
+            const metrics = ['pct_change', 'passenger_change', 'baseline_passengers', 'new_passengers'];
+
+            // Helper to get percentile value
+            function percentile(arr, p) {
+                const sorted = [...arr].sort((a, b) => a - b);
+                const index = Math.ceil((p / 100) * sorted.length) - 1;
+                return sorted[Math.max(0, index)];
+            }
+
+            metrics.forEach(metric => {
+                let values = [];
+                routeSummaryData.routes.forEach(r => {
+                    const val = r[metric];
+                    if (typeof val === 'number' && !isNaN(val)) {
+                        values.push(val);
+                    }
+                });
+
+                if (values.length > 0) {
+                    // For change metrics, use 95th percentile of absolute values for symmetric scale
+                    if (metric === 'pct_change' || metric === 'passenger_change') {
+                        const absValues = values.map(v => Math.abs(v));
+                        const p95 = percentile(absValues, 95);
+                        routeImpactScales[metric] = {
+                            min: -p95,
+                            max: p95
+                        };
+                    } else {
+                        // For absolute metrics, use raw min and 95th percentile as max
+                        routeImpactScales[metric] = {
+                            min: Math.min(...values),
+                            max: percentile(values, 95)
+                        };
+                    }
                 }
             });
         }
@@ -624,27 +897,115 @@
             return scale.colors[Math.min(colorIndex, scale.colors.length - 1)];
         }
 
+        // Get color for route impact metric
+        function getRouteImpactColor(value, metric) {
+            if (value === null || value === undefined || value === 'NEW' || isNaN(value)) {
+                return metric === 'pct_change' ? '#198754' : '#6c757d'; // NEW routes are green
+            }
+
+            const scale = routeImpactScales[metric];
+            if (!scale) return '#6c757d';
+
+            // For change metrics, use diverging scale (red-gray-green)
+            if (metric === 'pct_change' || metric === 'passenger_change') {
+                // Normalize to -1 to 1 range
+                const maxAbs = Math.max(Math.abs(scale.min), Math.abs(scale.max));
+                let t = value / maxAbs;
+                t = Math.max(-1, Math.min(1, t));
+
+                // Handle near-zero values with a visible neutral gray
+                if (Math.abs(t) < 0.08) {
+                    // Very small change - use medium gray that's clearly visible
+                    return '#94a3b8';
+                }
+
+                if (t > 0) {
+                    // Positive = green (scale from light to dark green)
+                    const intensity = Math.max(80, Math.floor(t * 255));
+                    return `rgb(${Math.max(30, 200 - intensity)}, ${Math.min(220, 160 + intensity * 0.4)}, ${Math.max(30, 200 - intensity)})`;
+                } else {
+                    // Negative = red (scale from light to dark red)
+                    const intensity = Math.max(80, Math.floor(Math.abs(t) * 255));
+                    return `rgb(${Math.min(220, 160 + intensity * 0.4)}, ${Math.max(30, 200 - intensity)}, ${Math.max(30, 200 - intensity)})`;
+                }
+            } else {
+                // For absolute metrics, use sequential blue scale with visible minimum
+                let t = (value - scale.min) / (scale.max - scale.min);
+                t = Math.max(0, Math.min(1, t));
+                // Use a scale that starts with visible light blue instead of near-white
+                const colors = ['#a8d4f0', '#6baed6', '#4292c6', '#2171b5', '#084594'];
+                const colorIndex = Math.floor(t * (colors.length - 1));
+                return colors[Math.min(colorIndex, colors.length - 1)];
+            }
+        }
+
+        // Get line weight for route impact
+        function getRouteImpactWeight(value, metric) {
+            const scale = routeImpactScales[metric];
+            if (!scale || value === 'NEW') return 4;
+
+            if (metric === 'pct_change' || metric === 'passenger_change') {
+                const maxAbs = Math.max(Math.abs(scale.min), Math.abs(scale.max));
+                const t = Math.abs(value) / maxAbs;
+                return 2 + t * 6; // 2 to 8 weight
+            } else {
+                let t = (value - scale.min) / (scale.max - scale.min);
+                t = Math.max(0, Math.min(1, t));
+                return 2 + t * 6;
+            }
+        }
+
+        // Render all layers based on current state
+        function renderAll() {
+            renderTracts();
+            renderIBXLayers();
+            renderTransitRoutes();
+        }
+
         // Render census tracts
         function renderTracts() {
             if (tractLayer) {
                 map.removeLayer(tractLayer);
+                tractLayer = null;
             }
 
-            if (viewMode === 'overview') {
-                renderTractsOverview();
+            const showTracts = document.getElementById('show-tracts-layer').checked;
+            if (!showTracts) return;
+
+            if (dataLayer === 'tracts') {
+                if (tractsViewMode === 'overview') {
+                    renderTractsOverview();
+                } else {
+                    renderTractsSelection();
+                }
             } else {
-                renderTractsSelection();
+                // Show tracts as simple background when not in tracts mode
+                renderTractsBackground();
             }
 
-            // Bring IBX layers to front
+            // Bring overlay layers to front (in order)
+            if (transitRoutesLayer) transitRoutesLayer.bringToFront();
             if (ibxRouteLayer) ibxRouteLayer.bringToFront();
             if (ibxStationsLayer) ibxStationsLayer.bringToFront();
+        }
+
+        // Render tracts as simple background
+        function renderTractsBackground() {
+            tractLayer = L.geoJSON(tractData, {
+                style: {
+                    fillColor: '#f8f9fa',
+                    fillOpacity: 0.3,
+                    color: '#dee2e6',
+                    weight: 0.5,
+                    opacity: 0.5
+                }
+            }).addTo(map);
         }
 
         // Render tracts in overview mode (summary data)
         function renderTractsOverview() {
             const metric = document.getElementById('overview-metric-select').value;
-            const dataKey = overviewPerspective === 'origin' ? 'by_origin' : 'by_destination';
+            const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
             const summaryLookup = summaryData[dataKey];
 
             tractLayer = L.geoJSON(tractData, {
@@ -795,7 +1156,7 @@
         // Handle tract hover in overview mode
         function onTractHoverOverview(geoid, properties, e) {
             const hoverEl = document.getElementById('hover-info');
-            const dataKey = overviewPerspective === 'origin' ? 'by_origin' : 'by_destination';
+            const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
             const tractSummary = summaryData[dataKey][geoid];
 
             const formatValue = (val, suffix = '') => {
@@ -822,7 +1183,7 @@
                 return;
             }
 
-            const perspectiveLabel = overviewPerspective === 'origin' ? 'As Origin' : 'As Destination';
+            const perspectiveLabel = tractsPerspective === 'origin' ? 'As Origin' : 'As Destination';
 
             hoverEl.innerHTML = `
                 <div class="info-row">
@@ -964,10 +1325,72 @@
 
         // Update legend
         function updateLegend() {
-            if (viewMode === 'overview') {
-                updateLegendOverview();
+            if (dataLayer === 'transit' && transitViewMode === 'impact') {
+                updateLegendTransitImpact();
+            } else if (dataLayer === 'tracts') {
+                if (tractsViewMode === 'overview') {
+                    updateLegendOverview();
+                } else {
+                    updateLegendSelection();
+                }
             } else {
-                updateLegendSelection();
+                // Hide legend or show generic
+                document.getElementById('legend-title').textContent = 'Transit Routes';
+                document.getElementById('legend-scale').innerHTML = '';
+                document.getElementById('legend-labels').innerHTML = '';
+            }
+        }
+
+        function updateLegendTransitImpact() {
+            const metric = transitImpactMetric;
+            const labels = {
+                pct_change: '% Change',
+                passenger_change: 'Passenger Change',
+                baseline_passengers: 'Baseline Passengers',
+                new_passengers: 'New Passengers'
+            };
+
+            document.getElementById('legend-title').textContent = labels[metric];
+
+            const scaleEl = document.getElementById('legend-scale');
+            const labelsEl = document.getElementById('legend-labels');
+            const scale = routeImpactScales[metric];
+
+            if (metric === 'pct_change' || metric === 'passenger_change') {
+                // Diverging scale with gray for near-zero
+                scaleEl.innerHTML = `
+                    <div style="flex:1;background:#dc3545"></div>
+                    <div style="flex:1;background:#f87171"></div>
+                    <div style="flex:1;background:#94a3b8"></div>
+                    <div style="flex:1;background:#86efac"></div>
+                    <div style="flex:1;background:#22c55e"></div>
+                `;
+                if (scale) {
+                    const maxAbs = Math.max(Math.abs(scale.min), Math.abs(scale.max));
+                    labelsEl.innerHTML = `<span>-${maxAbs.toFixed(0)}</span><span>0</span><span>+${maxAbs.toFixed(0)}</span>`;
+                }
+            } else {
+                // Sequential blue scale with visible minimum
+                scaleEl.innerHTML = `
+                    <div style="flex:1;background:#a8d4f0"></div>
+                    <div style="flex:1;background:#6baed6"></div>
+                    <div style="flex:1;background:#4292c6"></div>
+                    <div style="flex:1;background:#2171b5"></div>
+                    <div style="flex:1;background:#084594"></div>
+                `;
+                if (scale) {
+                    labelsEl.innerHTML = `<span>${scale.min.toLocaleString()}</span><span>${scale.max.toLocaleString()}</span>`;
+                }
+            }
+
+            // Add no-data indicator if not hidden
+            if (!hideNoDataRoutes) {
+                labelsEl.innerHTML += `
+                    <div class="legend-item" style="width: 100%; margin-top: 8px;">
+                        <div class="legend-line dashed"></div>
+                        <span>No impact data</span>
+                    </div>
+                `;
             }
         }
 
@@ -1102,19 +1525,257 @@
             ibxStationsLayer.bringToFront();
         }
 
-        // Update view mode UI visibility
-        function updateViewModeUI() {
-            const isOverview = viewMode === 'overview';
+        // Render transit routes
+        function renderTransitRoutes() {
+            // Remove existing layer
+            if (transitRoutesLayer) {
+                map.removeLayer(transitRoutesLayer);
+                transitRoutesLayer = null;
+            }
 
-            document.getElementById('view-mode-indicator').textContent = isOverview ? 'Overview' : 'Selection Mode';
-            document.getElementById('overview-perspective-group').style.display = isOverview ? 'flex' : 'none';
+            // Only show transit routes in transit data layer mode
+            if (dataLayer !== 'transit') return;
+
+            const showSubway = document.getElementById('show-subway').checked;
+            const showRail = document.getElementById('show-rail').checked;
+            const showBus = document.getElementById('show-bus').checked;
+
+            const isImpactMode = transitViewMode === 'impact';
+
+            // Filter features by type and impact criteria
+            const filteredFeatures = transitRoutesData.features.filter(f => {
+                const type = f.properties.route_type;
+                // Route type filter
+                if (type === 1 && !showSubway) return false;
+                if (type === 2 && !showRail) return false;
+                if (type === 3 && !showBus) return false;
+
+                // Impact mode filters
+                if (isImpactMode) {
+                    const routeName = f.properties.route_name || f.properties.route_id;
+                    const routeStats = routeSummaryData.lookup[routeName];
+
+                    // Hide routes without data if checkbox is checked
+                    if (hideNoDataRoutes && !routeStats) return false;
+
+                    // Apply threshold filter
+                    if (impactThreshold > 0 && routeStats) {
+                        const metricValue = routeStats[transitImpactMetric];
+                        if (transitImpactMetric === 'pct_change' || transitImpactMetric === 'passenger_change') {
+                            // For change metrics, filter by absolute value
+                            if (metricValue !== 'NEW' && typeof metricValue === 'number') {
+                                if (Math.abs(metricValue) < impactThreshold) return false;
+                            }
+                        } else {
+                            // For absolute metrics (baseline/new passengers), filter by raw value
+                            if (typeof metricValue === 'number' && metricValue < impactThreshold) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            });
+
+            const filteredData = {
+                type: 'FeatureCollection',
+                features: filteredFeatures
+            };
+
+            transitRoutesLayer = L.geoJSON(filteredData, {
+                style: feature => {
+                    const props = feature.properties;
+                    const routeName = props.route_name || props.route_id;
+                    const routeStats = routeSummaryData.lookup[routeName];
+                    const naturalColor = '#' + (props.route_colo || '888888');
+                    const type = props.route_type;
+
+                    // Check if this is the selected route
+                    const isSelected = selectedTransitRoute && selectedTransitRoute.name === routeName;
+
+                    let baseStyle;
+                    if (isImpactMode && routeStats) {
+                        const metricValue = routeStats[transitImpactMetric];
+                        baseStyle = {
+                            color: getRouteImpactColor(metricValue, transitImpactMetric),
+                            weight: getRouteImpactWeight(metricValue, transitImpactMetric),
+                            opacity: 0.9,
+                            lineCap: 'round',
+                            lineJoin: 'round'
+                        };
+                    } else if (isImpactMode && !routeStats) {
+                        baseStyle = {
+                            color: '#9ca3af',
+                            weight: 1.5,
+                            opacity: 0.4,
+                            dashArray: '4, 4',
+                            lineCap: 'round',
+                            lineJoin: 'round'
+                        };
+                    } else {
+                        baseStyle = {
+                            color: naturalColor,
+                            weight: type === 3 ? 2 : 3,
+                            opacity: 0.8,
+                            lineCap: 'round',
+                            lineJoin: 'round'
+                        };
+                    }
+
+                    // Apply selection highlight
+                    if (isSelected) {
+                        baseStyle.weight = Math.max(baseStyle.weight, 5) + 2;
+                        baseStyle.opacity = 1;
+                        baseStyle.dashArray = null; // Make solid if it was dashed
+                    }
+
+                    return baseStyle;
+                },
+                onEachFeature: (feature, layer) => {
+                    const props = feature.properties;
+                    const routeName = props.route_name || props.route_id;
+                    const routeStats = routeSummaryData.lookup[routeName];
+                    const color = '#' + (props.route_colo || '888888');
+                    const typeName = ROUTE_TYPE_NAMES[props.route_type] || 'Unknown';
+
+                    // Store original styles for mouseout
+                    const originalWeight = layer.options.weight;
+                    const originalOpacity = layer.options.opacity;
+                    const originalDashArray = layer.options.dashArray;
+                    const originalColor = layer.options.color;
+
+                    // Click to select/pin route for comparison
+                    layer.on('click', function(e) {
+                        L.DomEvent.stopPropagation(e);
+
+                        // Toggle selection
+                        if (selectedTransitRoute && selectedTransitRoute.name === routeName) {
+                            // Deselect if clicking the same route
+                            selectedTransitRoute = null;
+                        } else {
+                            // Select this route
+                            selectedTransitRoute = {
+                                name: routeName,
+                                stats: routeStats,
+                                color: color,
+                                type: typeName
+                            };
+                        }
+
+                        // Re-render to update highlighting
+                        renderTransitRoutes();
+                        updateSelectedRouteInfo();
+                    });
+
+                    // Hover effect - update sidebar info panel
+                    layer.on('mouseover', function() {
+                        // Don't change style if this is the selected route
+                        const isSelected = selectedTransitRoute && selectedTransitRoute.name === routeName;
+
+                        if (!isSelected) {
+                            if (routeStats) {
+                                this.setStyle({ weight: originalWeight + 2, opacity: 1 });
+                            } else {
+                                this.setStyle({
+                                    weight: 3,
+                                    opacity: 0.7,
+                                    dashArray: null,
+                                    color: '#6b7280'
+                                });
+                            }
+                        }
+                        this.bringToFront();
+                        // Keep IBX on top
+                        if (ibxRouteLayer) ibxRouteLayer.bringToFront();
+                        if (ibxStationsLayer) ibxStationsLayer.bringToFront();
+
+                        // Update hover info panel
+                        updateTransitHoverInfo(routeName, routeStats, color, typeName);
+                    });
+
+                    layer.on('mouseout', function() {
+                        const isSelected = selectedTransitRoute && selectedTransitRoute.name === routeName;
+                        if (!isSelected) {
+                            this.setStyle({
+                                weight: originalWeight,
+                                opacity: originalOpacity,
+                                dashArray: originalDashArray,
+                                color: originalColor
+                            });
+                        }
+
+                        // If we have a selected route, show only its info when not hovering
+                        if (selectedTransitRoute) {
+                            updateSelectedRouteInfo();
+                        }
+                    });
+                }
+            }).addTo(map);
+
+            // Keep IBX layers on top
+            if (ibxRouteLayer) ibxRouteLayer.bringToFront();
+            if (ibxStationsLayer) ibxStationsLayer.bringToFront();
+        }
+
+        // Update data layer UI - show/hide appropriate control panels
+        function updateDataLayerUI() {
+            // Update data layer buttons
+            document.getElementById('btn-layer-tracts').classList.toggle('active', dataLayer === 'tracts');
+            document.getElementById('btn-layer-transit').classList.toggle('active', dataLayer === 'transit');
+
+            // Show/hide main control panels
+            document.getElementById('tracts-controls').style.display = dataLayer === 'tracts' ? 'block' : 'none';
+            document.getElementById('transit-controls').style.display = dataLayer === 'transit' ? 'block' : 'none';
+
+            // Show/hide route types panel in map controls (right panel)
+            document.getElementById('route-types-panel').style.display = dataLayer === 'transit' ? 'block' : 'none';
+
+            // Update hover info placeholder text based on data layer
+            const hoverEl = document.getElementById('hover-info');
+            if (dataLayer === 'tracts') {
+                hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a tract for details</span>';
+            } else if (dataLayer === 'transit') {
+                if (selectedTransitRoute) {
+                    updateSelectedRouteInfo();
+                } else {
+                    hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a route for details<br>Click to pin for comparison</span>';
+                }
+            }
+
+            // Update tracts-specific UI if in tracts mode
+            if (dataLayer === 'tracts') {
+                updateTractsViewModeUI();
+            }
+
+            // Update transit-specific UI if in transit mode
+            if (dataLayer === 'transit') {
+                updateTransitViewModeUI();
+            }
+        }
+
+        // Update tracts view mode UI visibility
+        function updateTractsViewModeUI() {
+            const isOverview = tractsViewMode === 'overview';
+
+            document.getElementById('tracts-view-indicator').textContent = isOverview ? 'Overview' : 'Selection Mode';
+            document.getElementById('tracts-perspective-group').style.display = isOverview ? 'flex' : 'none';
             document.getElementById('overview-metric-group').style.display = isOverview ? 'block' : 'none';
             document.getElementById('selection-mode-group').style.display = isOverview ? 'none' : 'block';
             document.getElementById('selection-metric-group').style.display = isOverview ? 'none' : 'block';
 
             // Update perspective buttons
-            document.getElementById('btn-perspective-origin').classList.toggle('active', overviewPerspective === 'origin');
-            document.getElementById('btn-perspective-dest').classList.toggle('active', overviewPerspective === 'destination');
+            document.getElementById('btn-perspective-origin').classList.toggle('active', tractsPerspective === 'origin');
+            document.getElementById('btn-perspective-dest').classList.toggle('active', tractsPerspective === 'destination');
+        }
+
+        // Update transit view mode UI
+        function updateTransitViewModeUI() {
+            const isImpact = transitViewMode === 'impact';
+
+            document.getElementById('btn-transit-overview').classList.toggle('active', !isImpact);
+            document.getElementById('btn-transit-impact').classList.toggle('active', isImpact);
+            document.getElementById('transit-impact-metric-group').style.display = isImpact ? 'block' : 'none';
         }
 
         // Update active selection display
@@ -1141,7 +1802,7 @@
             activeDestination = null;
             selectedTractId = null;
             currentMode = null;
-            viewMode = 'overview';
+            tractsViewMode = 'overview';
 
             document.getElementById('selected-tract').textContent = 'Click a tract on the map';
             document.getElementById('selected-tract').classList.add('empty');
@@ -1151,16 +1812,34 @@
             document.getElementById('btn-dest').classList.remove('active');
             document.getElementById('selection-stats').style.display = 'none';
 
-            updateViewModeUI();
+            updateTractsViewModeUI();
             renderTracts();
             updateLegend();
         }
 
         // Event listeners
 
+        // ========== DATA LAYER BUTTONS ==========
+        document.getElementById('btn-layer-tracts').addEventListener('click', () => {
+            dataLayer = 'tracts';
+            selectedTransitRoute = null; // Clear transit selection
+            updateDataLayerUI();
+            renderAll();
+            updateLegend();
+        });
+
+        document.getElementById('btn-layer-transit').addEventListener('click', () => {
+            dataLayer = 'transit';
+            updateDataLayerUI();
+            renderAll();
+            updateLegend();
+            updateSelectedRouteInfo();
+        });
+
+        // ========== TRACTS CONTROLS ==========
         // Overview perspective toggles
         document.getElementById('btn-perspective-origin').addEventListener('click', () => {
-            overviewPerspective = 'origin';
+            tractsPerspective = 'origin';
             document.getElementById('btn-perspective-origin').classList.add('active');
             document.getElementById('btn-perspective-dest').classList.remove('active');
             renderTracts();
@@ -1168,7 +1847,7 @@
         });
 
         document.getElementById('btn-perspective-dest').addEventListener('click', () => {
-            overviewPerspective = 'destination';
+            tractsPerspective = 'destination';
             document.getElementById('btn-perspective-dest').classList.add('active');
             document.getElementById('btn-perspective-origin').classList.remove('active');
             renderTracts();
@@ -1187,10 +1866,10 @@
             activeOrigin = selectedTractId;
             activeDestination = null;
             currentMode = 'origin';
-            viewMode = 'selection';
+            tractsViewMode = 'selection';
             document.getElementById('btn-origin').classList.add('active');
             document.getElementById('btn-dest').classList.remove('active');
-            updateViewModeUI();
+            updateTractsViewModeUI();
             updateActiveSelection();
             renderTracts();
             updateLegend();
@@ -1202,10 +1881,10 @@
             activeDestination = selectedTractId;
             activeOrigin = null;
             currentMode = 'destination';
-            viewMode = 'selection';
+            tractsViewMode = 'selection';
             document.getElementById('btn-dest').classList.add('active');
             document.getElementById('btn-origin').classList.remove('active');
-            updateViewModeUI();
+            updateTractsViewModeUI();
             updateActiveSelection();
             renderTracts();
             updateLegend();
@@ -1230,8 +1909,270 @@
             renderTracts();
         });
 
+        // ========== TRANSIT CONTROLS ==========
+        document.getElementById('btn-transit-overview').addEventListener('click', () => {
+            transitViewMode = 'overview';
+            selectedTransitRoute = null; // Clear selection when switching views
+            updateTransitViewModeUI();
+            renderTransitRoutes();
+            updateLegend();
+            updateSelectedRouteInfo();
+        });
+
+        document.getElementById('btn-transit-impact').addEventListener('click', () => {
+            transitViewMode = 'impact';
+            selectedTransitRoute = null; // Clear selection when switching views
+            updateTransitViewModeUI();
+            updateThresholdSliderRange();
+            renderTransitRoutes();
+            updateLegend();
+            updateSelectedRouteInfo();
+        });
+
+        document.getElementById('transit-impact-metric-select').addEventListener('change', (e) => {
+            transitImpactMetric = e.target.value;
+            // Update slider range for new metric and reset threshold
+            document.getElementById('impact-threshold').value = 0;
+            impactThreshold = 0;
+            updateThresholdSliderRange();
+            renderTransitRoutes();
+            updateLegend();
+        });
+
+        document.getElementById('impact-threshold').addEventListener('input', (e) => {
+            impactThreshold = parseFloat(e.target.value);
+            updateThresholdLabel();
+            renderTransitRoutes();
+        });
+
+        document.getElementById('hide-no-data-routes').addEventListener('change', (e) => {
+            hideNoDataRoutes = e.target.checked;
+            renderTransitRoutes();
+            updateLegend();
+        });
+
+        // Generate HTML for route stats
+        function getRouteStatsHtml(routeStats, color, routeName, typeName, isSelected = false) {
+            const headerStyle = isSelected
+                ? 'border: 2px solid #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);'
+                : '';
+
+            let statsHtml = '';
+            if (routeStats) {
+                const pctChange = routeStats.pct_change;
+                const changeColor = typeof pctChange === 'number'
+                    ? (pctChange > 0 ? '#198754' : '#dc3545')
+                    : '#198754';
+                const changeText = pctChange === 'NEW'
+                    ? '<span style="color: #198754; font-weight: 500;">NEW</span>'
+                    : `<span style="color: ${changeColor}; font-weight: 500;">${pctChange > 0 ? '+' : ''}${pctChange.toFixed(1)}%</span>`;
+
+                statsHtml = `
+                    <div class="info-row">
+                        <span class="info-label">Baseline Passengers</span>
+                        <span class="info-value">${routeStats.baseline_passengers.toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">With IBX</span>
+                        <span class="info-value">${routeStats.new_passengers.toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">% Change</span>
+                        <span class="info-value">${changeText}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Passenger Change</span>
+                        <span class="info-value" style="color: ${routeStats.passenger_change >= 0 ? '#198754' : '#dc3545'}">
+                            ${routeStats.passenger_change >= 0 ? '+' : ''}${routeStats.passenger_change.toLocaleString()}
+                        </span>
+                    </div>
+                `;
+            } else {
+                statsHtml = `
+                    <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 4px; border-left: 3px solid #9ca3af;">
+                        <div style="color: #6b7280; font-size: 0.8rem;">No IBX impact data</div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div style="margin-bottom: 8px; padding: 6px; background: #f8f9fa; border-radius: 6px; ${headerStyle}">
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                        <span style="display: inline-block; padding: 3px 8px; background: ${routeStats ? color : '#9ca3af'}; color: white; border-radius: 4px; font-weight: 600; font-size: 0.9rem;">${routeName}</span>
+                        <span style="color: #6c757d; font-size: 0.8rem;">${typeName}</span>
+                        ${isSelected ? '<span style="color: #0d6efd; font-size: 0.65rem; font-weight: 500;">PINNED</span>' : ''}
+                    </div>
+                    ${statsHtml}
+                </div>
+            `;
+        }
+
+        // Update hover info when hovering over a transit route
+        function updateTransitHoverInfo(routeName, routeStats, color, typeName) {
+            const hoverEl = document.getElementById('hover-info');
+
+            // If hovering over the selected route, just show it
+            if (selectedTransitRoute && selectedTransitRoute.name === routeName) {
+                hoverEl.innerHTML = getRouteStatsHtml(routeStats, color, routeName, typeName, true);
+                return;
+            }
+
+            // If we have a selected route, show it first (stable position at top)
+            if (selectedTransitRoute) {
+                let html = getRouteStatsHtml(
+                    selectedTransitRoute.stats,
+                    selectedTransitRoute.color,
+                    selectedTransitRoute.name,
+                    selectedTransitRoute.type,
+                    true
+                );
+
+                // Add hovered route below with "Comparing to:" label
+                html += `<div style="border-top: 1px solid #dee2e6; padding-top: 6px; margin-top: 2px;">
+                    <div style="font-size: 0.65rem; color: #6c757d; text-transform: uppercase; margin-bottom: 4px;">Hovering over:</div>
+                </div>`;
+                html += getRouteStatsHtml(routeStats, color, routeName, typeName, false);
+
+                // Add comparison summary if both have stats
+                if (routeStats && selectedTransitRoute.stats) {
+                    const pinnedPct = typeof selectedTransitRoute.stats.pct_change === 'number' ? selectedTransitRoute.stats.pct_change : 0;
+                    const hoveredPct = typeof routeStats.pct_change === 'number' ? routeStats.pct_change : 0;
+                    const diff = hoveredPct - pinnedPct;
+                    const passDiff = routeStats.passenger_change - selectedTransitRoute.stats.passenger_change;
+
+                    html += `
+                        <div style="background: #e9ecef; padding: 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <div style="font-weight: 500; margin-bottom: 3px;">Difference:</div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>% Change</span>
+                                <span style="color: ${diff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Passengers</span>
+                                <span style="color: ${passDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${passDiff >= 0 ? '+' : ''}${passDiff.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                hoverEl.innerHTML = html;
+            } else {
+                // No selected route, just show hovered route info
+                hoverEl.innerHTML = getRouteStatsHtml(routeStats, color, routeName, typeName, false);
+            }
+        }
+
+        // Show only the selected route info (when not hovering)
+        function updateSelectedRouteInfo() {
+            const hoverEl = document.getElementById('hover-info');
+
+            if (selectedTransitRoute) {
+                let html = getRouteStatsHtml(
+                    selectedTransitRoute.stats,
+                    selectedTransitRoute.color,
+                    selectedTransitRoute.name,
+                    selectedTransitRoute.type,
+                    true
+                );
+                html += `<div style="text-align: center; color: #6c757d; font-size: 0.75rem; margin-top: 8px;">
+                    Hover over another route to compare<br>
+                    <span style="color: #0d6efd; cursor: pointer;" onclick="clearSelectedRoute()">Click to deselect</span>
+                </div>`;
+                hoverEl.innerHTML = html;
+            } else {
+                hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a route for details<br>Click to pin for comparison</span>';
+            }
+        }
+
+        // Clear selected route (called from onclick)
+        function clearSelectedRoute() {
+            selectedTransitRoute = null;
+            renderTransitRoutes();
+            updateSelectedRouteInfo();
+        }
+
+        function updateThresholdLabel() {
+            const label = document.getElementById('threshold-value');
+            const sliderLabel = document.querySelector('#impact-threshold').closest('.slider-group').querySelector('label');
+
+            if (impactThreshold === 0) {
+                label.textContent = 'Show all routes';
+            } else {
+                if (transitImpactMetric === 'pct_change') {
+                    label.textContent = `Hide < ${impactThreshold}% change`;
+                } else if (transitImpactMetric === 'passenger_change') {
+                    label.textContent = `Hide < ${impactThreshold.toLocaleString()} change`;
+                } else {
+                    label.textContent = `Hide < ${impactThreshold.toLocaleString()} passengers`;
+                }
+            }
+
+            // Update slider label based on metric type
+            if (transitImpactMetric === 'pct_change' || transitImpactMetric === 'passenger_change') {
+                sliderLabel.textContent = 'Minimum Change Threshold';
+            } else {
+                sliderLabel.textContent = 'Minimum Passenger Threshold';
+            }
+        }
+
+        // Update threshold slider range based on current metric
+        function updateThresholdSliderRange() {
+            const slider = document.getElementById('impact-threshold');
+            const sliderGroup = slider.closest('.slider-group');
+            const scale = routeImpactScales[transitImpactMetric];
+
+            if (!scale) return;
+
+            sliderGroup.style.display = 'block';
+
+            if (transitImpactMetric === 'pct_change') {
+                // For % change, use 0-50 range with step of 1
+                slider.max = 50;
+                slider.step = 1;
+            } else if (transitImpactMetric === 'passenger_change') {
+                // For passenger change, use half of 95th percentile as max
+                const maxThreshold = Math.round(scale.max * 0.5);
+                const magnitude = Math.pow(10, Math.floor(Math.log10(maxThreshold)));
+                const step = Math.max(100, Math.round(magnitude / 10));
+                slider.max = Math.round(maxThreshold / step) * step;
+                slider.step = step;
+            } else {
+                // For absolute metrics (baseline/new passengers), use percentile-based range
+                const maxThreshold = Math.round(scale.max * 0.5);
+                const magnitude = Math.pow(10, Math.floor(Math.log10(maxThreshold)));
+                const step = Math.max(1000, Math.round(magnitude / 10));
+                slider.max = Math.round(maxThreshold / step) * step;
+                slider.step = step;
+            }
+
+            // Reset slider value if it exceeds new max
+            if (parseFloat(slider.value) > parseFloat(slider.max)) {
+                slider.value = 0;
+                impactThreshold = 0;
+            }
+
+            updateThresholdLabel();
+        }
+
+        document.getElementById('show-subway').addEventListener('change', () => {
+            renderTransitRoutes();
+        });
+
+        document.getElementById('show-rail').addEventListener('change', () => {
+            renderTransitRoutes();
+        });
+
+        document.getElementById('show-bus').addEventListener('change', () => {
+            renderTransitRoutes();
+        });
+
+        // ========== COMMON CONTROLS ==========
         document.getElementById('show-ibx-route').addEventListener('change', () => {
             renderIBXLayers();
+        });
+
+        document.getElementById('show-tracts-layer').addEventListener('change', () => {
+            renderTracts();
         });
 
         // Initialize

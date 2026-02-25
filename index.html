@@ -383,6 +383,59 @@
             );
             height: 2px;
         }
+        /* Station Impact Mode Styles */
+        .station-size-legend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .station-size-legend .size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+        .bar-chart-container {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 0;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .bar-row:hover {
+            background: #f1f3f5;
+        }
+        .bar-row.pinned {
+            background: #e7f1ff;
+            border-left: 3px solid #0d6efd;
+            padding-left: 5px;
+        }
+        .bar-fill {
+            height: 12px;
+            background: #dc3545;
+            border-radius: 2px;
+            min-width: 2px;
+        }
+        .bar-label {
+            flex-shrink: 0;
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .bar-value {
+            flex-shrink: 0;
+            width: 50px;
+            text-align: right;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -480,6 +533,7 @@
                 <div class="btn-group">
                     <button id="btn-transit-overview" class="btn active">Overview</button>
                     <button id="btn-transit-impact" class="btn">Route Impact</button>
+                    <button id="btn-transit-stations" class="btn">Station Impact</button>
                 </div>
             </div>
 
@@ -503,6 +557,25 @@
                     <input type="checkbox" id="hide-no-data-routes">
                     Hide routes without data
                 </label>
+            </div>
+
+            <!-- Station Impact Controls (shown in station mode) -->
+            <div class="control-group" id="station-impact-controls" style="display: none;">
+                <h3>Station Metric</h3>
+                <select id="station-metric-select">
+                    <option value="total_passengers" selected>Total Passengers</option>
+                    <option value="change">Change (IBX - Baseline)</option>
+                    <option value="transfers">Transfers</option>
+                    <option value="boardings">Boardings</option>
+                    <option value="alightings">Alightings</option>
+                </select>
+
+                <h3 style="margin-top: 12px;">Data View</h3>
+                <div class="btn-group">
+                    <button id="btn-data-baseline" class="btn">Baseline</button>
+                    <button id="btn-data-ibx" class="btn active">IBX</button>
+                    <button id="btn-data-comparison" class="btn">Compare</button>
+                </div>
             </div>
         </div>
 
@@ -590,6 +663,13 @@
         let globalScales = {};
         let summaryScales = {};
         let routeImpactScales = {};
+        let stationScales = {};
+
+        // Station impact state
+        let ibxStationRidershipData = null;
+        let stationImpactMetric = 'total_passengers'; // 'total_passengers' | 'change' | 'transfers' | 'boardings' | 'alightings'
+        let stationDataView = 'ibx'; // 'baseline' | 'ibx' | 'comparison'
+        let pinnedStations = []; // Array of station names for comparison
 
         // Route type mapping: 1 = subway, 2 = rail, 3 = bus
         const ROUTE_TYPE_NAMES = { 1: 'Subway', 2: 'Rail', 3: 'Bus' };
@@ -600,7 +680,7 @@
                 // Green scale for negative values (time savings)
                 colors: ['#006d2c', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#f7fcf5'],
                 domain: [-60, -50, -40, -30, -20, -10, 0],
-                reverse: true, // lower (more negative) is better
+                reverse: false, // more negative (bigger savings) = darker green
                 unit: 'min'
             },
             ibx_time: {
@@ -636,7 +716,7 @@
             transfer_change: {
                 colors: ['#006d2c', '#74c476', '#f7fcf5', '#fc9272', '#de2d26'],
                 domain: [-2, -1, 0, 1, 2, 3],
-                reverse: true, // negative is better (fewer transfers)
+                reverse: false, // negative (fewer transfers) = green, positive = red
                 unit: ''
             }
         };
@@ -645,7 +725,7 @@
         const SUMMARY_COLOR_SCALES = {
             avg_time_change_min: {
                 colors: ['#006d2c', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#f7fcf5'],
-                reverse: true,
+                reverse: false,
                 unit: 'min'
             },
             total_time_saved_hours: {
@@ -709,14 +789,15 @@
         // Load data
         async function loadData() {
             try {
-                const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse, transitRoutesResponse, routeSummaryResponse] = await Promise.all([
+                const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse, transitRoutesResponse, routeSummaryResponse, stationRidershipResponse] = await Promise.all([
                     fetch('data/census/nyc_census.geojson'),
                     fetch('data/tract_comparison_data.json'),
                     fetch('data/tract_summary_data.json'),
                     fetch('data/IBX/route.geojson'),
                     fetch('data/IBX/stations.geojson'),
                     fetch('data/transit/NYC_routes.geojson'),
-                    fetch('data/route_summary.json')
+                    fetch('data/route_summary.json'),
+                    fetch('data/ibx_stations.json')
                 ]);
                 tractData = await tractResponse.json();
                 comparisonData = await comparisonResponse.json();
@@ -725,6 +806,7 @@
                 ibxStationsData = await ibxStationsResponse.json();
                 transitRoutesData = await transitRoutesResponse.json();
                 routeSummaryData = await routeSummaryResponse.json();
+                ibxStationRidershipData = await stationRidershipResponse.json();
 
                 // Build route summary lookup by route name
                 routeSummaryData.lookup = {};
@@ -736,6 +818,7 @@
                 computeGlobalScales();
                 computeSummaryScales();
                 computeRouteImpactScales();
+                computeStationScales();
 
                 document.getElementById('loading').style.display = 'none';
                 updateDataLayerUI();
@@ -838,6 +921,45 @@
                     }
                 }
             });
+        }
+
+        // Compute scales for station metrics
+        function computeStationScales() {
+            if (!ibxStationRidershipData) return;
+
+            const metrics = {
+                total_passengers: s => s['Total Passengers'],
+                change: s => s['Change'],
+                transfers: s => s['Transfers'],
+                boardings: s => s['Instappen'],
+                alightings: s => s['Uitstappen'],
+                baseline_total: s => s['Baseline_total'],
+                baseline_transfers: s => s['Baseline_transfers'],
+                baseline_boardings: s => s['Baseline_instappen'],
+                baseline_alightings: s => s['Baseline_uistappen']
+            };
+
+            Object.keys(metrics).forEach(metric => {
+                const values = ibxStationRidershipData
+                    .map(s => metrics[metric](s))
+                    .filter(v => typeof v === 'number' && !isNaN(v));
+
+                if (values.length > 0) {
+                    stationScales[metric] = {
+                        min: Math.min(...values),
+                        max: Math.max(...values)
+                    };
+                }
+            });
+        }
+
+        // Normalize station name for matching between datasets
+        function normalizeStationName(name) {
+            return name
+                .replace(/[–—]/g, '-')  // Normalize dashes
+                .replace(/\s+/g, ' ')   // Normalize spaces
+                .trim()
+                .toLowerCase();
         }
 
         // Get color for a value
@@ -1325,7 +1447,9 @@
 
         // Update legend
         function updateLegend() {
-            if (dataLayer === 'transit' && transitViewMode === 'impact') {
+            if (dataLayer === 'transit' && transitViewMode === 'stations') {
+                updateLegendStationImpact();
+            } else if (dataLayer === 'transit' && transitViewMode === 'impact') {
                 updateLegendTransitImpact();
             } else if (dataLayer === 'tracts') {
                 if (tractsViewMode === 'overview') {
@@ -1339,6 +1463,64 @@
                 document.getElementById('legend-scale').innerHTML = '';
                 document.getElementById('legend-labels').innerHTML = '';
             }
+        }
+
+        function updateLegendStationImpact() {
+            const labels = {
+                total_passengers: stationDataView === 'baseline' ? 'Baseline Passengers' : 'Total Passengers',
+                change: 'Change',
+                transfers: stationDataView === 'baseline' ? 'Baseline Transfers' : 'Transfers',
+                boardings: stationDataView === 'baseline' ? 'Baseline Boardings' : 'Boardings',
+                alightings: stationDataView === 'baseline' ? 'Baseline Alightings' : 'Alightings'
+            };
+
+            document.getElementById('legend-title').textContent = labels[stationImpactMetric];
+
+            const scaleEl = document.getElementById('legend-scale');
+            const labelsEl = document.getElementById('legend-labels');
+
+            // Sequential red scale (matching IBX color)
+            scaleEl.innerHTML = `
+                <div style="flex:1;background:#fecaca"></div>
+                <div style="flex:1;background:#f87171"></div>
+                <div style="flex:1;background:#dc3545"></div>
+                <div style="flex:1;background:#b91c1c"></div>
+                <div style="flex:1;background:#7f1d1d"></div>
+            `;
+
+            // Get appropriate scale
+            let scaleKey = stationImpactMetric;
+            if (stationDataView === 'baseline') {
+                if (stationImpactMetric === 'total_passengers') scaleKey = 'baseline_total';
+                else if (stationImpactMetric === 'transfers') scaleKey = 'baseline_transfers';
+                else if (stationImpactMetric === 'boardings') scaleKey = 'baseline_boardings';
+                else if (stationImpactMetric === 'alightings') scaleKey = 'baseline_alightings';
+            }
+            const scale = stationScales[scaleKey];
+
+            if (scale) {
+                labelsEl.innerHTML = `<span>${scale.min.toLocaleString()}</span><span>${scale.max.toLocaleString()}</span>`;
+            } else {
+                labelsEl.innerHTML = '';
+            }
+
+            // Add size legend
+            labelsEl.innerHTML += `
+                <div class="station-size-legend" style="width: 100%; margin-top: 10px; justify-content: space-around;">
+                    <div class="size-item">
+                        <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#dc3545" stroke="#fff" stroke-width="1.5"/></svg>
+                        <span>Low</span>
+                    </div>
+                    <div class="size-item">
+                        <svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="#dc3545" stroke="#fff" stroke-width="1.5"/></svg>
+                        <span>Med</span>
+                    </div>
+                    <div class="size-item">
+                        <svg width="34" height="34"><circle cx="17" cy="17" r="15" fill="#dc3545" stroke="#fff" stroke-width="1.5"/></svg>
+                        <span>High</span>
+                    </div>
+                </div>
+            `;
         }
 
         function updateLegendTransitImpact() {
@@ -1450,8 +1632,91 @@
         }
 
         // Render IBX route and stations
+        // Build station ridership lookup by normalized name
+        function getStationRidershipLookup() {
+            const lookup = {};
+            if (!ibxStationRidershipData) return lookup;
+            ibxStationRidershipData.forEach(s => {
+                lookup[normalizeStationName(s.Stop)] = s;
+            });
+            return lookup;
+        }
+
+        // Get station ridership data by name
+        function getStationRidership(stationName) {
+            const lookup = getStationRidershipLookup();
+            return lookup[normalizeStationName(stationName)] || null;
+        }
+
+        // Get metric value for a station based on current settings
+        function getStationMetricValue(stationName) {
+            const data = getStationRidership(stationName);
+            if (!data) return null;
+
+            const metricMap = {
+                total_passengers: stationDataView === 'baseline' ? data['Baseline_total'] : data['Total Passengers'],
+                change: data['Change'],
+                transfers: stationDataView === 'baseline' ? data['Baseline_transfers'] : data['Transfers'],
+                boardings: stationDataView === 'baseline' ? data['Baseline_instappen'] : data['Instappen'],
+                alightings: stationDataView === 'baseline' ? data['Baseline_uistappen'] : data['Uitstappen']
+            };
+            return metricMap[stationImpactMetric];
+        }
+
+        // Build popup content for IBX station with ridership data
+        function buildStationPopup(geoProps) {
+            const ridership = getStationRidership(geoProps.name);
+
+            let html = `<div class="ibx-station-popup">
+                <div class="station-name">${geoProps.name}</div>
+                <div class="station-detail">${geoProps.neighborho}, ${geoProps.borough}</div>`;
+
+            // Transfers
+            const transfers = geoProps.transfers ? geoProps.transfers.split(',') : [];
+            if (transfers.length > 0 && transfers[0]) {
+                html += `<div class="transfers">
+                    <strong>Transfers:</strong><br>
+                    ${transfers.map(t => `<span class="transfer-badge">${t.trim()}</span>`).join('')}
+                </div>`;
+            }
+
+            // Ridership data
+            if (ridership) {
+                html += `
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #dee2e6;">
+                    <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; margin-bottom: 4px;">Ridership</div>
+                    <div class="info-row">
+                        <span class="info-label">Total Passengers</span>
+                        <span class="info-value">${ridership['Total Passengers'].toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Boardings</span>
+                        <span class="info-value">${ridership['Instappen'].toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Alightings</span>
+                        <span class="info-value">${ridership['Uitstappen'].toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Transfers</span>
+                        <span class="info-value">${ridership['Transfers'].toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">vs Baseline</span>
+                        <span class="info-value" style="color: ${ridership['Change'] >= 0 ? '#198754' : '#dc3545'}">
+                            ${ridership['Change'] >= 0 ? '+' : ''}${ridership['Change'].toLocaleString()}
+                        </span>
+                    </div>
+                </div>`;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
         function renderIBXLayers() {
             const showIBX = document.getElementById('show-ibx-route').checked;
+            const isStationMode = dataLayer === 'transit' && transitViewMode === 'stations';
 
             // Remove existing layers
             if (ibxRouteLayer) {
@@ -1463,7 +1728,8 @@
                 ibxStationsLayer = null;
             }
 
-            if (!showIBX) return;
+            // In station mode, always show IBX layers regardless of checkbox
+            if (!showIBX && !isStationMode) return;
 
             // Add route layer
             ibxRouteLayer = L.geoJSON(ibxRouteData, {
@@ -1476,48 +1742,105 @@
                 }
             }).addTo(map);
 
+            // Determine scale for sizing
+            let scaleKey = stationImpactMetric;
+            if (stationImpactMetric === 'total_passengers' && stationDataView === 'baseline') {
+                scaleKey = 'baseline_total';
+            } else if (stationImpactMetric === 'transfers' && stationDataView === 'baseline') {
+                scaleKey = 'baseline_transfers';
+            } else if (stationImpactMetric === 'boardings' && stationDataView === 'baseline') {
+                scaleKey = 'baseline_boardings';
+            } else if (stationImpactMetric === 'alightings' && stationDataView === 'baseline') {
+                scaleKey = 'baseline_alightings';
+            }
+            const scale = stationScales[scaleKey];
+
             // Add stations layer
             ibxStationsLayer = L.geoJSON(ibxStationsData, {
                 pointToLayer: (feature, latlng) => {
-                    return L.circleMarker(latlng, {
-                        radius: 7,
-                        fillColor: '#dc3545',
-                        color: '#fff',
-                        weight: 2,
-                        opacity: 1,
-                        fillOpacity: 0.9
-                    });
+                    const name = feature.properties.name;
+                    const isPinned = pinnedStations.includes(name);
+
+                    if (isStationMode) {
+                        // Station impact mode - sized circles
+                        const value = getStationMetricValue(name);
+                        let radius = 7;
+                        if (value !== null && scale && scale.max > scale.min) {
+                            const t = Math.max(0, Math.min(1, (value - scale.min) / (scale.max - scale.min)));
+                            radius = 5 + t * 20; // 5 to 25
+                        }
+
+                        return L.circleMarker(latlng, {
+                            radius: radius,
+                            fillColor: '#dc3545',
+                            color: isPinned ? '#0d6efd' : '#fff',
+                            weight: isPinned ? 3 : 2,
+                            opacity: 1,
+                            fillOpacity: 0.85
+                        });
+                    } else {
+                        // Default mode - fixed size circles
+                        return L.circleMarker(latlng, {
+                            radius: 7,
+                            fillColor: '#dc3545',
+                            color: '#fff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.9
+                        });
+                    }
                 },
                 onEachFeature: (feature, layer) => {
                     const props = feature.properties;
-                    const transfers = props.transfers ? props.transfers.split(',') : [];
+                    const name = props.name;
 
-                    let transfersHtml = '';
-                    if (transfers.length > 0 && transfers[0]) {
-                        transfersHtml = `
-                            <div class="transfers">
-                                <strong>Transfers:</strong><br>
-                                ${transfers.map(t => `<span class="transfer-badge">${t.trim()}</span>`).join('')}
-                            </div>
-                        `;
+                    if (isStationMode) {
+                        // Station mode - click to pin/unpin (no popup)
+                        layer.on('click', function(e) {
+                            L.DomEvent.stopPropagation(e);
+                            const idx = pinnedStations.indexOf(name);
+                            if (idx >= 0) {
+                                pinnedStations.splice(idx, 1);
+                            } else {
+                                pinnedStations.push(name);
+                            }
+                            renderIBXLayers();
+                            updateStationInfoPanel();
+                        });
+
+                        // Tooltip showing station name on hover
+                        layer.bindTooltip(name, {
+                            permanent: false,
+                            direction: 'top',
+                            offset: [0, -10]
+                        });
+
+                        // Hover effects
+                        const baseRadius = layer.options.radius;
+                        layer.on('mouseover', function() {
+                            this.setStyle({ radius: baseRadius + 3, fillColor: '#b02a37' });
+                        });
+                        layer.on('mouseout', function() {
+                            const isPinned = pinnedStations.includes(name);
+                            this.setStyle({
+                                radius: baseRadius,
+                                fillColor: '#dc3545',
+                                color: isPinned ? '#0d6efd' : '#fff',
+                                weight: isPinned ? 3 : 2
+                            });
+                        });
+                    } else {
+                        // Default mode - show popup with ridership data
+                        const popupContent = buildStationPopup(props);
+                        layer.bindPopup(popupContent);
+
+                        layer.on('mouseover', function() {
+                            this.setStyle({ radius: 9, fillColor: '#b02a37' });
+                        });
+                        layer.on('mouseout', function() {
+                            this.setStyle({ radius: 7, fillColor: '#dc3545' });
+                        });
                     }
-
-                    const popupContent = `
-                        <div class="ibx-station-popup">
-                            <div class="station-name">${props.name}</div>
-                            <div class="station-detail">${props.neighborho}, ${props.borough}</div>
-                            ${transfersHtml}
-                        </div>
-                    `;
-
-                    layer.bindPopup(popupContent);
-
-                    layer.on('mouseover', function() {
-                        this.setStyle({ radius: 9, fillColor: '#b02a37' });
-                    });
-                    layer.on('mouseout', function() {
-                        this.setStyle({ radius: 7, fillColor: '#dc3545' });
-                    });
                 }
             }).addTo(map);
 
@@ -1593,9 +1916,19 @@
 
                     // Check if this is the selected route
                     const isSelected = selectedTransitRoute && selectedTransitRoute.name === routeName;
+                    const isStationMode = transitViewMode === 'stations';
 
                     let baseStyle;
-                    if (isImpactMode && routeStats) {
+                    if (isStationMode) {
+                        // Station mode - dim all routes to 30% opacity
+                        baseStyle = {
+                            color: naturalColor,
+                            weight: type === 3 ? 1.5 : 2,
+                            opacity: 0.3,
+                            lineCap: 'round',
+                            lineJoin: 'round'
+                        };
+                    } else if (isImpactMode && routeStats) {
                         const metricValue = routeStats[transitImpactMetric];
                         baseStyle = {
                             color: getRouteImpactColor(metricValue, transitImpactMetric),
@@ -1644,6 +1977,11 @@
                     const originalOpacity = layer.options.opacity;
                     const originalDashArray = layer.options.dashArray;
                     const originalColor = layer.options.color;
+
+                    // Skip all route interactions when in station mode
+                    if (transitViewMode === 'stations') {
+                        return;
+                    }
 
                     // Click to select/pin route for comparison
                     layer.on('click', function(e) {
@@ -1736,7 +2074,9 @@
             if (dataLayer === 'tracts') {
                 hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a tract for details</span>';
             } else if (dataLayer === 'transit') {
-                if (selectedTransitRoute) {
+                if (transitViewMode === 'stations') {
+                    updateStationInfoPanel();
+                } else if (selectedTransitRoute) {
                     updateSelectedRouteInfo();
                 } else {
                     hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a route for details<br>Click to pin for comparison</span>';
@@ -1771,11 +2111,22 @@
 
         // Update transit view mode UI
         function updateTransitViewModeUI() {
+            const isOverview = transitViewMode === 'overview';
             const isImpact = transitViewMode === 'impact';
+            const isStations = transitViewMode === 'stations';
 
-            document.getElementById('btn-transit-overview').classList.toggle('active', !isImpact);
+            document.getElementById('btn-transit-overview').classList.toggle('active', isOverview);
             document.getElementById('btn-transit-impact').classList.toggle('active', isImpact);
+            document.getElementById('btn-transit-stations').classList.toggle('active', isStations);
             document.getElementById('transit-impact-metric-group').style.display = isImpact ? 'block' : 'none';
+            document.getElementById('station-impact-controls').style.display = isStations ? 'block' : 'none';
+        }
+
+        // Update data view buttons for station impact
+        function updateDataViewButtons() {
+            document.getElementById('btn-data-baseline').classList.toggle('active', stationDataView === 'baseline');
+            document.getElementById('btn-data-ibx').classList.toggle('active', stationDataView === 'ibx');
+            document.getElementById('btn-data-comparison').classList.toggle('active', stationDataView === 'comparison');
         }
 
         // Update active selection display
@@ -1913,8 +2264,10 @@
         document.getElementById('btn-transit-overview').addEventListener('click', () => {
             transitViewMode = 'overview';
             selectedTransitRoute = null; // Clear selection when switching views
+            pinnedStations = []; // Clear station pins
             updateTransitViewModeUI();
             renderTransitRoutes();
+            renderIBXLayers();
             updateLegend();
             updateSelectedRouteInfo();
         });
@@ -1922,9 +2275,11 @@
         document.getElementById('btn-transit-impact').addEventListener('click', () => {
             transitViewMode = 'impact';
             selectedTransitRoute = null; // Clear selection when switching views
+            pinnedStations = []; // Clear station pins
             updateTransitViewModeUI();
             updateThresholdSliderRange();
             renderTransitRoutes();
+            renderIBXLayers();
             updateLegend();
             updateSelectedRouteInfo();
         });
@@ -1949,6 +2304,46 @@
             hideNoDataRoutes = e.target.checked;
             renderTransitRoutes();
             updateLegend();
+        });
+
+        // ========== STATION IMPACT CONTROLS ==========
+        document.getElementById('btn-transit-stations').addEventListener('click', () => {
+            transitViewMode = 'stations';
+            selectedTransitRoute = null;
+            pinnedStations = [];
+            updateTransitViewModeUI();
+            renderTransitRoutes();
+            renderIBXLayers();
+            updateLegend();
+            updateStationInfoPanel();
+        });
+
+        document.getElementById('station-metric-select').addEventListener('change', (e) => {
+            stationImpactMetric = e.target.value;
+            renderIBXLayers();
+            updateLegend();
+            updateStationInfoPanel();
+        });
+
+        document.getElementById('btn-data-baseline').addEventListener('click', () => {
+            stationDataView = 'baseline';
+            updateDataViewButtons();
+            renderIBXLayers();
+            updateStationInfoPanel();
+        });
+
+        document.getElementById('btn-data-ibx').addEventListener('click', () => {
+            stationDataView = 'ibx';
+            updateDataViewButtons();
+            renderIBXLayers();
+            updateStationInfoPanel();
+        });
+
+        document.getElementById('btn-data-comparison').addEventListener('click', () => {
+            stationDataView = 'comparison';
+            updateDataViewButtons();
+            renderIBXLayers();
+            updateStationInfoPanel();
         });
 
         // Generate HTML for route stats
@@ -2009,6 +2404,11 @@
 
         // Update hover info when hovering over a transit route
         function updateTransitHoverInfo(routeName, routeStats, color, typeName) {
+            // Don't update if in station mode with pinned stations - keep station data visible
+            if (transitViewMode === 'stations' && pinnedStations.length > 0) {
+                return;
+            }
+
             const hoverEl = document.getElementById('hover-info');
 
             // If hovering over the selected route, just show it
@@ -2035,21 +2435,19 @@
 
                 // Add comparison summary if both have stats
                 if (routeStats && selectedTransitRoute.stats) {
-                    const pinnedPct = typeof selectedTransitRoute.stats.pct_change === 'number' ? selectedTransitRoute.stats.pct_change : 0;
-                    const hoveredPct = typeof routeStats.pct_change === 'number' ? routeStats.pct_change : 0;
-                    const diff = hoveredPct - pinnedPct;
-                    const passDiff = routeStats.passenger_change - selectedTransitRoute.stats.passenger_change;
+                    const baselineDiff = selectedTransitRoute.stats.baseline_passengers - routeStats.baseline_passengers;
+                    const ibxDiff = selectedTransitRoute.stats.new_passengers - routeStats.new_passengers;
 
                     html += `
                         <div style="background: #e9ecef; padding: 6px; border-radius: 4px; font-size: 0.75rem;">
-                            <div style="font-weight: 500; margin-bottom: 3px;">Difference:</div>
+                            <div style="font-weight: 500; margin-bottom: 3px;">Difference (Pinned - Hovering):</div>
                             <div style="display: flex; justify-content: space-between;">
-                                <span>% Change</span>
-                                <span style="color: ${diff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%</span>
+                                <span>Baseline Passengers</span>
+                                <span style="color: ${baselineDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${baselineDiff >= 0 ? '+' : ''}${baselineDiff.toLocaleString()}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between;">
-                                <span>Passengers</span>
-                                <span style="color: ${passDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${passDiff >= 0 ? '+' : ''}${passDiff.toLocaleString()}</span>
+                                <span>IBX Passengers</span>
+                                <span style="color: ${ibxDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${ibxDiff >= 0 ? '+' : ''}${ibxDiff.toLocaleString()}</span>
                             </div>
                         </div>
                     `;
@@ -2089,6 +2487,134 @@
             selectedTransitRoute = null;
             renderTransitRoutes();
             updateSelectedRouteInfo();
+        }
+
+        // ========== STATION INFO PANEL FUNCTIONS ==========
+        function updateStationInfoPanel() {
+            const hoverEl = document.getElementById('hover-info');
+
+            if (pinnedStations.length === 0) {
+                // Bar chart mode
+                hoverEl.innerHTML = renderStationBarChart();
+            } else {
+                // Comparison mode
+                hoverEl.innerHTML = renderStationComparison();
+            }
+        }
+
+        function renderStationBarChart() {
+            if (!ibxStationRidershipData) return 'Loading station data...';
+
+            const getValue = (s) => {
+                const metricMap = {
+                    total_passengers: stationDataView === 'baseline' ? s['Baseline_total'] : s['Total Passengers'],
+                    change: s['Change'],
+                    transfers: stationDataView === 'baseline' ? s['Baseline_transfers'] : s['Transfers'],
+                    boardings: stationDataView === 'baseline' ? s['Baseline_instappen'] : s['Instappen'],
+                    alightings: stationDataView === 'baseline' ? s['Baseline_uistappen'] : s['Uitstappen']
+                };
+                return metricMap[stationImpactMetric] || 0;
+            };
+
+            const sorted = [...ibxStationRidershipData].sort((a, b) => getValue(b) - getValue(a));
+            const maxVal = Math.max(getValue(sorted[0]) || 1, 1);
+
+            const metricLabels = {
+                total_passengers: stationDataView === 'baseline' ? 'Baseline Passengers' : 'Total Passengers',
+                change: 'Change',
+                transfers: stationDataView === 'baseline' ? 'Baseline Transfers' : 'Transfers',
+                boardings: stationDataView === 'baseline' ? 'Baseline Boardings' : 'Boardings',
+                alightings: stationDataView === 'baseline' ? 'Baseline Alightings' : 'Alightings'
+            };
+
+            let html = `<div style="font-size: 0.75rem; color: #6c757d; margin-bottom: 8px;">${metricLabels[stationImpactMetric]}</div>`;
+            html += `<div class="bar-chart-container">`;
+            sorted.forEach(s => {
+                const val = getValue(s);
+                const pct = Math.max(0, (val / maxVal) * 100);
+                const isPinned = pinnedStations.includes(s.Stop);
+                html += `
+                    <div class="bar-row ${isPinned ? 'pinned' : ''}" data-station="${s.Stop}">
+                        <div class="bar-label" title="${s.Stop}">${s.Stop}</div>
+                        <div style="flex: 1;">
+                            <div class="bar-fill" style="width: ${pct}%"></div>
+                        </div>
+                        <div class="bar-value">${val.toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            html += `<div style="font-size: 0.75rem; color: #6c757d; margin-top: 8px;">Click stations on map to compare</div>`;
+
+            return html;
+        }
+
+        function renderStationComparison() {
+            const ridershipLookup = getStationRidershipLookup();
+
+            let html = `<div style="font-size: 0.75rem; color: #6c757d; margin-bottom: 8px;">
+                Comparing ${pinnedStations.length} station(s)
+                <span style="color: #0d6efd; cursor: pointer; margin-left: 8px;" onclick="clearPinnedStations()">[Clear]</span>
+            </div>`;
+
+            // Create table
+            html += `<div style="overflow-x: auto;"><table style="width: 100%; font-size: 0.8rem; border-collapse: collapse;">`;
+
+            // Header row with station names
+            html += `<tr style="border-bottom: 1px solid #dee2e6;">
+                <th style="text-align: left; padding: 4px; font-weight: 500;">Metric</th>`;
+            pinnedStations.forEach(name => {
+                // Truncate long names
+                const shortName = name.length > 12 ? name.substring(0, 10) + '...' : name;
+                html += `<th style="text-align: right; padding: 4px; font-weight: 500;" title="${name}">${shortName}</th>`;
+            });
+            html += `</tr>`;
+
+            // Data rows
+            const metrics = [
+                ['Total', 'Total Passengers', 'Baseline_total'],
+                ['Boardings', 'Instappen', 'Baseline_instappen'],
+                ['Alightings', 'Uitstappen', 'Baseline_uistappen'],
+                ['Transfers', 'Transfers', 'Baseline_transfers'],
+                ['Change', 'Change', null]
+            ];
+
+            metrics.forEach(([label, ibxKey, baselineKey]) => {
+                html += `<tr style="border-bottom: 1px solid #f1f3f5;">
+                    <td style="padding: 4px; color: #6c757d;">${label}</td>`;
+                pinnedStations.forEach(name => {
+                    const data = ridershipLookup[normalizeStationName(name)];
+                    let val = '-';
+                    if (data) {
+                        if (stationDataView === 'comparison' && baselineKey) {
+                            const baseline = data[baselineKey] || 0;
+                            const ibx = data[ibxKey] || 0;
+                            val = `<span style="font-size: 0.7rem;">${baseline.toLocaleString()}</span> → ${ibx.toLocaleString()}`;
+                        } else if (stationDataView === 'baseline' && baselineKey) {
+                            val = (data[baselineKey] || 0).toLocaleString();
+                        } else {
+                            const value = data[ibxKey] || 0;
+                            if (label === 'Change') {
+                                const color = value >= 0 ? '#198754' : '#dc3545';
+                                val = `<span style="color: ${color}">${value >= 0 ? '+' : ''}${value.toLocaleString()}</span>`;
+                            } else {
+                                val = value.toLocaleString();
+                            }
+                        }
+                    }
+                    html += `<td style="text-align: right; padding: 4px;">${val}</td>`;
+                });
+                html += `</tr>`;
+            });
+
+            html += `</table></div>`;
+            return html;
+        }
+
+        function clearPinnedStations() {
+            pinnedStations = [];
+            renderIBXLayers();
+            updateStationInfoPanel();
         }
 
         function updateThresholdLabel() {

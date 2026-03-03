@@ -1,0 +1,2438 @@
+[
+  {
+    "Stop": "Eighth Avenue",
+    "Total Passengers": 8336.187535466552,
+    "Boarding": 8023.890892711958,
+    "Alighting": 312.2966427545943,
+    "Transfers": 210.15442517723267
+  },
+  {
+    "Stop": "New Utrecht Avenue",
+    "Total Passengers": 7996.599278358014,
+    "Boarding": 5433.528760425509,
+    "Alighting": 2563.070517932504,
+    "Transfers": 1947.041376279458
+  },
+  {
+    "Stop": "Remsen Avenue",
+    "Total Passengers": 7990.598269146653,
+    "Boarding": 3531.1702534853907,
+    "Alighting": 4459.4280156612585,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 7318.775987458978,
+    "Boarding": 1401.71128092095,
+    "Alighting": 5917.064706538033,
+    "Transfers": 4374.977392184787
+  },
+  {
+    "Stop": "Roosevelt Avenue",
+    "Total Passengers": 5659.209402302255,
+    "Boarding": 0.0,
+    "Alighting": 5659.209402302255,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Fourth Avenue",
+    "Total Passengers": 5600.8813921826895,
+    "Boarding": 5155.52304759888,
+    "Alighting": 445.3583445838076,
+    "Transfers": 169.7552267787118
+  },
+  {
+    "Stop": "East 16th Street",
+    "Total Passengers": 5520.125305249488,
+    "Boarding": 3496.296245239492,
+    "Alighting": 2023.829060009997,
+    "Transfers": 1210.809002289605
+  },
+  {
+    "Stop": "Linden Boulevard",
+    "Total Passengers": 5511.336822231947,
+    "Boarding": 1340.888225667819,
+    "Alighting": 4170.448596564127,
+    "Transfers": 148.4997191690997
+  },
+  {
+    "Stop": "Atlantic Avenue",
+    "Total Passengers": 5240.563830021284,
+    "Boarding": 136.57491536264686,
+    "Alighting": 5103.988914658638,
+    "Transfers": 3187.8828694977146
+  },
+  {
+    "Stop": "Utica Avenue",
+    "Total Passengers": 5034.9989731726155,
+    "Boarding": 1069.005558387518,
+    "Alighting": 3965.993414785096,
+    "Transfers": 1706.2650733014373
+  },
+  {
+    "Stop": "McDonald Avenue",
+    "Total Passengers": 4984.57180102344,
+    "Boarding": 3059.2843036164995,
+    "Alighting": 1925.287497406942,
+    "Transfers": 785.6961257874833
+  },
+  {
+    "Stop": "Sutter Avenue",
+    "Total Passengers": 4354.391763278045,
+    "Boarding": 548.312184662041,
+    "Alighting": 3806.0795786160024,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD",
+    "Total Passengers": 4334.407605663809,
+    "Boarding": 3685.498547508571,
+    "Alighting": 648.9090581552376,
+    "Transfers": 3685.498547508571
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 3841.7259307594195,
+    "Boarding": 3841.7259307594195,
+    "Alighting": 0.0,
+    "Transfers": 3841.7259307594195
+  },
+  {
+    "Stop": "Livonia Avenue",
+    "Total Passengers": 3466.4400994154594,
+    "Boarding": 298.6582718459981,
+    "Alighting": 3167.7818275694585,
+    "Transfers": 1129.7917563136361
+  },
+  {
+    "Stop": "Myrtle Avenue",
+    "Total Passengers": 3344.023802966871,
+    "Boarding": 1709.9746521357488,
+    "Alighting": 1634.0491508311234,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "62 St | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 2916.188072852973,
+    "Boarding": 2916.188072852973,
+    "Alighting": 0.0,
+    "Transfers": 2916.188072852973
+  },
+  {
+    "Stop": "Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 2909.9110758382735,
+    "Boarding": 0.0,
+    "Alighting": 2909.9110758382735,
+    "Transfers": 2909.9110758382735
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 2676.650626095801,
+    "Boarding": 2676.650626095801,
+    "Alighting": 0.0,
+    "Transfers": 2676.650626095801
+  },
+  {
+    "Stop": "GRAND AV/CALAMUS AV",
+    "Total Passengers": 2651.785742919065,
+    "Boarding": 997.4168660133441,
+    "Alighting": 1654.3688769057205,
+    "Transfers": 997.4168660133441
+  },
+  {
+    "Stop": "8 Av",
+    "Total Passengers": 2516.4819237392044,
+    "Boarding": 2516.4819237392044,
+    "Alighting": 0.0,
+    "Transfers": 2516.4819237392044
+  },
+  {
+    "Stop": "Grand Avenue",
+    "Total Passengers": 2498.2229427162038,
+    "Boarding": 347.5431646823539,
+    "Alighting": 2150.6797780338525,
+    "Transfers": 427.0140955128389
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 2374.4289270157783,
+    "Boarding": 2374.4289270157783,
+    "Alighting": 0.0,
+    "Transfers": 2374.4289270157783
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue",
+    "Total Passengers": 2017.1899963974643,
+    "Boarding": 2017.1899963974643,
+    "Alighting": 0.0,
+    "Transfers": 2017.1899963974643
+  },
+  {
+    "Stop": "Brooklyn Army Terminal",
+    "Total Passengers": 2008.8283685085805,
+    "Boarding": 2008.8283685085805,
+    "Alighting": 0.0,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "18 Av",
+    "Total Passengers": 1987.2839276783966,
+    "Boarding": 1889.2416849507051,
+    "Alighting": 98.04224272769086,
+    "Transfers": 1889.2416849507051
+  },
+  {
+    "Stop": "Broadway Junction",
+    "Total Passengers": 1963.912237030717,
+    "Boarding": 1449.4200132010244,
+    "Alighting": 514.4922238296924,
+    "Transfers": 1449.4200132010244
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 1912.9443930987775,
+    "Boarding": 1912.9443930987775,
+    "Alighting": 0.0,
+    "Transfers": 1912.9443930987775
+  },
+  {
+    "Stop": "Wilson Avenue",
+    "Total Passengers": 1692.1771792844747,
+    "Boarding": 145.5924375977655,
+    "Alighting": 1546.5847416867098,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "62 St",
+    "Total Passengers": 1649.323443078218,
+    "Boarding": 1453.9262939046464,
+    "Alighting": 195.39714917357145,
+    "Transfers": 1453.9262939046464
+  },
+  {
+    "Stop": "Avenue H",
+    "Total Passengers": 1548.8472983327017,
+    "Boarding": 1275.1242023609893,
+    "Alighting": 273.72309597171204,
+    "Transfers": 1275.1242023609893
+  },
+  {
+    "Stop": "Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 1437.5259651955535,
+    "Boarding": 0.0,
+    "Alighting": 1437.5259651955535,
+    "Transfers": 1437.5259651955535
+  },
+  {
+    "Stop": "Eliot Avenue",
+    "Total Passengers": 1410.4195005168817,
+    "Boarding": 362.94400472601984,
+    "Alighting": 1047.475495790862,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Metropolitan Avenue",
+    "Total Passengers": 1248.045235673848,
+    "Boarding": 692.0215422429083,
+    "Alighting": 556.0236934309407,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College",
+    "Total Passengers": 1188.88219929334,
+    "Boarding": 1188.88219929334,
+    "Alighting": 0.0,
+    "Transfers": 1188.88219929334
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 1056.3017373317387,
+    "Boarding": 1056.3017373317387,
+    "Alighting": 0.0,
+    "Transfers": 1056.3017373317387
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I",
+    "Total Passengers": 1011.0965781680783,
+    "Boarding": 879.9319254020277,
+    "Alighting": 131.16465276605064,
+    "Transfers": 879.9319254020277
+  },
+  {
+    "Stop": "Avenue I | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 988.2831532917772,
+    "Boarding": 988.2831532917772,
+    "Alighting": 0.0,
+    "Transfers": 988.2831532917772
+  },
+  {
+    "Stop": "FLATBUSH AV/E 29 ST | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 901.3234550855889,
+    "Boarding": 901.3234550855889,
+    "Alighting": 0.0,
+    "Transfers": 901.3234550855889
+  },
+  {
+    "Stop": "62 St | Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 901.0487420653355,
+    "Boarding": 901.0487420653355,
+    "Alighting": 0.0,
+    "Transfers": 901.0487420653355
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue",
+    "Total Passengers": 899.24336584934,
+    "Boarding": 899.24336584934,
+    "Alighting": 0.0,
+    "Transfers": 899.24336584934
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 882.0654680389646,
+    "Boarding": 882.0654680389646,
+    "Alighting": 0.0,
+    "Transfers": 882.0654680389646
+  },
+  {
+    "Stop": "62 St | East 16th Street",
+    "Total Passengers": 874.7822146555485,
+    "Boarding": 874.7822146555485,
+    "Alighting": 0.0,
+    "Transfers": 874.7822146555485
+  },
+  {
+    "Stop": "New Utrecht Av | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 853.2337605099783,
+    "Boarding": 853.2337605099783,
+    "Alighting": 0.0,
+    "Transfers": 853.2337605099783
+  },
+  {
+    "Stop": "Avenue H | Utica Avenue",
+    "Total Passengers": 834.6518765178035,
+    "Boarding": 834.6518765178035,
+    "Alighting": 0.0,
+    "Transfers": 834.6518765178035
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Linden Boulevard",
+    "Total Passengers": 829.6197304052687,
+    "Boarding": 829.6197304052687,
+    "Alighting": 0.0,
+    "Transfers": 829.6197304052687
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV",
+    "Total Passengers": 811.659014359147,
+    "Boarding": 201.14612157037305,
+    "Alighting": 610.5128927887739,
+    "Transfers": 201.14612157037305
+  },
+  {
+    "Stop": "Atlantic Avenue | Bowery",
+    "Total Passengers": 808.7985078824173,
+    "Boarding": 0.0,
+    "Alighting": 808.7985078824173,
+    "Transfers": 808.7985078824173
+  },
+  {
+    "Stop": "Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CHURCH AV",
+    "Total Passengers": 802.2084223733158,
+    "Boarding": 0.0,
+    "Alighting": 802.2084223733158,
+    "Transfers": 802.2084223733158
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 801.2409496524149,
+    "Boarding": 801.2409496524149,
+    "Alighting": 0.0,
+    "Transfers": 801.2409496524149
+  },
+  {
+    "Stop": "FLATBUSH AV/AURELIA CT",
+    "Total Passengers": 794.2279909441264,
+    "Boarding": 0.0,
+    "Alighting": 794.2279909441264,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Middle Village-Metropolitan Av",
+    "Total Passengers": 783.0248666312865,
+    "Boarding": 783.0248666312865,
+    "Alighting": 0.0,
+    "Transfers": 783.0248666312865
+  },
+  {
+    "Stop": "Bay Ridge Av",
+    "Total Passengers": 782.263862738226,
+    "Boarding": 778.568482597505,
+    "Alighting": 3.6953801407210567,
+    "Transfers": 778.568482597505
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 777.7909124938969,
+    "Boarding": 777.7909124938969,
+    "Alighting": 0.0,
+    "Transfers": 777.7909124938969
+  },
+  {
+    "Stop": "62 St | Atlantic Avenue",
+    "Total Passengers": 736.5800794543607,
+    "Boarding": 736.5800794543607,
+    "Alighting": 0.0,
+    "Transfers": 736.5800794543607
+  },
+  {
+    "Stop": "Bay Ridge Av | Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 709.6073596839334,
+    "Boarding": 709.6073596839334,
+    "Alighting": 0.0,
+    "Transfers": 709.6073596839334
+  },
+  {
+    "Stop": "GRAND AV/74 ST",
+    "Total Passengers": 675.7137029748226,
+    "Boarding": 0.0,
+    "Alighting": 675.7137029748226,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue",
+    "Total Passengers": 668.2919582538952,
+    "Boarding": 668.2919582538952,
+    "Alighting": 0.0,
+    "Transfers": 668.2919582538952
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Utica Avenue",
+    "Total Passengers": 617.0389879657124,
+    "Boarding": 617.0389879657124,
+    "Alighting": 0.0,
+    "Transfers": 617.0389879657124
+  },
+  {
+    "Stop": "62 St | Utica Avenue",
+    "Total Passengers": 607.885907225479,
+    "Boarding": 607.885907225479,
+    "Alighting": 0.0,
+    "Transfers": 607.885907225479
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue",
+    "Total Passengers": 604.9015224288851,
+    "Boarding": 604.9015224288851,
+    "Alighting": 0.0,
+    "Transfers": 604.9015224288851
+  },
+  {
+    "Stop": "18 Av | Utica Avenue",
+    "Total Passengers": 565.3735639263826,
+    "Boarding": 565.3735639263826,
+    "Alighting": 0.0,
+    "Transfers": 565.3735639263826
+  },
+  {
+    "Stop": "18 Av | East 16th Street",
+    "Total Passengers": 560.1178359891525,
+    "Boarding": 560.1178359891525,
+    "Alighting": 0.0,
+    "Transfers": 560.1178359891525
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I",
+    "Total Passengers": 544.8525487035421,
+    "Boarding": 544.8525487035421,
+    "Alighting": 0.0,
+    "Transfers": 544.8525487035421
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Livonia Avenue",
+    "Total Passengers": 522.9313009458095,
+    "Boarding": 522.9313009458095,
+    "Alighting": 0.0,
+    "Transfers": 522.9313009458095
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue",
+    "Total Passengers": 507.4627329151289,
+    "Boarding": 507.4627329151289,
+    "Alighting": 0.0,
+    "Transfers": 507.4627329151289
+  },
+  {
+    "Stop": "Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 459.31418877876735,
+    "Boarding": 0.0,
+    "Alighting": 459.31418877876735,
+    "Transfers": 459.31418877876735
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue",
+    "Total Passengers": 444.9731035255821,
+    "Boarding": 444.9731035255821,
+    "Alighting": 0.0,
+    "Transfers": 444.9731035255821
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 433.1541429367301,
+    "Boarding": 433.1541429367301,
+    "Alighting": 0.0,
+    "Transfers": 433.1541429367301
+  },
+  {
+    "Stop": "18 Av | Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 409.55011690997736,
+    "Boarding": 409.55011690997736,
+    "Alighting": 0.0,
+    "Transfers": 409.55011690997736
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 399.81823376550176,
+    "Boarding": 399.81823376550176,
+    "Alighting": 0.0,
+    "Transfers": 399.81823376550176
+  },
+  {
+    "Stop": "Atlantic Avenue | Bowery | DeKalb Av",
+    "Total Passengers": 389.76024788488866,
+    "Boarding": 0.0,
+    "Alighting": 389.76024788488866,
+    "Transfers": 389.76024788488866
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 373.7678778917211,
+    "Boarding": 373.7678778917211,
+    "Alighting": 0.0,
+    "Transfers": 373.7678778917211
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue",
+    "Total Passengers": 363.45910209677413,
+    "Boarding": 363.45910209677413,
+    "Alighting": 0.0,
+    "Transfers": 363.45910209677413
+  },
+  {
+    "Stop": "Atlantic Avenue | Delancey St-Essex St | Jay St-MetroTech",
+    "Total Passengers": 351.9375579909168,
+    "Boarding": 0.0,
+    "Alighting": 351.9375579909168,
+    "Transfers": 351.9375579909168
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Utica Avenue",
+    "Total Passengers": 350.3742458718684,
+    "Boarding": 350.3742458718684,
+    "Alighting": 0.0,
+    "Transfers": 350.3742458718684
+  },
+  {
+    "Stop": "Livonia Avenue | Lorimer St",
+    "Total Passengers": 345.20387388055724,
+    "Boarding": 0.0,
+    "Alighting": 345.20387388055724,
+    "Transfers": 345.20387388055724
+  },
+  {
+    "Stop": "GLENWOOD RD/E 34 ST | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 345.0585925508493,
+    "Boarding": 345.0585925508493,
+    "Alighting": 0.0,
+    "Transfers": 345.0585925508493
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 344.4113844182019,
+    "Boarding": 344.4113844182019,
+    "Alighting": 0.0,
+    "Transfers": 344.4113844182019
+  },
+  {
+    "Stop": "Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 324.23459371428845,
+    "Boarding": 0.0,
+    "Alighting": 324.23459371428845,
+    "Transfers": 324.23459371428845
+  },
+  {
+    "Stop": "8 Av | Grand Avenue",
+    "Total Passengers": 321.80860285427286,
+    "Boarding": 321.80860285427286,
+    "Alighting": 0.0,
+    "Transfers": 321.80860285427286
+  },
+  {
+    "Stop": "Bay Ridge Av | Utica Avenue",
+    "Total Passengers": 317.23119141808854,
+    "Boarding": 317.23119141808854,
+    "Alighting": 0.0,
+    "Transfers": 317.23119141808854
+  },
+  {
+    "Stop": "Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 314.42538463217466,
+    "Boarding": 0.0,
+    "Alighting": 314.42538463217466,
+    "Transfers": 314.42538463217466
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV",
+    "Total Passengers": 311.59513500311823,
+    "Boarding": 102.61835849749369,
+    "Alighting": 208.9767765056244,
+    "Transfers": 102.61835849749369
+  },
+  {
+    "Stop": "NOSTRAND AV/GLENWOOD RD | Atlantic Avenue",
+    "Total Passengers": 305.7056769700798,
+    "Boarding": 305.7056769700798,
+    "Alighting": 0.0,
+    "Transfers": 305.7056769700798
+  },
+  {
+    "Stop": "FLATBUSH AV/E 29 ST | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 295.4677241705351,
+    "Boarding": 295.4677241705351,
+    "Alighting": 0.0,
+    "Transfers": 295.4677241705351
+  },
+  {
+    "Stop": "Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 292.976203257867,
+    "Boarding": 0.0,
+    "Alighting": 292.976203257867,
+    "Transfers": 292.976203257867
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 291.36530627663006,
+    "Boarding": 291.36530627663006,
+    "Alighting": 0.0,
+    "Transfers": 291.36530627663006
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 286.6215235254672,
+    "Boarding": 286.6215235254672,
+    "Alighting": 0.0,
+    "Transfers": 286.6215235254672
+  },
+  {
+    "Stop": "62 St | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 266.7259857351443,
+    "Boarding": 266.7259857351443,
+    "Alighting": 0.0,
+    "Transfers": 266.7259857351443
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 248.71100215820175,
+    "Boarding": 248.71100215820175,
+    "Alighting": 0.0,
+    "Transfers": 248.71100215820175
+  },
+  {
+    "Stop": "Bay Ridge Av | East 16th Street",
+    "Total Passengers": 247.65090435503063,
+    "Boarding": 247.65090435503063,
+    "Alighting": 0.0,
+    "Transfers": 247.65090435503063
+  },
+  {
+    "Stop": "New Utrecht Av | East 16th Street",
+    "Total Passengers": 226.62867639345316,
+    "Boarding": 226.62867639345316,
+    "Alighting": 0.0,
+    "Transfers": 226.62867639345316
+  },
+  {
+    "Stop": "Bay Ridge Av | McDonald Avenue",
+    "Total Passengers": 218.40362042103635,
+    "Boarding": 218.40362042103635,
+    "Alighting": 0.0,
+    "Transfers": 218.40362042103635
+  },
+  {
+    "Stop": "New Utrecht Av | Atlantic Avenue",
+    "Total Passengers": 216.41142545138496,
+    "Boarding": 216.41142545138496,
+    "Alighting": 0.0,
+    "Transfers": 216.41142545138496
+  },
+  {
+    "Stop": "62 St | Livonia Avenue",
+    "Total Passengers": 215.46487231915148,
+    "Boarding": 215.46487231915148,
+    "Alighting": 0.0,
+    "Transfers": 215.46487231915148
+  },
+  {
+    "Stop": "Broadway Junction | Grand Avenue",
+    "Total Passengers": 215.45391584466788,
+    "Boarding": 215.45391584466788,
+    "Alighting": 0.0,
+    "Transfers": 215.45391584466788
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 213.802414476226,
+    "Boarding": 213.802414476226,
+    "Alighting": 0.0,
+    "Transfers": 213.802414476226
+  },
+  {
+    "Stop": "NOSTRAND AV/FLATBUSH AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 213.34927818741153,
+    "Boarding": 213.34927818741153,
+    "Alighting": 0.0,
+    "Transfers": 213.34927818741153
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue",
+    "Total Passengers": 209.53799833907993,
+    "Boarding": 209.53799833907993,
+    "Alighting": 0.0,
+    "Transfers": 209.53799833907993
+  },
+  {
+    "Stop": "18 Av | Livonia Avenue",
+    "Total Passengers": 206.8437865299309,
+    "Boarding": 206.8437865299309,
+    "Alighting": 0.0,
+    "Transfers": 206.8437865299309
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 202.13522122883015,
+    "Boarding": 202.13522122883015,
+    "Alighting": 0.0,
+    "Transfers": 202.13522122883015
+  },
+  {
+    "Stop": "Avenue H | Linden Boulevard",
+    "Total Passengers": 196.84355462840583,
+    "Boarding": 196.84355462840583,
+    "Alighting": 0.0,
+    "Transfers": 196.84355462840583
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 190.6340266385399,
+    "Boarding": 190.6340266385399,
+    "Alighting": 0.0,
+    "Transfers": 190.6340266385399
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV",
+    "Total Passengers": 186.84067970659314,
+    "Boarding": 186.84067970659314,
+    "Alighting": 0.0,
+    "Transfers": 186.84067970659314
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue",
+    "Total Passengers": 180.54705106923558,
+    "Boarding": 180.54705106923558,
+    "Alighting": 0.0,
+    "Transfers": 180.54705106923558
+  },
+  {
+    "Stop": "Avenue H | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 180.1944740418386,
+    "Boarding": 180.1944740418386,
+    "Alighting": 0.0,
+    "Transfers": 180.1944740418386
+  },
+  {
+    "Stop": "Middle Village-Metropolitan Av | Grand Avenue",
+    "Total Passengers": 179.42674868131772,
+    "Boarding": 179.42674868131772,
+    "Alighting": 0.0,
+    "Transfers": 179.42674868131772
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 179.37648244111531,
+    "Boarding": 179.37648244111531,
+    "Alighting": 0.0,
+    "Transfers": 179.37648244111531
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Livonia Avenue",
+    "Total Passengers": 177.3263124205177,
+    "Boarding": 177.3263124205177,
+    "Alighting": 0.0,
+    "Transfers": 177.3263124205177
+  },
+  {
+    "Stop": "Avenue I",
+    "Total Passengers": 169.96705971073587,
+    "Boarding": 0.0,
+    "Alighting": 169.96705971073587,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue",
+    "Total Passengers": 168.50471552746237,
+    "Boarding": 168.50471552746237,
+    "Alighting": 0.0,
+    "Transfers": 168.50471552746237
+  },
+  {
+    "Stop": "Atlantic Avenue | Myrtle Av | UTICA AV/AVENUE H",
+    "Total Passengers": 165.88566856588176,
+    "Boarding": 0.0,
+    "Alighting": 165.88566856588176,
+    "Transfers": 165.88566856588176
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 162.03657760134394,
+    "Boarding": 162.03657760134394,
+    "Alighting": 0.0,
+    "Transfers": 162.03657760134394
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 158.57323797718516,
+    "Boarding": 158.57323797718516,
+    "Alighting": 0.0,
+    "Transfers": 158.57323797718516
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Linden Boulevard",
+    "Total Passengers": 157.4109356981594,
+    "Boarding": 157.4109356981594,
+    "Alighting": 0.0,
+    "Transfers": 157.4109356981594
+  },
+  {
+    "Stop": "Linden Boulevard | 14 St-Union Sq",
+    "Total Passengers": 154.9001220203116,
+    "Boarding": 0.0,
+    "Alighting": 154.9001220203116,
+    "Transfers": 154.9001220203116
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV",
+    "Total Passengers": 148.6471622590015,
+    "Boarding": 148.6471622590015,
+    "Alighting": 0.0,
+    "Transfers": 148.6471622590015
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 145.6466568731989,
+    "Boarding": 145.6466568731989,
+    "Alighting": 0.0,
+    "Transfers": 145.6466568731989
+  },
+  {
+    "Stop": "Atlantic Avenue | Canal St",
+    "Total Passengers": 145.30167611930597,
+    "Boarding": 0.0,
+    "Alighting": 145.30167611930597,
+    "Transfers": 145.30167611930597
+  },
+  {
+    "Stop": "Livonia Avenue | 8 Av",
+    "Total Passengers": 142.87611176101166,
+    "Boarding": 0.0,
+    "Alighting": 142.87611176101166,
+    "Transfers": 142.87611176101166
+  },
+  {
+    "Stop": "Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CLARKSON AV",
+    "Total Passengers": 139.92699257985717,
+    "Boarding": 0.0,
+    "Alighting": 139.92699257985717,
+    "Transfers": 139.92699257985717
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 138.2396002241542,
+    "Boarding": 138.2396002241542,
+    "Alighting": 0.0,
+    "Transfers": 138.2396002241542
+  },
+  {
+    "Stop": "GLENWOOD RD/BROOKLYN AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 135.78949866955742,
+    "Boarding": 135.78949866955742,
+    "Alighting": 0.0,
+    "Transfers": 135.78949866955742
+  },
+  {
+    "Stop": "8 Av | Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 133.4225477679677,
+    "Boarding": 133.4225477679677,
+    "Alighting": 0.0,
+    "Transfers": 133.4225477679677
+  },
+  {
+    "Stop": "18 Av | Linden Boulevard",
+    "Total Passengers": 131.00263858976137,
+    "Boarding": 131.00263858976137,
+    "Alighting": 0.0,
+    "Transfers": 131.00263858976137
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Livonia Avenue",
+    "Total Passengers": 128.36287347331194,
+    "Boarding": 128.36287347331194,
+    "Alighting": 0.0,
+    "Transfers": 128.36287347331194
+  },
+  {
+    "Stop": "Atlantic Avenue | Myrtle Av | UTICA AV/FARRAGUT RD",
+    "Total Passengers": 128.11827279600382,
+    "Boarding": 0.0,
+    "Alighting": 128.11827279600382,
+    "Transfers": 128.11827279600382
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Livonia Avenue",
+    "Total Passengers": 127.04777064827499,
+    "Boarding": 127.04777064827499,
+    "Alighting": 0.0,
+    "Transfers": 127.04777064827499
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV | 8 Av",
+    "Total Passengers": 126.20489178716768,
+    "Boarding": 0.0,
+    "Alighting": 126.20489178716768,
+    "Transfers": 126.20489178716768
+  },
+  {
+    "Stop": "Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 124.91470053287394,
+    "Boarding": 0.0,
+    "Alighting": 124.91470053287394,
+    "Transfers": 124.91470053287394
+  },
+  {
+    "Stop": "62 St | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 124.39941332059746,
+    "Boarding": 124.39941332059746,
+    "Alighting": 0.0,
+    "Transfers": 124.39941332059746
+  },
+  {
+    "Stop": "Bay Ridge Av | Livonia Avenue",
+    "Total Passengers": 122.05149333877222,
+    "Boarding": 122.05149333877222,
+    "Alighting": 0.0,
+    "Transfers": 122.05149333877222
+  },
+  {
+    "Stop": "Junius St",
+    "Total Passengers": 121.19115881289714,
+    "Boarding": 0.0,
+    "Alighting": 121.19115881289714,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 120.40504836355343,
+    "Boarding": 120.40504836355343,
+    "Alighting": 0.0,
+    "Transfers": 120.40504836355343
+  },
+  {
+    "Stop": "GLENWOOD RD/E 38 ST | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 119.87886210500551,
+    "Boarding": 119.87886210500551,
+    "Alighting": 0.0,
+    "Transfers": 119.87886210500551
+  },
+  {
+    "Stop": "Livonia Avenue | 14 St-Union Sq",
+    "Total Passengers": 118.39439773598014,
+    "Boarding": 0.0,
+    "Alighting": 118.39439773598014,
+    "Transfers": 118.39439773598014
+  },
+  {
+    "Stop": "62 St | McDonald Avenue",
+    "Total Passengers": 111.10105033219753,
+    "Boarding": 111.10105033219753,
+    "Alighting": 0.0,
+    "Transfers": 111.10105033219753
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 109.11763418257097,
+    "Boarding": 109.11763418257097,
+    "Alighting": 0.0,
+    "Transfers": 109.11763418257097
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 107.3823968495004,
+    "Boarding": 107.3823968495004,
+    "Alighting": 0.0,
+    "Transfers": 107.3823968495004
+  },
+  {
+    "Stop": "Bay Ridge Av | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 107.28650742345948,
+    "Boarding": 107.28650742345948,
+    "Alighting": 0.0,
+    "Transfers": 107.28650742345948
+  },
+  {
+    "Stop": "FLATBUSH AV/ROGERS AV | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 107.0428404349095,
+    "Boarding": 107.0428404349095,
+    "Alighting": 0.0,
+    "Transfers": 107.0428404349095
+  },
+  {
+    "Stop": "Bay Ridge Av | Linden Boulevard",
+    "Total Passengers": 105.52343553502,
+    "Boarding": 105.52343553502,
+    "Alighting": 0.0,
+    "Transfers": 105.52343553502
+  },
+  {
+    "Stop": "AVENUE H/E 54 ST | Atlantic Avenue",
+    "Total Passengers": 104.97946976209822,
+    "Boarding": 104.97946976209822,
+    "Alighting": 0.0,
+    "Transfers": 104.97946976209822
+  },
+  {
+    "Stop": "18 Av | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 104.94385034356742,
+    "Boarding": 104.94385034356742,
+    "Alighting": 0.0,
+    "Transfers": 104.94385034356742
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 104.9179054496017,
+    "Boarding": 104.9179054496017,
+    "Alighting": 0.0,
+    "Transfers": 104.9179054496017
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 103.6189137120139,
+    "Boarding": 103.6189137120139,
+    "Alighting": 0.0,
+    "Transfers": 103.6189137120139
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 99.30472554799559,
+    "Boarding": 99.30472554799559,
+    "Alighting": 0.0,
+    "Transfers": 99.30472554799559
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 96.15603113099594,
+    "Boarding": 96.15603113099594,
+    "Alighting": 0.0,
+    "Transfers": 96.15603113099594
+  },
+  {
+    "Stop": "Bay Ridge Av | New Utrecht Avenue",
+    "Total Passengers": 95.84611245247888,
+    "Boarding": 95.84611245247888,
+    "Alighting": 0.0,
+    "Transfers": 95.84611245247888
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD",
+    "Total Passengers": 95.30394379543796,
+    "Boarding": 0.0,
+    "Alighting": 95.30394379543796,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 93.86779479568273,
+    "Boarding": 93.86779479568273,
+    "Alighting": 0.0,
+    "Transfers": 93.86779479568273
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 92.48978462898746,
+    "Boarding": 92.48978462898746,
+    "Alighting": 0.0,
+    "Transfers": 92.48978462898746
+  },
+  {
+    "Stop": "Avenue H | Livonia Avenue",
+    "Total Passengers": 91.94558673601698,
+    "Boarding": 91.94558673601698,
+    "Alighting": 0.0,
+    "Transfers": 91.94558673601698
+  },
+  {
+    "Stop": "Utica Avenue | UTICA AV/AVENUE J",
+    "Total Passengers": 90.07332600199356,
+    "Boarding": 0.0,
+    "Alighting": 90.07332600199356,
+    "Transfers": 90.07332600199356
+  },
+  {
+    "Stop": "Grand Avenue | PUTNAM AV/ONDERDONK AV",
+    "Total Passengers": 89.04772516385529,
+    "Boarding": 0.0,
+    "Alighting": 89.04772516385529,
+    "Transfers": 89.04772516385529
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Linden Boulevard",
+    "Total Passengers": 86.6653169200083,
+    "Boarding": 86.6653169200083,
+    "Alighting": 0.0,
+    "Transfers": 86.6653169200083
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 85.90995516648549,
+    "Boarding": 85.90995516648549,
+    "Alighting": 0.0,
+    "Transfers": 85.90995516648549
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Atlantic Avenue",
+    "Total Passengers": 83.42887074939327,
+    "Boarding": 83.42887074939327,
+    "Alighting": 0.0,
+    "Transfers": 83.42887074939327
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Bowery | DeKalb Av",
+    "Total Passengers": 82.5995492485998,
+    "Boarding": 82.5995492485998,
+    "Alighting": 0.0,
+    "Transfers": 82.5995492485998
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 78.68064657764597,
+    "Boarding": 78.68064657764597,
+    "Alighting": 0.0,
+    "Transfers": 78.68064657764597
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 76.28928635603019,
+    "Boarding": 76.28928635603019,
+    "Alighting": 0.0,
+    "Transfers": 76.28928635603019
+  },
+  {
+    "Stop": "Avenue I | Atlantic Avenue",
+    "Total Passengers": 75.7116751602772,
+    "Boarding": 75.7116751602772,
+    "Alighting": 0.0,
+    "Transfers": 75.7116751602772
+  },
+  {
+    "Stop": "East 16th Street | Kings Hwy",
+    "Total Passengers": 72.56966907992803,
+    "Boarding": 0.0,
+    "Alighting": 72.56966907992803,
+    "Transfers": 72.56966907992803
+  },
+  {
+    "Stop": "8 Av | Utica Avenue",
+    "Total Passengers": 69.59274735451811,
+    "Boarding": 69.59274735451811,
+    "Alighting": 0.0,
+    "Transfers": 69.59274735451811
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Livonia Avenue",
+    "Total Passengers": 68.7733515978461,
+    "Boarding": 68.7733515978461,
+    "Alighting": 0.0,
+    "Transfers": 68.7733515978461
+  },
+  {
+    "Stop": "Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/MIDWOOD ST",
+    "Total Passengers": 67.76353426704327,
+    "Boarding": 0.0,
+    "Alighting": 67.76353426704327,
+    "Transfers": 67.76353426704327
+  },
+  {
+    "Stop": "NOSTRAND AV/FLATBUSH AV | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 67.35772531854028,
+    "Boarding": 67.35772531854028,
+    "Alighting": 0.0,
+    "Transfers": 67.35772531854028
+  },
+  {
+    "Stop": "8 Av | Atlantic Avenue",
+    "Total Passengers": 66.8842335229094,
+    "Boarding": 66.8842335229094,
+    "Alighting": 0.0,
+    "Transfers": 66.8842335229094
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 65.89536045843103,
+    "Boarding": 65.89536045843103,
+    "Alighting": 0.0,
+    "Transfers": 65.89536045843103
+  },
+  {
+    "Stop": "New Utrecht Av | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 63.04843190065775,
+    "Boarding": 63.04843190065775,
+    "Alighting": 0.0,
+    "Transfers": 63.04843190065775
+  },
+  {
+    "Stop": "Bay Ridge Av | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CHURCH AV",
+    "Total Passengers": 62.30723838261222,
+    "Boarding": 62.30723838261222,
+    "Alighting": 0.0,
+    "Transfers": 62.30723838261222
+  },
+  {
+    "Stop": "New Utrecht Av | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 62.033361607269434,
+    "Boarding": 62.033361607269434,
+    "Alighting": 0.0,
+    "Transfers": 62.033361607269434
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Livonia Avenue",
+    "Total Passengers": 60.43293366911057,
+    "Boarding": 60.43293366911057,
+    "Alighting": 0.0,
+    "Transfers": 60.43293366911057
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 58.979891223541955,
+    "Boarding": 58.979891223541955,
+    "Alighting": 0.0,
+    "Transfers": 58.979891223541955
+  },
+  {
+    "Stop": "62 St | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CLARKSON AV",
+    "Total Passengers": 58.845898638858166,
+    "Boarding": 58.845898638858166,
+    "Alighting": 0.0,
+    "Transfers": 58.845898638858166
+  },
+  {
+    "Stop": "Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 57.1758778128558,
+    "Boarding": 0.0,
+    "Alighting": 57.1758778128558,
+    "Transfers": 57.1758778128558
+  },
+  {
+    "Stop": "62 St | East 16th Street | Kings Hwy",
+    "Total Passengers": 56.778507183586186,
+    "Boarding": 56.778507183586186,
+    "Alighting": 0.0,
+    "Transfers": 56.778507183586186
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 56.00388876721979,
+    "Boarding": 56.00388876721979,
+    "Alighting": 0.0,
+    "Transfers": 56.00388876721979
+  },
+  {
+    "Stop": "Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/EMPIRE BLVD",
+    "Total Passengers": 55.04781938782135,
+    "Boarding": 0.0,
+    "Alighting": 55.04781938782135,
+    "Transfers": 55.04781938782135
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 52.758769248000576,
+    "Boarding": 52.758769248000576,
+    "Alighting": 0.0,
+    "Transfers": 52.758769248000576
+  },
+  {
+    "Stop": "62 St | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 51.09562593473602,
+    "Boarding": 51.09562593473602,
+    "Alighting": 0.0,
+    "Transfers": 51.09562593473602
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 50.45420707972461,
+    "Boarding": 50.45420707972461,
+    "Alighting": 0.0,
+    "Transfers": 50.45420707972461
+  },
+  {
+    "Stop": "New Utrecht Av",
+    "Total Passengers": 49.25664683678994,
+    "Boarding": 0.0,
+    "Alighting": 49.25664683678994,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Kosciuszko St | MALCOLM X BLVD/CHAUNCEY ST",
+    "Total Passengers": 48.98582715452305,
+    "Boarding": 48.98582715452305,
+    "Alighting": 0.0,
+    "Transfers": 48.98582715452305
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 48.80972112342368,
+    "Boarding": 48.80972112342368,
+    "Alighting": 0.0,
+    "Transfers": 48.80972112342368
+  },
+  {
+    "Stop": "AVENUE H/E 54 ST | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 47.91646353018834,
+    "Boarding": 47.91646353018834,
+    "Alighting": 0.0,
+    "Transfers": 47.91646353018834
+  },
+  {
+    "Stop": "8 Av | Linden Boulevard",
+    "Total Passengers": 47.83246288916618,
+    "Boarding": 47.83246288916618,
+    "Alighting": 0.0,
+    "Transfers": 47.83246288916618
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST | Atlantic Avenue",
+    "Total Passengers": 47.49046800005542,
+    "Boarding": 47.49046800005542,
+    "Alighting": 0.0,
+    "Transfers": 47.49046800005542
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV | 14 St-Union Sq | 8 Av",
+    "Total Passengers": 47.47342598010157,
+    "Boarding": 0.0,
+    "Alighting": 47.47342598010157,
+    "Transfers": 47.47342598010157
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Linden Boulevard",
+    "Total Passengers": 46.887496630525725,
+    "Boarding": 46.887496630525725,
+    "Alighting": 0.0,
+    "Transfers": 46.887496630525725
+  },
+  {
+    "Stop": "New Utrecht Av | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CLARKSON AV",
+    "Total Passengers": 46.816517475500156,
+    "Boarding": 46.816517475500156,
+    "Alighting": 0.0,
+    "Transfers": 46.816517475500156
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Atlantic Avenue",
+    "Total Passengers": 46.632556058994396,
+    "Boarding": 46.632556058994396,
+    "Alighting": 0.0,
+    "Transfers": 46.632556058994396
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 46.52616535183475,
+    "Boarding": 46.52616535183475,
+    "Alighting": 0.0,
+    "Transfers": 46.52616535183475
+  },
+  {
+    "Stop": "62 St | Linden Boulevard",
+    "Total Passengers": 46.47080259207488,
+    "Boarding": 46.47080259207488,
+    "Alighting": 0.0,
+    "Transfers": 46.47080259207488
+  },
+  {
+    "Stop": "AVENUE H/E 52 ST | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 46.15052668969085,
+    "Boarding": 46.15052668969085,
+    "Alighting": 0.0,
+    "Transfers": 46.15052668969085
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Livonia Avenue | Myrtle-Wyckoff Avs",
+    "Total Passengers": 45.009440722884584,
+    "Boarding": 45.009440722884584,
+    "Alighting": 0.0,
+    "Transfers": 45.009440722884584
+  },
+  {
+    "Stop": "AVENUE H/E 52 ST | Atlantic Avenue",
+    "Total Passengers": 44.66910447499623,
+    "Boarding": 44.66910447499623,
+    "Alighting": 0.0,
+    "Transfers": 44.66910447499623
+  },
+  {
+    "Stop": "8 Av | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 43.33410553273894,
+    "Boarding": 43.33410553273894,
+    "Alighting": 0.0,
+    "Transfers": 43.33410553273894
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 41.98214904031469,
+    "Boarding": 41.98214904031469,
+    "Alighting": 0.0,
+    "Transfers": 41.98214904031469
+  },
+  {
+    "Stop": "Grand Avenue | PUTNAM AV/ONDERDONK AV | DE KALB AV/BROADWAY",
+    "Total Passengers": 41.942445605532576,
+    "Boarding": 0.0,
+    "Alighting": 41.942445605532576,
+    "Transfers": 41.942445605532576
+  },
+  {
+    "Stop": "GLENWOOD RD/E 38 ST | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 41.61194702073696,
+    "Boarding": 41.61194702073696,
+    "Alighting": 0.0,
+    "Transfers": 41.61194702073696
+  },
+  {
+    "Stop": "AVENUE H/E 52 ST",
+    "Total Passengers": 41.42602027771616,
+    "Boarding": 41.42602027771616,
+    "Alighting": 0.0,
+    "Transfers": 41.42602027771616
+  },
+  {
+    "Stop": "Avenue I | East 16th Street",
+    "Total Passengers": 41.25142353620667,
+    "Boarding": 41.25142353620667,
+    "Alighting": 0.0,
+    "Transfers": 41.25142353620667
+  },
+  {
+    "Stop": "Atlantic Avenue | 14 St-Union Sq",
+    "Total Passengers": 41.04234237572355,
+    "Boarding": 0.0,
+    "Alighting": 41.04234237572355,
+    "Transfers": 41.04234237572355
+  },
+  {
+    "Stop": "8 Av | East 16th Street",
+    "Total Passengers": 40.71973187052171,
+    "Boarding": 40.71973187052171,
+    "Alighting": 0.0,
+    "Transfers": 40.71973187052171
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 39.03015741920892,
+    "Boarding": 39.03015741920892,
+    "Alighting": 0.0,
+    "Transfers": 39.03015741920892
+  },
+  {
+    "Stop": "UTICA AV/AVENUE D",
+    "Total Passengers": 38.7943561062332,
+    "Boarding": 0.0,
+    "Alighting": 38.7943561062332,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "Bay Ridge Av | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/EMPIRE BLVD",
+    "Total Passengers": 38.61992110756345,
+    "Boarding": 38.61992110756345,
+    "Alighting": 0.0,
+    "Transfers": 38.61992110756345
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV | Atlantic Avenue",
+    "Total Passengers": 38.389060529735104,
+    "Boarding": 38.389060529735104,
+    "Alighting": 0.0,
+    "Transfers": 38.389060529735104
+  },
+  {
+    "Stop": "62 St | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CHURCH AV",
+    "Total Passengers": 38.13481024573878,
+    "Boarding": 38.13481024573878,
+    "Alighting": 0.0,
+    "Transfers": 38.13481024573878
+  },
+  {
+    "Stop": "FARRAGUT RD/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 38.0869444994258,
+    "Boarding": 38.0869444994258,
+    "Alighting": 0.0,
+    "Transfers": 38.0869444994258
+  },
+  {
+    "Stop": "62 St | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 38.00709545232928,
+    "Boarding": 38.00709545232928,
+    "Alighting": 0.0,
+    "Transfers": 38.00709545232928
+  },
+  {
+    "Stop": "Avenue I | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 37.28371241666877,
+    "Boarding": 37.28371241666877,
+    "Alighting": 0.0,
+    "Transfers": 37.28371241666877
+  },
+  {
+    "Stop": "NOSTRAND AV/GLENWOOD RD | Livonia Avenue",
+    "Total Passengers": 35.31083308876822,
+    "Boarding": 35.31083308876822,
+    "Alighting": 0.0,
+    "Transfers": 35.31083308876822
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Atlantic Avenue | Atlantic Terminal | 8 Av",
+    "Total Passengers": 35.19514488250887,
+    "Boarding": 35.19514488250887,
+    "Alighting": 0.0,
+    "Transfers": 35.19514488250887
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Bowery",
+    "Total Passengers": 35.058827211431506,
+    "Boarding": 35.058827211431506,
+    "Alighting": 0.0,
+    "Transfers": 35.058827211431506
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 34.7236636210897,
+    "Boarding": 34.7236636210897,
+    "Alighting": 0.0,
+    "Transfers": 34.7236636210897
+  },
+  {
+    "Stop": "FLATBUSH AV/ROGERS AV | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 34.38980316335643,
+    "Boarding": 34.38980316335643,
+    "Alighting": 0.0,
+    "Transfers": 34.38980316335643
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Atlantic Terminal | 36 St",
+    "Total Passengers": 33.46398730345955,
+    "Boarding": 33.46398730345955,
+    "Alighting": 0.0,
+    "Transfers": 33.46398730345955
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 33.138200499892015,
+    "Boarding": 33.138200499892015,
+    "Alighting": 0.0,
+    "Transfers": 33.138200499892015
+  },
+  {
+    "Stop": "Atlantic Avenue | Kosciuszko St | MALCOLM X BLVD/CHAUNCEY ST",
+    "Total Passengers": 30.966080103547778,
+    "Boarding": 0.0,
+    "Alighting": 30.966080103547778,
+    "Transfers": 30.966080103547778
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Kosciuszko St | MALCOLM X BLVD/CHAUNCEY ST",
+    "Total Passengers": 30.598084545102036,
+    "Boarding": 30.598084545102036,
+    "Alighting": 0.0,
+    "Transfers": 30.598084545102036
+  },
+  {
+    "Stop": "UTICA AV/KINGS HWY",
+    "Total Passengers": 29.99996042734734,
+    "Boarding": 0.0,
+    "Alighting": 29.99996042734734,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "8 Av | McDonald Avenue",
+    "Total Passengers": 29.71269050181749,
+    "Boarding": 29.71269050181749,
+    "Alighting": 0.0,
+    "Transfers": 29.71269050181749
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV",
+    "Total Passengers": 28.514760097673673,
+    "Boarding": 0.0,
+    "Alighting": 28.514760097673673,
+    "Transfers": 28.514760097673673
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 27.777252969275608,
+    "Boarding": 27.777252969275608,
+    "Alighting": 0.0,
+    "Transfers": 27.777252969275608
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Livonia Avenue",
+    "Total Passengers": 27.589486854880484,
+    "Boarding": 27.589486854880484,
+    "Alighting": 0.0,
+    "Transfers": 27.589486854880484
+  },
+  {
+    "Stop": "Avenue I | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 27.14987978024093,
+    "Boarding": 27.14987978024093,
+    "Alighting": 0.0,
+    "Transfers": 27.14987978024093
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 26.53084682148539,
+    "Boarding": 26.53084682148539,
+    "Alighting": 0.0,
+    "Transfers": 26.53084682148539
+  },
+  {
+    "Stop": "KINGS HWY/RYDER ST | Livonia Avenue",
+    "Total Passengers": 26.06767693032412,
+    "Boarding": 26.06767693032412,
+    "Alighting": 0.0,
+    "Transfers": 26.06767693032412
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 25.98203081638057,
+    "Boarding": 25.98203081638057,
+    "Alighting": 0.0,
+    "Transfers": 25.98203081638057
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 25.54975506331694,
+    "Boarding": 25.54975506331694,
+    "Alighting": 0.0,
+    "Transfers": 25.54975506331694
+  },
+  {
+    "Stop": "KINGS HWY/RYDER ST | Atlantic Avenue | Atlantic Terminal",
+    "Total Passengers": 25.54793968461553,
+    "Boarding": 25.54793968461553,
+    "Alighting": 0.0,
+    "Transfers": 25.54793968461553
+  },
+  {
+    "Stop": "Avenue H | Livonia Avenue | Lorimer St",
+    "Total Passengers": 25.23658360229748,
+    "Boarding": 25.23658360229748,
+    "Alighting": 0.0,
+    "Transfers": 25.23658360229748
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Linden Boulevard",
+    "Total Passengers": 25.224718945771965,
+    "Boarding": 25.224718945771965,
+    "Alighting": 0.0,
+    "Transfers": 25.224718945771965
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 25.19077614814274,
+    "Boarding": 25.19077614814274,
+    "Alighting": 0.0,
+    "Transfers": 25.19077614814274
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 24.819722801712242,
+    "Boarding": 24.819722801712242,
+    "Alighting": 0.0,
+    "Transfers": 24.819722801712242
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 23.989343018645926,
+    "Boarding": 23.989343018645926,
+    "Alighting": 0.0,
+    "Transfers": 23.989343018645926
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Kosciuszko St | MALCOLM X BLVD/CHAUNCEY ST",
+    "Total Passengers": 23.856605525176185,
+    "Boarding": 23.856605525176185,
+    "Alighting": 0.0,
+    "Transfers": 23.856605525176185
+  },
+  {
+    "Stop": "FLATBUSH AV/E 29 ST | Livonia Avenue",
+    "Total Passengers": 23.837609371390613,
+    "Boarding": 23.837609371390613,
+    "Alighting": 0.0,
+    "Transfers": 23.837609371390613
+  },
+  {
+    "Stop": "KINGS HWY/RYDER ST | Atlantic Avenue | Atlantic Terminal | 8 Av",
+    "Total Passengers": 23.55754227894453,
+    "Boarding": 23.55754227894453,
+    "Alighting": 0.0,
+    "Transfers": 23.55754227894453
+  },
+  {
+    "Stop": "AVENUE H/E 54 ST",
+    "Total Passengers": 23.190700747797244,
+    "Boarding": 23.190700747797244,
+    "Alighting": 0.0,
+    "Transfers": 23.190700747797244
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Livonia Avenue | Lorimer St",
+    "Total Passengers": 22.603720099889436,
+    "Boarding": 22.603720099889436,
+    "Alighting": 0.0,
+    "Transfers": 22.603720099889436
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 22.240746999485317,
+    "Boarding": 22.240746999485317,
+    "Alighting": 0.0,
+    "Transfers": 22.240746999485317
+  },
+  {
+    "Stop": "New Utrecht Av | Livonia Avenue",
+    "Total Passengers": 20.571229776253737,
+    "Boarding": 20.571229776253737,
+    "Alighting": 0.0,
+    "Transfers": 20.571229776253737
+  },
+  {
+    "Stop": "New Utrecht Av | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 20.512716398377368,
+    "Boarding": 20.512716398377368,
+    "Alighting": 0.0,
+    "Transfers": 20.512716398377368
+  },
+  {
+    "Stop": "GLENWOOD RD/E 34 ST | Atlantic Avenue",
+    "Total Passengers": 20.47104067097233,
+    "Boarding": 20.47104067097233,
+    "Alighting": 0.0,
+    "Transfers": 20.47104067097233
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 20.363105277904197,
+    "Boarding": 20.363105277904197,
+    "Alighting": 0.0,
+    "Transfers": 20.363105277904197
+  },
+  {
+    "Stop": "18 Av | Livonia Avenue | Myrtle-Wyckoff Avs",
+    "Total Passengers": 19.878982289513445,
+    "Boarding": 19.878982289513445,
+    "Alighting": 0.0,
+    "Transfers": 19.878982289513445
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 19.866139351043707,
+    "Boarding": 19.866139351043707,
+    "Alighting": 0.0,
+    "Transfers": 19.866139351043707
+  },
+  {
+    "Stop": "NEW YORK AV/FARRAGUT RD | Atlantic Avenue",
+    "Total Passengers": 19.807599664826782,
+    "Boarding": 19.807599664826782,
+    "Alighting": 0.0,
+    "Transfers": 19.807599664826782
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 19.383328962978002,
+    "Boarding": 19.383328962978002,
+    "Alighting": 0.0,
+    "Transfers": 19.383328962978002
+  },
+  {
+    "Stop": "NOSTRAND AV/AVENUE I | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 19.24661981990569,
+    "Boarding": 19.24661981990569,
+    "Alighting": 0.0,
+    "Transfers": 19.24661981990569
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 18.802247776212734,
+    "Boarding": 18.802247776212734,
+    "Alighting": 0.0,
+    "Transfers": 18.802247776212734
+  },
+  {
+    "Stop": "Atlantic Avenue | Lorimer St",
+    "Total Passengers": 18.13166784374645,
+    "Boarding": 0.0,
+    "Alighting": 18.13166784374645,
+    "Transfers": 18.13166784374645
+  },
+  {
+    "Stop": "GLENWOOD RD/E 32 ST | Atlantic Avenue",
+    "Total Passengers": 17.229649890464053,
+    "Boarding": 17.229649890464053,
+    "Alighting": 0.0,
+    "Transfers": 17.229649890464053
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Grand Avenue",
+    "Total Passengers": 16.8030966570035,
+    "Boarding": 16.8030966570035,
+    "Alighting": 0.0,
+    "Transfers": 16.8030966570035
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 16.760943054971722,
+    "Boarding": 16.760943054971722,
+    "Alighting": 0.0,
+    "Transfers": 16.760943054971722
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST",
+    "Total Passengers": 16.5462728455103,
+    "Boarding": 16.5462728455103,
+    "Alighting": 0.0,
+    "Transfers": 16.5462728455103
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 16.022601227298,
+    "Boarding": 16.022601227298,
+    "Alighting": 0.0,
+    "Transfers": 16.022601227298
+  },
+  {
+    "Stop": "Atlantic Avenue | Bowery | DeKalb Av | 86 St",
+    "Total Passengers": 15.668792940526274,
+    "Boarding": 0.0,
+    "Alighting": 15.668792940526274,
+    "Transfers": 15.668792940526274
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 15.41625402089314,
+    "Boarding": 15.41625402089314,
+    "Alighting": 0.0,
+    "Transfers": 15.41625402089314
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Livonia Avenue | Myrtle-Wyckoff Avs",
+    "Total Passengers": 15.176718679609818,
+    "Boarding": 15.176718679609818,
+    "Alighting": 0.0,
+    "Transfers": 15.176718679609818
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 14.455600770075716,
+    "Boarding": 14.455600770075716,
+    "Alighting": 0.0,
+    "Transfers": 14.455600770075716
+  },
+  {
+    "Stop": "Avenue I | Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 14.120477726783694,
+    "Boarding": 14.120477726783694,
+    "Alighting": 0.0,
+    "Transfers": 14.120477726783694
+  },
+  {
+    "Stop": "New Utrecht Av | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 13.633805912402442,
+    "Boarding": 13.633805912402442,
+    "Alighting": 0.0,
+    "Transfers": 13.633805912402442
+  },
+  {
+    "Stop": "Atlantic Avenue | Myrtle Av | UTICA AV/AVENUE J",
+    "Total Passengers": 13.099262837948945,
+    "Boarding": 0.0,
+    "Alighting": 13.099262837948945,
+    "Transfers": 13.099262837948945
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV | Linden Boulevard",
+    "Total Passengers": 12.965704087753249,
+    "Boarding": 12.965704087753249,
+    "Alighting": 0.0,
+    "Transfers": 12.965704087753249
+  },
+  {
+    "Stop": "GLENWOOD RD/NEW YORK AV",
+    "Total Passengers": 12.436358162385492,
+    "Boarding": 0.0,
+    "Alighting": 12.436358162385492,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "8 Av | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/EMPIRE BLVD",
+    "Total Passengers": 11.708162707284975,
+    "Boarding": 11.708162707284975,
+    "Alighting": 0.0,
+    "Transfers": 11.708162707284975
+  },
+  {
+    "Stop": "Avenue I | Livonia Avenue",
+    "Total Passengers": 11.654410726892984,
+    "Boarding": 11.654410726892984,
+    "Alighting": 0.0,
+    "Transfers": 11.654410726892984
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV",
+    "Total Passengers": 11.507655875047634,
+    "Boarding": 11.507655875047634,
+    "Alighting": 0.0,
+    "Transfers": 11.507655875047634
+  },
+  {
+    "Stop": "GLENWOOD RD/BROOKLYN AV | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 11.406468910946844,
+    "Boarding": 11.406468910946844,
+    "Alighting": 0.0,
+    "Transfers": 11.406468910946844
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Atlantic Avenue | Atlantic Terminal | 4 Av-9 St",
+    "Total Passengers": 11.38864442838722,
+    "Boarding": 11.38864442838722,
+    "Alighting": 0.0,
+    "Transfers": 11.38864442838722
+  },
+  {
+    "Stop": "Livonia Avenue | Myrtle-Wyckoff Avs",
+    "Total Passengers": 11.27637046193728,
+    "Boarding": 0.0,
+    "Alighting": 11.27637046193728,
+    "Transfers": 11.27637046193728
+  },
+  {
+    "Stop": "Avenue H | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 11.231414747105305,
+    "Boarding": 11.231414747105305,
+    "Alighting": 0.0,
+    "Transfers": 11.231414747105305
+  },
+  {
+    "Stop": "18 Av | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CHURCH AV",
+    "Total Passengers": 11.116786963282905,
+    "Boarding": 11.116786963282905,
+    "Alighting": 0.0,
+    "Transfers": 11.116786963282905
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Livonia Avenue | Lorimer St",
+    "Total Passengers": 10.9699708774062,
+    "Boarding": 10.9699708774062,
+    "Alighting": 0.0,
+    "Transfers": 10.9699708774062
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 9.857980046440616,
+    "Boarding": 9.857980046440616,
+    "Alighting": 0.0,
+    "Transfers": 9.857980046440616
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV | Lorimer St",
+    "Total Passengers": 9.81294596108168,
+    "Boarding": 0.0,
+    "Alighting": 9.81294596108168,
+    "Transfers": 9.81294596108168
+  },
+  {
+    "Stop": "KINGS HWY/RYDER ST | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 9.515949193782399,
+    "Boarding": 9.515949193782399,
+    "Alighting": 0.0,
+    "Transfers": 9.515949193782399
+  },
+  {
+    "Stop": "Avenue H | Flatbush Avenue\u2013Nostrand Avenue",
+    "Total Passengers": 9.26786236894014,
+    "Boarding": 9.26786236894014,
+    "Alighting": 0.0,
+    "Transfers": 9.26786236894014
+  },
+  {
+    "Stop": "Avenue I | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 9.263853427886911,
+    "Boarding": 9.263853427886911,
+    "Alighting": 0.0,
+    "Transfers": 9.263853427886911
+  },
+  {
+    "Stop": "GLENWOOD RD/BROOKLYN AV | Atlantic Avenue",
+    "Total Passengers": 8.76856490668072,
+    "Boarding": 8.76856490668072,
+    "Alighting": 0.0,
+    "Transfers": 8.76856490668072
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV | Lorimer St | Church Av",
+    "Total Passengers": 8.767065674845778,
+    "Boarding": 0.0,
+    "Alighting": 8.767065674845778,
+    "Transfers": 8.767065674845778
+  },
+  {
+    "Stop": "18 Av | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 8.70715063191795,
+    "Boarding": 8.70715063191795,
+    "Alighting": 0.0,
+    "Transfers": 8.70715063191795
+  },
+  {
+    "Stop": "8 Av | Atlantic Avenue | Kosciuszko St | MALCOLM X BLVD/CHAUNCEY ST",
+    "Total Passengers": 8.640163648371063,
+    "Boarding": 8.640163648371063,
+    "Alighting": 0.0,
+    "Transfers": 8.640163648371063
+  },
+  {
+    "Stop": "Sutter Av",
+    "Total Passengers": 8.525718074064855,
+    "Boarding": 8.525718074064855,
+    "Alighting": 0.0,
+    "Transfers": 8.525718074064855
+  },
+  {
+    "Stop": "GLENWOOD RD/E 32 ST | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 8.403754551698741,
+    "Boarding": 8.403754551698741,
+    "Alighting": 0.0,
+    "Transfers": 8.403754551698741
+  },
+  {
+    "Stop": "8 Av | Flatbush Avenue\u2013Nostrand Avenue | FLATBUSH AV/CHURCH AV",
+    "Total Passengers": 8.118800130183951,
+    "Boarding": 8.118800130183951,
+    "Alighting": 0.0,
+    "Transfers": 8.118800130183951
+  },
+  {
+    "Stop": "FARRAGUT RD/NOSTRAND AV | Atlantic Avenue",
+    "Total Passengers": 8.077647551613474,
+    "Boarding": 8.077647551613474,
+    "Alighting": 0.0,
+    "Transfers": 8.077647551613474
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 8.011118409329148,
+    "Boarding": 8.011118409329148,
+    "Alighting": 0.0,
+    "Transfers": 8.011118409329148
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Livonia Avenue | Lorimer St",
+    "Total Passengers": 7.960455467617635,
+    "Boarding": 7.960455467617635,
+    "Alighting": 0.0,
+    "Transfers": 7.960455467617635
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 7.583109440374609,
+    "Boarding": 7.583109440374609,
+    "Alighting": 0.0,
+    "Transfers": 7.583109440374609
+  },
+  {
+    "Stop": "New Utrecht Av | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 7.520544765931101,
+    "Boarding": 7.520544765931101,
+    "Alighting": 0.0,
+    "Transfers": 7.520544765931101
+  },
+  {
+    "Stop": "Fourth Avenue | 86 St",
+    "Total Passengers": 7.0830164896716585,
+    "Boarding": 0.0,
+    "Alighting": 7.0830164896716585,
+    "Transfers": 7.0830164896716585
+  },
+  {
+    "Stop": "KINGS HWY/E 37 ST | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 7.021167980742295,
+    "Boarding": 7.021167980742295,
+    "Alighting": 0.0,
+    "Transfers": 7.021167980742295
+  },
+  {
+    "Stop": "AVENUE H/E 52 ST | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 6.840872079766799,
+    "Boarding": 6.840872079766799,
+    "Alighting": 0.0,
+    "Transfers": 6.840872079766799
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Linden Boulevard | Myrtle-Wyckoff Avs",
+    "Total Passengers": 6.819092902775734,
+    "Boarding": 6.819092902775734,
+    "Alighting": 0.0,
+    "Transfers": 6.819092902775734
+  },
+  {
+    "Stop": "KINGS HWY/RYDER ST | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 6.593788706668384,
+    "Boarding": 6.593788706668384,
+    "Alighting": 0.0,
+    "Transfers": 6.593788706668384
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 6.194307962971196,
+    "Boarding": 6.194307962971196,
+    "Alighting": 0.0,
+    "Transfers": 6.194307962971196
+  },
+  {
+    "Stop": "Livonia Av | Grand Avenue",
+    "Total Passengers": 6.184945369591574,
+    "Boarding": 6.184945369591574,
+    "Alighting": 0.0,
+    "Transfers": 6.184945369591574
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV | Livonia Avenue",
+    "Total Passengers": 6.016632943646494,
+    "Boarding": 6.016632943646494,
+    "Alighting": 0.0,
+    "Transfers": 6.016632943646494
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Livonia Avenue | Myrtle-Wyckoff Avs | Seneca Av",
+    "Total Passengers": 5.919487354216313,
+    "Boarding": 5.919487354216313,
+    "Alighting": 0.0,
+    "Transfers": 5.919487354216313
+  },
+  {
+    "Stop": "Bay Ridge Av | Atlantic Avenue | Myrtle Av | Seneca Av",
+    "Total Passengers": 5.7350131518392065,
+    "Boarding": 5.7350131518392065,
+    "Alighting": 0.0,
+    "Transfers": 5.7350131518392065
+  },
+  {
+    "Stop": "8 Av | Utica Avenue | UTICA AV/FLATLANDS AV",
+    "Total Passengers": 5.693397612084166,
+    "Boarding": 5.693397612084166,
+    "Alighting": 0.0,
+    "Transfers": 5.693397612084166
+  },
+  {
+    "Stop": "Atlantic Avenue | Delancey St-Essex St | Jay St-MetroTech | 86 St",
+    "Total Passengers": 5.378483309176677,
+    "Boarding": 0.0,
+    "Alighting": 5.378483309176677,
+    "Transfers": 5.378483309176677
+  },
+  {
+    "Stop": "Avenue H | Utica Avenue | UTICA AV/AVENUE J",
+    "Total Passengers": 5.343727988369375,
+    "Boarding": 5.343727988369375,
+    "Alighting": 0.0,
+    "Transfers": 5.343727988369375
+  },
+  {
+    "Stop": "FLATBUSH AV/NOSTRAND AV | Atlantic Avenue | Kosciuszko St",
+    "Total Passengers": 5.248633351861754,
+    "Boarding": 5.248633351861754,
+    "Alighting": 0.0,
+    "Transfers": 5.248633351861754
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV | 8 Av | Broadway Junction",
+    "Total Passengers": 5.152855530854696,
+    "Boarding": 0.0,
+    "Alighting": 5.152855530854696,
+    "Transfers": 5.152855530854696
+  },
+  {
+    "Stop": "GLENWOOD RD/E 34 ST",
+    "Total Passengers": 5.032352145299452,
+    "Boarding": 0.0,
+    "Alighting": 5.032352145299452,
+    "Transfers": 0.0
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue | Atlantic Terminal | 9 Av",
+    "Total Passengers": 4.767886221685378,
+    "Boarding": 4.767886221685378,
+    "Alighting": 0.0,
+    "Transfers": 4.767886221685378
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Livonia Avenue | Lorimer St",
+    "Total Passengers": 4.614255002257574,
+    "Boarding": 4.614255002257574,
+    "Alighting": 0.0,
+    "Transfers": 4.614255002257574
+  },
+  {
+    "Stop": "GLENWOOD RD/NOSTRAND AV | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 4.407011979415875,
+    "Boarding": 4.407011979415875,
+    "Alighting": 0.0,
+    "Transfers": 4.407011979415875
+  },
+  {
+    "Stop": "AVENUE H/E 48 ST | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 4.188912055253696,
+    "Boarding": 4.188912055253696,
+    "Alighting": 0.0,
+    "Transfers": 4.188912055253696
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Livonia Avenue | Myrtle-Wyckoff Avs",
+    "Total Passengers": 4.184656463606882,
+    "Boarding": 4.184656463606882,
+    "Alighting": 0.0,
+    "Transfers": 4.184656463606882
+  },
+  {
+    "Stop": "FLATLANDS AV/RALPH AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 4.157076696941763,
+    "Boarding": 4.157076696941763,
+    "Alighting": 0.0,
+    "Transfers": 4.157076696941763
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 4.078558313857899,
+    "Boarding": 4.078558313857899,
+    "Alighting": 0.0,
+    "Transfers": 4.078558313857899
+  },
+  {
+    "Stop": "AVENUE H/E 52 ST | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 3.916334517847565,
+    "Boarding": 3.916334517847565,
+    "Alighting": 0.0,
+    "Transfers": 3.916334517847565
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 3.6553782986556227,
+    "Boarding": 3.6553782986556227,
+    "Alighting": 0.0,
+    "Transfers": 3.6553782986556227
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Livonia Avenue | Myrtle-Wyckoff Avs | Seneca Av",
+    "Total Passengers": 3.5967257386966613,
+    "Boarding": 3.5967257386966613,
+    "Alighting": 0.0,
+    "Transfers": 3.5967257386966613
+  },
+  {
+    "Stop": "GLENWOOD RD/FLATBUSH AV | Livonia Avenue | Myrtle-Wyckoff Avs",
+    "Total Passengers": 3.3766375467324226,
+    "Boarding": 3.3766375467324226,
+    "Alighting": 0.0,
+    "Transfers": 3.3766375467324226
+  },
+  {
+    "Stop": "GLENWOOD RD/E 34 ST | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 3.3744563439176463,
+    "Boarding": 3.3744563439176463,
+    "Alighting": 0.0,
+    "Transfers": 3.3744563439176463
+  },
+  {
+    "Stop": "GLENWOOD RD/BROOKLYN AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 3.2813683674147094,
+    "Boarding": 3.2813683674147094,
+    "Alighting": 0.0,
+    "Transfers": 3.2813683674147094
+  },
+  {
+    "Stop": "Livonia Avenue | Myrtle-Wyckoff Avs | Seneca Av",
+    "Total Passengers": 3.166262153699144,
+    "Boarding": 0.0,
+    "Alighting": 3.166262153699144,
+    "Transfers": 3.166262153699144
+  },
+  {
+    "Stop": "New Lots Av",
+    "Total Passengers": 2.8469118623232044,
+    "Boarding": 2.8469118623232044,
+    "Alighting": 0.0,
+    "Transfers": 2.8469118623232044
+  },
+  {
+    "Stop": "Atlantic Avenue | Myrtle-Wyckoff Avs | Seneca Av",
+    "Total Passengers": 2.807828524744,
+    "Boarding": 0.0,
+    "Alighting": 2.807828524744,
+    "Transfers": 2.807828524744
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue | Nostrand Avenue",
+    "Total Passengers": 2.4504073790033867,
+    "Boarding": 2.4504073790033867,
+    "Alighting": 0.0,
+    "Transfers": 2.4504073790033867
+  },
+  {
+    "Stop": "AVENUE H/E 52 ST | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 2.3287435570769963,
+    "Boarding": 2.3287435570769963,
+    "Alighting": 0.0,
+    "Transfers": 2.3287435570769963
+  },
+  {
+    "Stop": "Grand Avenue | PUTNAM AV/ONDERDONK AV | DE KALB AV/FLATBUSH AV EXT",
+    "Total Passengers": 2.189075113214222,
+    "Boarding": 0.0,
+    "Alighting": 2.189075113214222,
+    "Transfers": 2.189075113214222
+  },
+  {
+    "Stop": "AVENUE H/UTICA AV | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 2.1255661501800636,
+    "Boarding": 2.1255661501800636,
+    "Alighting": 0.0,
+    "Transfers": 2.1255661501800636
+  },
+  {
+    "Stop": "FLATBUSH AV/ROGERS AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 2.0116976884307674,
+    "Boarding": 2.0116976884307674,
+    "Alighting": 0.0,
+    "Transfers": 2.0116976884307674
+  },
+  {
+    "Stop": "Grand Avenue | PALMETTO ST/MYRTLE AV | 14 St-Union Sq",
+    "Total Passengers": 1.9475709296181538,
+    "Boarding": 0.0,
+    "Alighting": 1.9475709296181538,
+    "Transfers": 1.9475709296181538
+  },
+  {
+    "Stop": "Atlantic Av | Grand Avenue",
+    "Total Passengers": 1.704892402128348,
+    "Boarding": 1.704892402128348,
+    "Alighting": 0.0,
+    "Transfers": 1.704892402128348
+  },
+  {
+    "Stop": "Sutter Av | Grand Avenue",
+    "Total Passengers": 1.608218180920399,
+    "Boarding": 1.608218180920399,
+    "Alighting": 0.0,
+    "Transfers": 1.608218180920399
+  },
+  {
+    "Stop": "Avenue H | Grand Avenue",
+    "Total Passengers": 1.523275657473791,
+    "Boarding": 1.523275657473791,
+    "Alighting": 0.0,
+    "Transfers": 1.523275657473791
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Linden Boulevard | Myrtle-Wyckoff Avs | Seneca Av",
+    "Total Passengers": 1.5213182196851407,
+    "Boarding": 1.5213182196851407,
+    "Alighting": 0.0,
+    "Transfers": 1.5213182196851407
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Linden Boulevard | Myrtle-Wyckoff Avs | Seneca Av",
+    "Total Passengers": 1.4265953318729583,
+    "Boarding": 1.4265953318729583,
+    "Alighting": 0.0,
+    "Transfers": 1.4265953318729583
+  },
+  {
+    "Stop": "FLATBUSH AV/AVENUE I | Atlantic Avenue | Delancey St-Essex St",
+    "Total Passengers": 1.2958519652444334,
+    "Boarding": 1.2958519652444334,
+    "Alighting": 0.0,
+    "Transfers": 1.2958519652444334
+  },
+  {
+    "Stop": "UTICA AV/FARRAGUT RD | Grand Avenue | PUTNAM AV/ONDERDONK AV",
+    "Total Passengers": 1.2902272526723757,
+    "Boarding": 1.2902272526723757,
+    "Alighting": 0.0,
+    "Transfers": 1.2902272526723757
+  },
+  {
+    "Stop": "Utica Avenue | UTICA AV/AVENUE H",
+    "Total Passengers": 0.8814658057695068,
+    "Boarding": 0.0,
+    "Alighting": 0.8814658057695068,
+    "Transfers": 0.8814658057695068
+  },
+  {
+    "Stop": "Grand Avenue | PUTNAM AV/ONDERDONK AV | DE KALB AV/BROADWAY | UTICA AV/AVENUE H",
+    "Total Passengers": 0.6730630564573244,
+    "Boarding": 0.0,
+    "Alighting": 0.6730630564573244,
+    "Transfers": 0.6730630564573244
+  },
+  {
+    "Stop": "Flatbush Av-Brooklyn College | Grand Avenue",
+    "Total Passengers": 0.5402877239163922,
+    "Boarding": 0.5402877239163922,
+    "Alighting": 0.0,
+    "Transfers": 0.5402877239163922
+  },
+  {
+    "Stop": "UTICA AV/GLENWOOD RD | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 0.5330107498599058,
+    "Boarding": 0.5330107498599058,
+    "Alighting": 0.0,
+    "Transfers": 0.5330107498599058
+  },
+  {
+    "Stop": "NOSTRAND AV/FLATBUSH AV | Atlantic Avenue | Atlantic Terminal | 86 St",
+    "Total Passengers": 0.3400615276089701,
+    "Boarding": 0.3400615276089701,
+    "Alighting": 0.0,
+    "Transfers": 0.3400615276089701
+  },
+  {
+    "Stop": "Wilson Av | Grand Avenue",
+    "Total Passengers": 0.2582659861926753,
+    "Boarding": 0.2582659861926753,
+    "Alighting": 0.0,
+    "Transfers": 0.2582659861926753
+  },
+  {
+    "Stop": "GLENWOOD RD/E 34 ST | Atlantic Avenue | Myrtle Av",
+    "Total Passengers": 9.808391875645422e-12,
+    "Boarding": 9.808391875645422e-12,
+    "Alighting": 0.0,
+    "Transfers": 9.808391875645422e-12
+  }
+]

@@ -682,6 +682,11 @@
         let stationDataView = 'ibx'; // 'baseline' | 'ibx' | 'comparison'
         let pinnedStations = []; // Array of station names for comparison
 
+        // Pinned tract state (for info panel)
+        let pinnedTractId = null;
+        let pinnedTractProps = null;
+        let currentConnectedTracts = {}; // Accessible for pinning
+
         // Measurement tool state
         let measureMode = false;
         let measurePoints = [];
@@ -813,15 +818,18 @@
         // Load data
         async function loadData() {
             try {
+                // Cache-busting: append timestamp to force fresh data
+                const cacheBust = `?v=${Date.now()}`;
+
                 const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse, transitRoutesResponse, routeSummaryResponse, stationRidershipResponse] = await Promise.all([
-                    fetch('data/census/nyc_census.geojson'),
-                    fetch('data/tract_comparison_data.json'),
-                    fetch('data/tract_summary_data.json'),
-                    fetch('data/IBX/route.geojson'),
-                    fetch('data/IBX/stations.geojson'),
-                    fetch('data/transit/NYC_routes.geojson'),
-                    fetch('data/route_summary.json'),
-                    fetch('data/ibx_stations.json')
+                    fetch('data/census/nyc_census.geojson' + cacheBust),
+                    fetch('data/tract_comparison_data.json' + cacheBust),
+                    fetch('data/tract_summary_data.json' + cacheBust),
+                    fetch('data/IBX/route.geojson' + cacheBust),
+                    fetch('data/IBX/stations.geojson' + cacheBust),
+                    fetch('data/transit/NYC_routes.geojson' + cacheBust),
+                    fetch('data/route_summary.json' + cacheBust),
+                    fetch('data/ibx_stops.json' + cacheBust)
                 ]);
                 tractData = await tractResponse.json();
                 comparisonData = await comparisonResponse.json();
@@ -953,14 +961,14 @@
 
             const metrics = {
                 total_passengers: s => s['Total Passengers'],
-                change: s => s['Change'],
+                change: s => s['Total Passengers Change'],
                 transfers: s => s['Transfers'],
-                boardings: s => s['Instappen'],
-                alightings: s => s['Uitstappen'],
-                baseline_total: s => s['Baseline_total'],
-                baseline_transfers: s => s['Baseline_transfers'],
-                baseline_boardings: s => s['Baseline_instappen'],
-                baseline_alightings: s => s['Baseline_uistappen']
+                boardings: s => s['Boarding'],
+                alightings: s => s['Alighting'],
+                baseline_total: s => s['Baseline Total Passengers'],
+                baseline_transfers: s => s['Baseline Transfers'],
+                baseline_boardings: s => s['Baseline Boarding'],
+                baseline_alightings: s => s['Baseline Alighting']
             };
 
             Object.keys(metrics).forEach(metric => {
@@ -1181,7 +1189,7 @@
                     layer.on({
                         click: () => onTractClick(feature.properties.GEOID, feature.properties),
                         mouseover: e => onTractHoverOverview(feature.properties.GEOID, feature.properties, e),
-                        mouseout: () => onTractMouseOut()
+                        mouseout: e => onTractMouseOut(feature.properties.GEOID, e)
                     });
                 }
             }).addTo(map);
@@ -1193,14 +1201,14 @@
             const showNewConnections = document.getElementById('show-new-connections').checked;
 
             // Build lookup for connected tracts
-            let connectedTracts = {};
+            currentConnectedTracts = {}; // Reset and use global
             let localMin = Infinity, localMax = -Infinity;
 
             if (activeOrigin) {
                 const dests = comparisonData.by_origin[activeOrigin] || [];
                 dests.forEach(d => {
                     if (!showNewConnections && d.baseline_time === 'NaN') return;
-                    connectedTracts[d.dest] = d;
+                    currentConnectedTracts[d.dest] = d;
                     const val = d[metric];
                     if (typeof val === 'number' && !isNaN(val)) {
                         localMin = Math.min(localMin, val);
@@ -1211,7 +1219,7 @@
                 const origins = comparisonData.by_destination[activeDestination] || [];
                 origins.forEach(d => {
                     if (!showNewConnections && d.baseline_time === 'NaN') return;
-                    connectedTracts[d.origin] = d;
+                    currentConnectedTracts[d.origin] = d;
                     const val = d[metric];
                     if (typeof val === 'number' && !isNaN(val)) {
                         localMin = Math.min(localMin, val);
@@ -1225,7 +1233,7 @@
                     const geoid = feature.properties.GEOID;
                     const isSelected = geoid === selectedTractId;
                     const isActive = geoid === activeOrigin || geoid === activeDestination;
-                    const connectionData = connectedTracts[geoid];
+                    const connectionData = currentConnectedTracts[geoid];
 
                     let fillColor = '#e9ecef';
                     let fillOpacity = 0.3;
@@ -1250,14 +1258,14 @@
                 onEachFeature: (feature, layer) => {
                     layer.on({
                         click: () => onTractClick(feature.properties.GEOID, feature.properties),
-                        mouseover: e => onTractHoverSelection(feature.properties.GEOID, feature.properties, connectedTracts, e),
-                        mouseout: () => onTractMouseOut()
+                        mouseover: e => onTractHoverSelection(feature.properties.GEOID, feature.properties, e),
+                        mouseout: e => onTractMouseOut(feature.properties.GEOID, e)
                     });
                 }
             }).addTo(map);
 
             // Update stats
-            updateStats(connectedTracts, metric);
+            updateStats(currentConnectedTracts, metric);
         }
 
         // Update statistics display
@@ -1279,7 +1287,7 @@
 
             if (validValues.length > 0) {
                 const avg = validValues.reduce((a, b) => a + b, 0) / validValues.length;
-                document.getElementById('stat-avg').textContent = avg.toFixed(1);
+                document.getElementById('stat-avg').textContent = Math.round(avg);
             } else {
                 document.getElementById('stat-avg').textContent = '-';
             }
@@ -1287,6 +1295,7 @@
 
         // Handle tract click
         function onTractClick(geoid, properties) {
+            const previousSelected = selectedTractId;
             selectedTractId = geoid;
 
             const tractEl = document.getElementById('selected-tract');
@@ -1296,7 +1305,45 @@
             document.getElementById('btn-origin').disabled = false;
             document.getElementById('btn-dest').disabled = false;
 
-            renderTracts();
+            // Handle pinning in selection mode (when origin/destination is set)
+            if (tractsViewMode === 'selection' && (activeOrigin || activeDestination)) {
+                // Toggle pin: if clicking same tract, unpin; otherwise pin new tract
+                if (pinnedTractId === geoid) {
+                    pinnedTractId = null;
+                    pinnedTractProps = null;
+                    // Reset to default message
+                    const hoverEl = document.getElementById('hover-info');
+                    hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a tract for details</span>';
+                } else {
+                    pinnedTractId = geoid;
+                    pinnedTractProps = properties;
+                    // Display the pinned tract's info
+                    displayTractInfo(geoid, properties);
+                }
+            }
+
+            // Update styles directly on the layer without re-rendering
+            if (tractLayer) {
+                tractLayer.eachLayer(layer => {
+                    const layerGeoid = layer.feature.properties.GEOID;
+                    const isActive = layerGeoid === activeOrigin || layerGeoid === activeDestination;
+
+                    if (layerGeoid === previousSelected && previousSelected !== geoid) {
+                        // Remove highlight from previously selected
+                        layer.setStyle({
+                            color: isActive ? '#0d6efd' : '#6c757d',
+                            weight: isActive ? 3 : 0.5
+                        });
+                    }
+                    if (layerGeoid === geoid) {
+                        // Add highlight to newly selected
+                        layer.setStyle({
+                            color: '#000',
+                            weight: 3
+                        });
+                    }
+                });
+            }
         }
 
         // Handle tract hover in overview mode
@@ -1309,7 +1356,7 @@
                 if (val === null || val === undefined || (typeof val === 'number' && isNaN(val))) {
                     return 'N/A';
                 }
-                return typeof val === 'number' ? val.toFixed(1) + suffix : val;
+                return typeof val === 'number' ? Math.round(val) + suffix : val;
             };
 
             if (!tractSummary || tractSummary.pairs === 0) {
@@ -1372,8 +1419,23 @@
         }
 
         // Handle tract hover in selection mode
-        function onTractHoverSelection(geoid, properties, connectedTracts, e) {
-            const connectionData = connectedTracts[geoid];
+        function onTractHoverSelection(geoid, properties, e) {
+            // If a tract is pinned, don't update the info panel on hover
+            if (pinnedTractId) {
+                // Still highlight on hover
+                e.target.setStyle({ weight: 2, color: '#000' });
+                return;
+            }
+
+            displayTractInfo(geoid, properties);
+
+            // Highlight on hover
+            e.target.setStyle({ weight: 2, color: '#000' });
+        }
+
+        // Display tract info in the info panel (used by both hover and pin)
+        function displayTractInfo(geoid, properties) {
+            const connectionData = currentConnectedTracts[geoid];
             const hoverEl = document.getElementById('hover-info');
 
             if (!connectionData && geoid !== activeOrigin && geoid !== activeDestination) {
@@ -1415,10 +1477,13 @@
                 if (val === 'NaN' || val === null || val === undefined || (typeof val === 'number' && isNaN(val))) {
                     return 'N/A';
                 }
-                return typeof val === 'number' ? val.toFixed(1) + suffix : val;
+                return typeof val === 'number' ? Math.round(val) + suffix : val;
             };
 
+            const pinnedIndicator = pinnedTractId === geoid ? '<div style="font-size: 0.75rem; color: #0d6efd; margin-bottom: 4px;">📌 Pinned (click to unpin)</div>' : '';
+
             hoverEl.innerHTML = `
+                ${pinnedIndicator}
                 <div class="info-row">
                     <span class="info-label">Tract</span>
                     <span class="info-value">${geoid}</span>
@@ -1459,14 +1524,28 @@
                     <div>${connectionData.ibx_routes || 'N/A'}</div>
                 </div>
             `;
-
-            // Highlight on hover
-            e.target.setStyle({ weight: 2, color: '#000' });
         }
 
         // Handle mouse out
-        function onTractMouseOut() {
-            renderTracts(); // Reset styles
+        function onTractMouseOut(geoid, e) {
+            // Reset just this tract's style instead of re-rendering the entire layer
+            const isSelected = geoid === selectedTractId;
+            const isActive = geoid === activeOrigin || geoid === activeDestination;
+            const isPinned = geoid === pinnedTractId;
+
+            if (isActive) {
+                e.target.setStyle({ color: '#0d6efd', weight: 3 });
+            } else if (isSelected || isPinned) {
+                e.target.setStyle({ color: '#000', weight: 3 });
+            } else {
+                e.target.setStyle({ color: '#6c757d', weight: 0.5 });
+            }
+
+            // Only reset hover info if no tract is pinned
+            if (!pinnedTractId) {
+                const hoverEl = document.getElementById('hover-info');
+                hoverEl.innerHTML = '<span style="color: #6c757d; font-style: italic;">Hover over a tract for details</span>';
+            }
         }
 
         // Update legend
@@ -1523,7 +1602,7 @@
             const scale = stationScales[scaleKey];
 
             if (scale) {
-                labelsEl.innerHTML = `<span>${scale.min.toLocaleString()}</span><span>${scale.max.toLocaleString()}</span>`;
+                labelsEl.innerHTML = `<span>${Math.round(scale.min).toLocaleString()}</span><span>${Math.round(scale.max).toLocaleString()}</span>`;
             } else {
                 labelsEl.innerHTML = '';
             }
@@ -1585,7 +1664,7 @@
                     <div style="flex:1;background:#084594"></div>
                 `;
                 if (scale) {
-                    labelsEl.innerHTML = `<span>${scale.min.toLocaleString()}</span><span>${scale.max.toLocaleString()}</span>`;
+                    labelsEl.innerHTML = `<span>${Math.round(scale.min).toLocaleString()}</span><span>${Math.round(scale.max).toLocaleString()}</span>`;
                 }
             }
 
@@ -1678,11 +1757,11 @@
             if (!data) return null;
 
             const metricMap = {
-                total_passengers: stationDataView === 'baseline' ? data['Baseline_total'] : data['Total Passengers'],
-                change: data['Change'],
-                transfers: stationDataView === 'baseline' ? data['Baseline_transfers'] : data['Transfers'],
-                boardings: stationDataView === 'baseline' ? data['Baseline_instappen'] : data['Instappen'],
-                alightings: stationDataView === 'baseline' ? data['Baseline_uistappen'] : data['Uitstappen']
+                total_passengers: stationDataView === 'baseline' ? data['Baseline Total Passengers'] : data['Total Passengers'],
+                change: data['Total Passengers Change'],
+                transfers: stationDataView === 'baseline' ? data['Baseline Transfers'] : data['Transfers'],
+                boardings: stationDataView === 'baseline' ? data['Baseline Boarding'] : data['Boarding'],
+                alightings: stationDataView === 'baseline' ? data['Baseline Alighting'] : data['Alighting']
             };
             return metricMap[stationImpactMetric];
         }
@@ -1711,24 +1790,24 @@
                     <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; margin-bottom: 4px;">Ridership</div>
                     <div class="info-row">
                         <span class="info-label">Total Passengers</span>
-                        <span class="info-value">${ridership['Total Passengers'].toLocaleString()}</span>
+                        <span class="info-value">${Math.round(ridership['Total Passengers']).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Boardings</span>
-                        <span class="info-value">${ridership['Instappen'].toLocaleString()}</span>
+                        <span class="info-value">${Math.round(ridership['Boarding']).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Alightings</span>
-                        <span class="info-value">${ridership['Uitstappen'].toLocaleString()}</span>
+                        <span class="info-value">${Math.round(ridership['Alighting']).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Transfers</span>
-                        <span class="info-value">${ridership['Transfers'].toLocaleString()}</span>
+                        <span class="info-value">${Math.round(ridership['Transfers']).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">vs Baseline</span>
-                        <span class="info-value" style="color: ${ridership['Change'] >= 0 ? '#198754' : '#dc3545'}">
-                            ${ridership['Change'] >= 0 ? '+' : ''}${ridership['Change'].toLocaleString()}
+                        <span class="info-value" style="color: ${ridership['Total Passengers Change'] >= 0 ? '#198754' : '#dc3545'}">
+                            ${ridership['Total Passengers Change'] >= 0 ? '+' : ''}${Math.round(ridership['Total Passengers Change']).toLocaleString()}
                         </span>
                     </div>
                 </div>`;
@@ -2178,6 +2257,8 @@
             selectedTractId = null;
             currentMode = null;
             tractsViewMode = 'overview';
+            pinnedTractId = null;
+            pinnedTractProps = null;
 
             document.getElementById('selected-tract').textContent = 'Click a tract on the map';
             document.getElementById('selected-tract').classList.add('empty');
@@ -2242,6 +2323,8 @@
             activeDestination = null;
             currentMode = 'origin';
             tractsViewMode = 'selection';
+            pinnedTractId = null;
+            pinnedTractProps = null;
             document.getElementById('btn-origin').classList.add('active');
             document.getElementById('btn-dest').classList.remove('active');
             updateTractsViewModeUI();
@@ -2257,6 +2340,8 @@
             activeOrigin = null;
             currentMode = 'destination';
             tractsViewMode = 'selection';
+            pinnedTractId = null;
+            pinnedTractProps = null;
             document.getElementById('btn-dest').classList.add('active');
             document.getElementById('btn-origin').classList.remove('active');
             updateTractsViewModeUI();
@@ -2389,11 +2474,11 @@
                 statsHtml = `
                     <div class="info-row">
                         <span class="info-label">Baseline Passengers</span>
-                        <span class="info-value">${routeStats.baseline_passengers.toLocaleString()}</span>
+                        <span class="info-value">${Math.round(routeStats.baseline_passengers).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">With IBX</span>
-                        <span class="info-value">${routeStats.new_passengers.toLocaleString()}</span>
+                        <span class="info-value">${Math.round(routeStats.new_passengers).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">% Change</span>
@@ -2402,7 +2487,7 @@
                     <div class="info-row">
                         <span class="info-label">Passenger Change</span>
                         <span class="info-value" style="color: ${routeStats.passenger_change >= 0 ? '#198754' : '#dc3545'}">
-                            ${routeStats.passenger_change >= 0 ? '+' : ''}${routeStats.passenger_change.toLocaleString()}
+                            ${routeStats.passenger_change >= 0 ? '+' : ''}${Math.round(routeStats.passenger_change).toLocaleString()}
                         </span>
                     </div>
                 `;
@@ -2467,11 +2552,11 @@
                             <div style="font-weight: 500; margin-bottom: 3px;">Difference (Pinned - Hovering):</div>
                             <div style="display: flex; justify-content: space-between;">
                                 <span>Baseline Passengers</span>
-                                <span style="color: ${baselineDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${baselineDiff >= 0 ? '+' : ''}${baselineDiff.toLocaleString()}</span>
+                                <span style="color: ${baselineDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${baselineDiff >= 0 ? '+' : ''}${Math.round(baselineDiff).toLocaleString()}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between;">
                                 <span>IBX Passengers</span>
-                                <span style="color: ${ibxDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${ibxDiff >= 0 ? '+' : ''}${ibxDiff.toLocaleString()}</span>
+                                <span style="color: ${ibxDiff >= 0 ? '#198754' : '#dc3545'}; font-weight: 500;">${ibxDiff >= 0 ? '+' : ''}${Math.round(ibxDiff).toLocaleString()}</span>
                             </div>
                         </div>
                     `;
@@ -2531,11 +2616,11 @@
 
             const getValue = (s) => {
                 const metricMap = {
-                    total_passengers: stationDataView === 'baseline' ? s['Baseline_total'] : s['Total Passengers'],
-                    change: s['Change'],
-                    transfers: stationDataView === 'baseline' ? s['Baseline_transfers'] : s['Transfers'],
-                    boardings: stationDataView === 'baseline' ? s['Baseline_instappen'] : s['Instappen'],
-                    alightings: stationDataView === 'baseline' ? s['Baseline_uistappen'] : s['Uitstappen']
+                    total_passengers: stationDataView === 'baseline' ? s['Baseline Total Passengers'] : s['Total Passengers'],
+                    change: s['Total Passengers Change'],
+                    transfers: stationDataView === 'baseline' ? s['Baseline Transfers'] : s['Transfers'],
+                    boardings: stationDataView === 'baseline' ? s['Baseline Boarding'] : s['Boarding'],
+                    alightings: stationDataView === 'baseline' ? s['Baseline Alighting'] : s['Alighting']
                 };
                 return metricMap[stationImpactMetric] || 0;
             };
@@ -2563,7 +2648,7 @@
                         <div style="flex: 1;">
                             <div class="bar-fill" style="width: ${pct}%"></div>
                         </div>
-                        <div class="bar-value">${val.toLocaleString()}</div>
+                        <div class="bar-value">${Math.round(val).toLocaleString()}</div>
                     </div>
                 `;
             });
@@ -2596,11 +2681,11 @@
 
             // Data rows
             const metrics = [
-                ['Total', 'Total Passengers', 'Baseline_total'],
-                ['Boardings', 'Instappen', 'Baseline_instappen'],
-                ['Alightings', 'Uitstappen', 'Baseline_uistappen'],
-                ['Transfers', 'Transfers', 'Baseline_transfers'],
-                ['Change', 'Change', null]
+                ['Total', 'Total Passengers', 'Baseline Total Passengers'],
+                ['Boardings', 'Boarding', 'Baseline Boarding'],
+                ['Alightings', 'Alighting', 'Baseline Alighting'],
+                ['Transfers', 'Transfers', 'Baseline Transfers'],
+                ['Change', 'Total Passengers Change', null]
             ];
 
             metrics.forEach(([label, ibxKey, baselineKey]) => {
@@ -2611,13 +2696,13 @@
                     let val = '-';
                     if (data) {
                         if (stationDataView === 'comparison' && baselineKey) {
-                            const baseline = data[baselineKey] || 0;
-                            const ibx = data[ibxKey] || 0;
+                            const baseline = Math.round(data[baselineKey] || 0);
+                            const ibx = Math.round(data[ibxKey] || 0);
                             val = `<span style="font-size: 0.7rem;">${baseline.toLocaleString()}</span> → ${ibx.toLocaleString()}`;
                         } else if (stationDataView === 'baseline' && baselineKey) {
-                            val = (data[baselineKey] || 0).toLocaleString();
+                            val = Math.round(data[baselineKey] || 0).toLocaleString();
                         } else {
-                            const value = data[ibxKey] || 0;
+                            const value = Math.round(data[ibxKey] || 0);
                             if (label === 'Change') {
                                 const color = value >= 0 ? '#198754' : '#dc3545';
                                 val = `<span style="color: ${color}">${value >= 0 ? '+' : ''}${value.toLocaleString()}</span>`;

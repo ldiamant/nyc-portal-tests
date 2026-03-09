@@ -1,0 +1,479 @@
+{
+  "routes": [
+    {
+      "route": "IBX",
+      "baseline_passengers": 0,
+      "baseline_pairs": 0,
+      "new_passengers": 133524,
+      "new_pairs": 17047,
+      "passenger_change": 133524,
+      "pair_change": 17047,
+      "pct_change": "NEW"
+    },
+    {
+      "route": "B44",
+      "baseline_passengers": 64205,
+      "baseline_pairs": 6753,
+      "new_passengers": 32775,
+      "new_pairs": 3653,
+      "passenger_change": -31430,
+      "pair_change": -3100,
+      "pct_change": -48.95
+    },
+    {
+      "route": "City Terminal Zone",
+      "baseline_passengers": 30362,
+      "baseline_pairs": 3522,
+      "new_passengers": 61414,
+      "new_pairs": 6436,
+      "passenger_change": 31052,
+      "pair_change": 2914,
+      "pct_change": 102.27
+    },
+    {
+      "route": "B6",
+      "baseline_passengers": 48002,
+      "baseline_pairs": 6809,
+      "new_passengers": 17416,
+      "new_pairs": 2800,
+      "passenger_change": -30586,
+      "pair_change": -4009,
+      "pct_change": -63.72
+    },
+    {
+      "route": "B35",
+      "baseline_passengers": 50834,
+      "baseline_pairs": 5140,
+      "new_passengers": 20566,
+      "new_pairs": 1880,
+      "passenger_change": -30268,
+      "pair_change": -3260,
+      "pct_change": -59.54
+    },
+    {
+      "route": "L",
+      "baseline_passengers": 87985,
+      "baseline_pairs": 11916,
+      "new_passengers": 67518,
+      "new_pairs": 9107,
+      "passenger_change": -20467,
+      "pair_change": -2809,
+      "pct_change": -23.26
+    },
+    {
+      "route": "G",
+      "baseline_passengers": 49982,
+      "baseline_pairs": 6689,
+      "new_passengers": 35186,
+      "new_pairs": 5586,
+      "passenger_change": -14796,
+      "pair_change": -1103,
+      "pct_change": -29.6
+    },
+    {
+      "route": "D",
+      "baseline_passengers": 23734,
+      "baseline_pairs": 2616,
+      "new_passengers": 38453,
+      "new_pairs": 4035,
+      "passenger_change": 14719,
+      "pair_change": 1419,
+      "pct_change": 62.02
+    },
+    {
+      "route": "F",
+      "baseline_passengers": 44070,
+      "baseline_pairs": 5885,
+      "new_passengers": 57011,
+      "new_pairs": 7324,
+      "passenger_change": 12941,
+      "pair_change": 1439,
+      "pct_change": 29.36
+    },
+    {
+      "route": "R",
+      "baseline_passengers": 34421,
+      "baseline_pairs": 3796,
+      "new_passengers": 43004,
+      "new_pairs": 4445,
+      "passenger_change": 8583,
+      "pair_change": 649,
+      "pct_change": 24.94
+    },
+    {
+      "route": "Q",
+      "baseline_passengers": 35137,
+      "baseline_pairs": 4715,
+      "new_passengers": 43358,
+      "new_pairs": 5433,
+      "passenger_change": 8221,
+      "pair_change": 718,
+      "pct_change": 23.4
+    },
+    {
+      "route": "J",
+      "baseline_passengers": 33105,
+      "baseline_pairs": 4653,
+      "new_passengers": 39755,
+      "new_pairs": 5352,
+      "passenger_change": 6650,
+      "pair_change": 699,
+      "pct_change": 20.09
+    },
+    {
+      "route": "B41",
+      "baseline_passengers": 14297,
+      "baseline_pairs": 1433,
+      "new_passengers": 19898,
+      "new_pairs": 2013,
+      "passenger_change": 5601,
+      "pair_change": 580,
+      "pct_change": 39.18
+    },
+    {
+      "route": "A",
+      "baseline_passengers": 43144,
+      "baseline_pairs": 6544,
+      "new_passengers": 38117,
+      "new_pairs": 6336,
+      "passenger_change": -5027,
+      "pair_change": -208,
+      "pct_change": -11.65
+    },
+    {
+      "route": "Z",
+      "baseline_passengers": 18303,
+      "baseline_pairs": 2693,
+      "new_passengers": 21558,
+      "new_pairs": 3173,
+      "passenger_change": 3255,
+      "pair_change": 480,
+      "pct_change": 17.78
+    },
+    {
+      "route": "Q58",
+      "baseline_passengers": 22102,
+      "baseline_pairs": 3119,
+      "new_passengers": 25275,
+      "new_pairs": 3719,
+      "passenger_change": 3173,
+      "pair_change": 600,
+      "pct_change": 14.36
+    },
+    {
+      "route": "N",
+      "baseline_passengers": 23615,
+      "baseline_pairs": 2535,
+      "new_passengers": 26428,
+      "new_pairs": 2813,
+      "passenger_change": 2813,
+      "pair_change": 278,
+      "pct_change": 11.91
+    },
+    {
+      "route": "2",
+      "baseline_passengers": 20671,
+      "baseline_pairs": 2409,
+      "new_passengers": 22207,
+      "new_pairs": 2469,
+      "passenger_change": 1536,
+      "pair_change": 60,
+      "pct_change": 7.43
+    },
+    {
+      "route": "B1",
+      "baseline_passengers": 7908,
+      "baseline_pairs": 794,
+      "new_passengers": 6581,
+      "new_pairs": 683,
+      "passenger_change": -1327,
+      "pair_change": -111,
+      "pct_change": -16.78
+    },
+    {
+      "route": "Port Washington Branch",
+      "baseline_passengers": 13124,
+      "baseline_pairs": 1410,
+      "new_passengers": 11962,
+      "new_pairs": 1238,
+      "passenger_change": -1162,
+      "pair_change": -172,
+      "pct_change": -8.85
+    },
+    {
+      "route": "B46",
+      "baseline_passengers": 59285,
+      "baseline_pairs": 7732,
+      "new_passengers": 60168,
+      "new_pairs": 7824,
+      "passenger_change": 883,
+      "pair_change": 92,
+      "pct_change": 1.49
+    },
+    {
+      "route": "B82",
+      "baseline_passengers": 28716,
+      "baseline_pairs": 3369,
+      "new_passengers": 27882,
+      "new_pairs": 3208,
+      "passenger_change": -834,
+      "pair_change": -161,
+      "pct_change": -2.9
+    },
+    {
+      "route": "B38",
+      "baseline_passengers": 11843,
+      "baseline_pairs": 1927,
+      "new_passengers": 11261,
+      "new_pairs": 1842,
+      "passenger_change": -582,
+      "pair_change": -85,
+      "pct_change": -4.91
+    },
+    {
+      "route": "E",
+      "baseline_passengers": 13664,
+      "baseline_pairs": 1847,
+      "new_passengers": 14059,
+      "new_pairs": 1878,
+      "passenger_change": 395,
+      "pair_change": 31,
+      "pct_change": 2.89
+    },
+    {
+      "route": "6",
+      "baseline_passengers": 1692,
+      "baseline_pairs": 283,
+      "new_passengers": 2026,
+      "new_pairs": 304,
+      "passenger_change": 334,
+      "pair_change": 21,
+      "pct_change": 19.74
+    },
+    {
+      "route": "S",
+      "baseline_passengers": 3113,
+      "baseline_pairs": 404,
+      "new_passengers": 3386,
+      "new_pairs": 428,
+      "passenger_change": 273,
+      "pair_change": 24,
+      "pct_change": 8.77
+    },
+    {
+      "route": "Q46",
+      "baseline_passengers": 2113,
+      "baseline_pairs": 298,
+      "new_passengers": 2351,
+      "new_pairs": 321,
+      "passenger_change": 238,
+      "pair_change": 23,
+      "pct_change": 11.26
+    },
+    {
+      "route": "Hempstead Branch",
+      "baseline_passengers": 710,
+      "baseline_pairs": 183,
+      "new_passengers": 910,
+      "new_pairs": 226,
+      "passenger_change": 200,
+      "pair_change": 43,
+      "pct_change": 28.17
+    },
+    {
+      "route": "Babylon Branch",
+      "baseline_passengers": 563,
+      "baseline_pairs": 121,
+      "new_passengers": 381,
+      "new_pairs": 87,
+      "passenger_change": -182,
+      "pair_change": -34,
+      "pct_change": -32.33
+    },
+    {
+      "route": "7",
+      "baseline_passengers": 34600,
+      "baseline_pairs": 4638,
+      "new_passengers": 34782,
+      "new_pairs": 4594,
+      "passenger_change": 182,
+      "pair_change": -44,
+      "pct_change": 0.53
+    },
+    {
+      "route": "B",
+      "baseline_passengers": 11103,
+      "baseline_pairs": 1543,
+      "new_passengers": 10929,
+      "new_pairs": 1453,
+      "passenger_change": -174,
+      "pair_change": -90,
+      "pct_change": -1.57
+    },
+    {
+      "route": "W",
+      "baseline_passengers": 7496,
+      "baseline_pairs": 899,
+      "new_passengers": 7329,
+      "new_pairs": 856,
+      "passenger_change": -167,
+      "pair_change": -43,
+      "pct_change": -2.23
+    },
+    {
+      "route": "1",
+      "baseline_passengers": 3148,
+      "baseline_pairs": 507,
+      "new_passengers": 3304,
+      "new_pairs": 580,
+      "passenger_change": 156,
+      "pair_change": 73,
+      "pct_change": 4.96
+    },
+    {
+      "route": "7X",
+      "baseline_passengers": 10752,
+      "baseline_pairs": 1806,
+      "new_passengers": 10906,
+      "new_pairs": 1827,
+      "passenger_change": 154,
+      "pair_change": 21,
+      "pct_change": 1.43
+    },
+    {
+      "route": "C",
+      "baseline_passengers": 22886,
+      "baseline_pairs": 2691,
+      "new_passengers": 23039,
+      "new_pairs": 2853,
+      "passenger_change": 153,
+      "pair_change": 162,
+      "pct_change": 0.67
+    },
+    {
+      "route": "M101",
+      "baseline_passengers": 68,
+      "baseline_pairs": 31,
+      "new_passengers": 208,
+      "new_pairs": 81,
+      "passenger_change": 140,
+      "pair_change": 50,
+      "pct_change": 205.88
+    },
+    {
+      "route": "6X",
+      "baseline_passengers": 1532,
+      "baseline_pairs": 349,
+      "new_passengers": 1659,
+      "new_pairs": 407,
+      "passenger_change": 127,
+      "pair_change": 58,
+      "pct_change": 8.29
+    },
+    {
+      "route": "Q17",
+      "baseline_passengers": 3655,
+      "baseline_pairs": 387,
+      "new_passengers": 3772,
+      "new_pairs": 404,
+      "passenger_change": 117,
+      "pair_change": 17,
+      "pct_change": 3.2
+    },
+    {
+      "route": "FX",
+      "baseline_passengers": 13346,
+      "baseline_pairs": 1209,
+      "new_passengers": 13239,
+      "new_pairs": 1198,
+      "passenger_change": -107,
+      "pair_change": -11,
+      "pct_change": -0.8
+    },
+    {
+      "route": "3",
+      "baseline_passengers": 869,
+      "baseline_pairs": 175,
+      "new_passengers": 764,
+      "new_pairs": 151,
+      "passenger_change": -105,
+      "pair_change": -24,
+      "pct_change": -12.08
+    },
+    {
+      "route": "M",
+      "baseline_passengers": 12671,
+      "baseline_pairs": 2004,
+      "new_passengers": 12587,
+      "new_pairs": 1605,
+      "passenger_change": -84,
+      "pair_change": -399,
+      "pct_change": -0.66
+    },
+    {
+      "route": "4",
+      "baseline_passengers": 14976,
+      "baseline_pairs": 2355,
+      "new_passengers": 15025,
+      "new_pairs": 2459,
+      "passenger_change": 49,
+      "pair_change": 104,
+      "pct_change": 0.33
+    },
+    {
+      "route": "M4",
+      "baseline_passengers": 319,
+      "baseline_pairs": 41,
+      "new_passengers": 294,
+      "new_pairs": 42,
+      "passenger_change": -25,
+      "pair_change": 1,
+      "pct_change": -7.84
+    },
+    {
+      "route": "Long Beach Branch",
+      "baseline_passengers": 151,
+      "baseline_pairs": 46,
+      "new_passengers": 128,
+      "new_pairs": 38,
+      "passenger_change": -23,
+      "pair_change": -8,
+      "pct_change": -15.23
+    },
+    {
+      "route": "Far Rockaway Branch",
+      "baseline_passengers": 1024,
+      "baseline_pairs": 237,
+      "new_passengers": 1039,
+      "new_pairs": 247,
+      "passenger_change": 15,
+      "pair_change": 10,
+      "pct_change": 1.46
+    },
+    {
+      "route": "Q27",
+      "baseline_passengers": 4776,
+      "baseline_pairs": 973,
+      "new_passengers": 4772,
+      "new_pairs": 982,
+      "passenger_change": -4,
+      "pair_change": 9,
+      "pct_change": -0.08
+    },
+    {
+      "route": "M15",
+      "baseline_passengers": 1821,
+      "baseline_pairs": 441,
+      "new_passengers": 1822,
+      "new_pairs": 444,
+      "passenger_change": 1,
+      "pair_change": 3,
+      "pct_change": 0.05
+    }
+  ],
+  "summary": {
+    "total_routes": 47,
+    "routes_with_gains": 28,
+    "routes_with_losses": 19
+  }
+}

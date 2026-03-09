@@ -185,6 +185,11 @@
             justify-content: space-between;
             font-size: 0.7rem;
             color: #6c757d;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+        .legend-labels > span {
+            white-space: nowrap;
         }
         .loading {
             position: absolute;
@@ -699,11 +704,12 @@
         // Color scales
         const COLOR_SCALES = {
             time_change: {
-                // Green scale for negative values (time savings)
+                // Green scale for negative values (time savings), red for any positive
                 colors: ['#006d2c', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#f7fcf5'],
                 domain: [-60, -50, -40, -30, -20, -10, 0],
-                reverse: false, // more negative (bigger savings) = darker green
-                unit: 'min'
+                reverse: false,
+                unit: 'min',
+                redIfPositive: true  // Flag to turn positive values red
             },
             ibx_time: {
                 colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
@@ -746,14 +752,17 @@
         // Summary metric color scales
         const SUMMARY_COLOR_SCALES = {
             avg_time_change_min: {
+                // Green scale for negative values (time savings), red for any positive
                 colors: ['#006d2c', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#f7fcf5'],
                 reverse: false,
-                unit: 'min'
+                unit: 'min',
+                redIfPositive: true  // Flag to turn positive values red
             },
             total_time_saved_hours: {
                 colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
                 reverse: false,
-                unit: 'hrs'
+                unit: 'hrs',
+                redIfNegative: true  // Flag to turn negative values (time lost) red
             },
             pairs: {
                 colors: ['#f7fbff', '#c6dbef', '#9ecae1', '#6baed6', '#3182bd', '#08519c'],
@@ -815,30 +824,39 @@
             });
         }
 
+        // Helper to fetch and decompress gzipped JSON
+        async function fetchGzippedJson(url) {
+            const response = await fetch(url);
+            const ds = new DecompressionStream('gzip');
+            const decompressedStream = response.body.pipeThrough(ds);
+            const text = await new Response(decompressedStream).text();
+            return JSON.parse(text);
+        }
+
         // Load data
         async function loadData() {
             try {
                 // Cache-busting: append timestamp to force fresh data
                 const cacheBust = `?v=${Date.now()}`;
 
-                const [tractResponse, comparisonResponse, summaryResponse, ibxRouteResponse, ibxStationsResponse, transitRoutesResponse, routeSummaryResponse, stationRidershipResponse] = await Promise.all([
-                    fetch('data/census/nyc_census.geojson' + cacheBust),
-                    fetch('data/tract_comparison_data.json' + cacheBust),
-                    fetch('data/tract_summary_data.json' + cacheBust),
-                    fetch('data/IBX/route.geojson' + cacheBust),
-                    fetch('data/IBX/stations.geojson' + cacheBust),
-                    fetch('data/transit/NYC_routes.geojson' + cacheBust),
-                    fetch('data/route_summary.json' + cacheBust),
-                    fetch('data/ibx_stops.json' + cacheBust)
+                const [tractData_, comparisonData_, summaryData_, ibxRouteData_, ibxStationsData_, transitRoutesData_, routeSummaryData_, ibxStationRidershipData_] = await Promise.all([
+                    fetch('data/census/nyc_census.geojson' + cacheBust).then(r => r.json()),
+                    fetchGzippedJson('data/tract_comparison_data.json.gz' + cacheBust),
+                    fetchGzippedJson('data/tract_summary_data.json.gz' + cacheBust),
+                    fetch('data/IBX/route.geojson' + cacheBust).then(r => r.json()),
+                    fetch('data/IBX/stations.geojson' + cacheBust).then(r => r.json()),
+                    fetch('data/transit/NYC_routes.geojson' + cacheBust).then(r => r.json()),
+                    fetchGzippedJson('data/route_summary.json.gz' + cacheBust),
+                    fetchGzippedJson('data/ibx_stops.json.gz' + cacheBust)
                 ]);
-                tractData = await tractResponse.json();
-                comparisonData = await comparisonResponse.json();
-                summaryData = await summaryResponse.json();
-                ibxRouteData = await ibxRouteResponse.json();
-                ibxStationsData = await ibxStationsResponse.json();
-                transitRoutesData = await transitRoutesResponse.json();
-                routeSummaryData = await routeSummaryResponse.json();
-                ibxStationRidershipData = await stationRidershipResponse.json();
+                tractData = tractData_;
+                comparisonData = comparisonData_;
+                summaryData = summaryData_;
+                ibxRouteData = ibxRouteData_;
+                ibxStationsData = ibxStationsData_;
+                transitRoutesData = transitRoutesData_;
+                routeSummaryData = routeSummaryData_;
+                ibxStationRidershipData = ibxStationRidershipData_;
 
                 // Build route summary lookup by route name
                 routeSummaryData.lookup = {};
@@ -1003,6 +1021,16 @@
             const scale = COLOR_SCALES[metric];
             const normalize = document.getElementById('normalize-scale').checked;
 
+            // If redIfPositive flag is set, return red for any positive value
+            if (scale.redIfPositive && value > 0) {
+                return '#dc3545';  // Red for edge cases
+            }
+
+            // For zero, return light gray
+            if (scale.redIfPositive && value === 0) {
+                return '#e9ecef';
+            }
+
             let min, max;
             if (normalize && localMin !== undefined && localMax !== undefined) {
                 min = localMin;
@@ -1010,6 +1038,12 @@
             } else {
                 min = globalScales[metric]?.min ?? scale.domain[0];
                 max = globalScales[metric]?.max ?? scale.domain[scale.domain.length - 1];
+            }
+
+            // For redIfPositive scales, normalize negative values from min to 0
+            // so small negative values (small savings) still show color
+            if (scale.redIfPositive && value < 0) {
+                max = 0;
             }
 
             // Normalize value to 0-1
@@ -1027,7 +1061,7 @@
 
         // Get color for summary metric value
         function getColorSummary(value, metric) {
-            if (value === null || value === undefined || isNaN(value) || value === 0) {
+            if (value === null || value === undefined || isNaN(value)) {
                 return '#e9ecef';
             }
 
@@ -1036,8 +1070,33 @@
 
             if (!scale || !ss) return '#e9ecef';
 
+            // If redIfPositive flag is set, return red for any positive value
+            if (scale.redIfPositive && value > 0) {
+                return '#dc3545';  // Red for edge cases
+            }
+
+            // If redIfNegative flag is set, return red for any negative value
+            if (scale.redIfNegative && value < 0) {
+                return '#dc3545';  // Red for edge cases (time lost)
+            }
+
+            // For zero, return light gray
+            if (value === 0) return '#e9ecef';
+
             let min = ss.min;
             let max = ss.max;
+
+            // For redIfNegative scales, normalize positive values from 0 to max
+            // so small positive values still show color
+            if (scale.redIfNegative && value > 0) {
+                min = 0;
+            }
+
+            // For redIfPositive scales, normalize negative values from min to 0
+            // so small negative values still show color
+            if (scale.redIfPositive && value < 0) {
+                max = 0;
+            }
 
             // Normalize value to 0-1
             let t = (value - min) / (max - min);
@@ -1400,7 +1459,7 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Avg Time Change</span>
-                    <span class="info-value" style="color: ${tractSummary.avg_time_change_min < 0 ? '#198754' : '#6c757d'}">
+                    <span class="info-value" style="color: ${tractSummary.avg_time_change_min < 0 ? '#198754' : (tractSummary.avg_time_change_min > 0 ? '#dc3545' : '#6c757d')}">
                         ${formatValue(tractSummary.avg_time_change_min, ' min')}
                     </span>
                 </div>
@@ -1651,8 +1710,9 @@
                     <div style="flex:1;background:#22c55e"></div>
                 `;
                 if (scale) {
-                    const maxAbs = Math.max(Math.abs(scale.min), Math.abs(scale.max));
-                    labelsEl.innerHTML = `<span>-${maxAbs.toFixed(0)}</span><span>0</span><span>+${maxAbs.toFixed(0)}</span>`;
+                    const minVal = Math.round(scale.min);
+                    const maxVal = Math.round(scale.max);
+                    labelsEl.innerHTML = `<span>${minVal.toLocaleString()}</span><span>0</span><span>+${maxVal.toLocaleString()}</span>`;
                 }
             } else {
                 // Sequential blue scale with visible minimum
@@ -1694,14 +1754,32 @@
             document.getElementById('legend-title').textContent = labels[metric];
 
             const scaleEl = document.getElementById('legend-scale');
-            scaleEl.innerHTML = scale.colors.map(c =>
+            let scaleHtml = '';
+            // Add red box at the start if redIfNegative
+            if (scale.redIfNegative) {
+                scaleHtml += `<div style="flex:0.5;background:#dc3545"></div>`;
+            }
+            scaleHtml += scale.colors.map(c =>
                 `<div style="flex:1;background:${c}"></div>`
             ).join('');
+            // Add red box at the end if redIfPositive
+            if (scale.redIfPositive) {
+                scaleHtml += `<div style="flex:0.5;background:#dc3545"></div>`;
+            }
+            scaleEl.innerHTML = scaleHtml;
 
             const labelsEl = document.getElementById('legend-labels');
             const ss = summaryScales[metric];
             if (ss) {
-                labelsEl.innerHTML = `<span>${ss.min.toFixed(0)}</span><span>${ss.max.toFixed(0)}</span>`;
+                if (scale.redIfPositive) {
+                    // Show min, 0, and "+" for positive (red)
+                    labelsEl.innerHTML = `<span>${Math.round(ss.min)}</span><span>0</span><span style="color:#dc3545">+</span>`;
+                } else if (scale.redIfNegative) {
+                    // Show "-" for negative (red), 0, and max
+                    labelsEl.innerHTML = `<span style="color:#dc3545">−</span><span>0</span><span>${Math.round(ss.max)}</span>`;
+                } else {
+                    labelsEl.innerHTML = `<span>${ss.min.toFixed(0)}</span><span>${ss.max.toFixed(0)}</span>`;
+                }
             }
         }
 
@@ -1721,13 +1799,22 @@
             document.getElementById('legend-title').textContent = labels[metric];
 
             const scaleEl = document.getElementById('legend-scale');
-            scaleEl.innerHTML = scale.colors.map(c =>
+            // Add red box at the end if redIfPositive
+            let scaleHtml = scale.colors.map(c =>
                 `<div style="flex:1;background:${c}"></div>`
             ).join('');
+            if (scale.redIfPositive) {
+                scaleHtml += `<div style="flex:0.5;background:#dc3545"></div>`;
+            }
+            scaleEl.innerHTML = scaleHtml;
 
             const labelsEl = document.getElementById('legend-labels');
             const gs = globalScales[metric];
-            if (gs) {
+            if (scale.redIfPositive) {
+                // Show min, 0, and "+" for positive (red)
+                const minVal = gs ? Math.round(gs.min) : scale.domain[0];
+                labelsEl.innerHTML = `<span>${minVal}</span><span>0</span><span style="color:#dc3545">+</span>`;
+            } else if (gs) {
                 labelsEl.innerHTML = `<span>${gs.min.toFixed(0)}</span><span>${gs.max.toFixed(0)}</span>`;
             } else {
                 labelsEl.innerHTML = `<span>${scale.domain[0]}</span><span>${scale.domain[scale.domain.length-1]}</span>`;

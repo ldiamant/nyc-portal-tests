@@ -827,6 +827,15 @@
         // Helper to fetch and decompress gzipped JSON
         async function fetchGzippedJson(url) {
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.status}`);
+            }
+            // Check if server already decompressed it
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json') || contentType.includes('text/')) {
+                return response.json();
+            }
+            // Decompress gzip
             const ds = new DecompressionStream('gzip');
             const decompressedStream = response.body.pipeThrough(ds);
             const text = await new Response(decompressedStream).text();

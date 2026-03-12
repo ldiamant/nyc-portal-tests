@@ -701,6 +701,22 @@
         // Route type mapping: 1 = subway, 2 = rail, 3 = bus
         const ROUTE_TYPE_NAMES = { 1: 'Subway', 2: 'Rail', 3: 'Bus' };
 
+        // LIRR branch name to LIRR_X mapping (GeoJSON uses branch names, route_summary uses LIRR_X)
+        const LIRR_BRANCH_TO_CODE = {
+            'Babylon Branch': 'LIRR_1',
+            'Hempstead Branch': 'LIRR_2',
+            'Oyster Bay Branch': 'LIRR_3',
+            'Ronkonkoma Branch': 'LIRR_4',
+            'Montauk Branch': 'LIRR_5',
+            'Long Beach Branch': 'LIRR_6',
+            'Far Rockaway Branch': 'LIRR_7',
+            'West Hempstead Branch': 'LIRR_8',
+            'Port Washington Branch': 'LIRR_9',
+            'Port Jefferson Branch': 'LIRR_10',
+            'City Terminal Zone': 'LIRR_12',
+            'Greenport Service': 'LIRR_13'
+        };
+
         // Color scales
         const COLOR_SCALES = {
             time_change: {
@@ -826,20 +842,26 @@
 
         // Helper to fetch and decompress gzipped JSON
         async function fetchGzippedJson(url) {
+            console.log('Fetching:', url);
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Failed to fetch ${url}: ${response.status}`);
             }
-            // Check if server already decompressed it
-            const contentType = response.headers.get('content-type') || '';
-            if (contentType.includes('application/json') || contentType.includes('text/')) {
-                return response.json();
+            const blob = await response.blob();
+            console.log('Blob size:', blob.size, 'type:', blob.type);
+            // Try to decompress, fall back to direct parse if already decompressed
+            try {
+                const ds = new DecompressionStream('gzip');
+                const decompressedStream = blob.stream().pipeThrough(ds);
+                const text = await new Response(decompressedStream).text();
+                console.log('Decompressed successfully:', url);
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Decompress failed for', url, e);
+                // Server may have already decompressed it
+                const text = await blob.text();
+                return JSON.parse(text);
             }
-            // Decompress gzip
-            const ds = new DecompressionStream('gzip');
-            const decompressedStream = response.body.pipeThrough(ds);
-            const text = await new Response(decompressedStream).text();
-            return JSON.parse(text);
         }
 
         // Load data
@@ -871,6 +893,13 @@
                 routeSummaryData.lookup = {};
                 routeSummaryData.routes.forEach(r => {
                     routeSummaryData.lookup[r.route] = r;
+                });
+
+                // Also add LIRR branch names to lookup (maps branch name -> LIRR_X stats)
+                Object.entries(LIRR_BRANCH_TO_CODE).forEach(([branchName, lirrCode]) => {
+                    if (routeSummaryData.lookup[lirrCode]) {
+                        routeSummaryData.lookup[branchName] = routeSummaryData.lookup[lirrCode];
+                    }
                 });
 
                 // Compute global scales
@@ -908,10 +937,12 @@
                 });
 
                 if (values.length > 0) {
-                    globalScales[metric] = {
-                        min: Math.min(...values),
-                        max: Math.max(...values)
-                    };
+                    let min = values[0], max = values[0];
+                    for (let i = 1; i < values.length; i++) {
+                        if (values[i] < min) min = values[i];
+                        if (values[i] > max) max = values[i];
+                    }
+                    globalScales[metric] = { min, max };
                 }
             });
         }
@@ -934,10 +965,12 @@
                 });
 
                 if (values.length > 0) {
-                    summaryScales[metric] = {
-                        min: Math.min(...values),
-                        max: Math.max(...values)
-                    };
+                    let min = values[0], max = values[0];
+                    for (let i = 1; i < values.length; i++) {
+                        if (values[i] < min) min = values[i];
+                        if (values[i] > max) max = values[i];
+                    }
+                    summaryScales[metric] = { min, max };
                 }
             });
         }
@@ -973,8 +1006,12 @@
                         };
                     } else {
                         // For absolute metrics, use raw min and 95th percentile as max
+                        let min = values[0];
+                        for (let i = 1; i < values.length; i++) {
+                            if (values[i] < min) min = values[i];
+                        }
                         routeImpactScales[metric] = {
-                            min: Math.min(...values),
+                            min: min,
                             max: percentile(values, 95)
                         };
                     }
@@ -1004,10 +1041,12 @@
                     .filter(v => typeof v === 'number' && !isNaN(v));
 
                 if (values.length > 0) {
-                    stationScales[metric] = {
-                        min: Math.min(...values),
-                        max: Math.max(...values)
-                    };
+                    let min = values[0], max = values[0];
+                    for (let i = 1; i < values.length; i++) {
+                        if (values[i] < min) min = values[i];
+                        if (values[i] > max) max = values[i];
+                    }
+                    stationScales[metric] = { min, max };
                 }
             });
         }

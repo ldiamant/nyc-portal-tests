@@ -477,10 +477,12 @@
                 <select id="overview-metric-select">
                     <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
                     <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
-                    <option value="pairs">Connection Pairs</option>
                     <option value="total_trips">Total Trips</option>
+                    <!-- Hidden for now - debugging metrics
+                    <option value="pairs">Connection Pairs</option>
                     <option value="time_improved_pairs">Time-Improved Pairs</option>
                     <option value="trips_time_improved">Trips with Time Savings</option>
+                    -->
                 </select>
             </div>
 
@@ -609,10 +611,6 @@
                 <input type="checkbox" id="show-new-connections" checked>
                 Show new connections
             </label>
-            <label class="checkbox-group" style="margin-top: 4px;">
-                <input type="checkbox" id="normalize-scale">
-                Normalize scale
-            </label>
             <div id="route-types-panel" style="display: none;">
                 <h4>Route Types</h4>
                 <label class="checkbox-group">
@@ -658,8 +656,11 @@
         let ibxStationsLayer = null;
         let transitRoutesLayer = null;
         let selectedTractId = null;
+        let selectedTractProps = null; // Properties of the selected tract
         let activeOrigin = null;
+        let activeOriginName = null; // NTAName of the active origin
         let activeDestination = null;
+        let activeDestinationName = null; // NTAName of the active destination
         let currentMode = null; // 'origin' or 'destination'
 
         // Top-level data layer: 'tracts' | 'transit' | 'stops' (future)
@@ -716,6 +717,17 @@
             'City Terminal Zone': 'LIRR_12',
             'Greenport Service': 'LIRR_13'
         };
+
+        // Reverse mapping: LIRR code to branch name
+        const LIRR_CODE_TO_BRANCH = Object.fromEntries(
+            Object.entries(LIRR_BRANCH_TO_CODE).map(([name, code]) => [code, name.replace(' Branch', '')])
+        );
+
+        // Format route string, replacing LIRR codes with branch names
+        function formatRouteString(routeStr) {
+            if (!routeStr) return 'N/A';
+            return routeStr.replace(/LIRR_\d+/g, match => LIRR_CODE_TO_BRANCH[match] || match);
+        }
 
         // Color scales
         const COLOR_SCALES = {
@@ -947,10 +959,17 @@
             });
         }
 
-        // Compute global scales for summary metrics
+        // Compute global scales for summary metrics (using percentiles to handle outliers)
         function computeSummaryScales() {
             const metrics = ['avg_time_change_min', 'total_time_saved_hours', 'pairs',
                            'total_trips', 'time_improved_pairs', 'trips_time_improved'];
+
+            // Helper to get percentile value
+            function percentile(arr, p) {
+                const sorted = [...arr].sort((a, b) => a - b);
+                const index = Math.ceil((p / 100) * sorted.length) - 1;
+                return sorted[Math.max(0, index)];
+            }
 
             metrics.forEach(metric => {
                 let values = [];
@@ -965,12 +984,18 @@
                 });
 
                 if (values.length > 0) {
-                    let min = values[0], max = values[0];
-                    for (let i = 1; i < values.length; i++) {
-                        if (values[i] < min) min = values[i];
-                        if (values[i] > max) max = values[i];
-                    }
-                    summaryScales[metric] = { min, max };
+                    // Use 5th and 95th percentiles to handle outliers
+                    const p5 = percentile(values, 5);
+                    const p95 = percentile(values, 95);
+                    // Also compute actual min/max for reference
+                    const actualMin = Math.min(...values);
+                    const actualMax = Math.max(...values);
+                    summaryScales[metric] = {
+                        min: p5,
+                        max: p95,
+                        actualMin,
+                        actualMax
+                    };
                 }
             });
         }
@@ -1019,17 +1044,28 @@
             });
         }
 
+        // Helper functions to calculate total passengers as sum of boarding + alighting + transfers
+        function calcTotalPassengers(s) {
+            return (s['Boarding'] || 0) + (s['Alighting'] || 0) + (s['Transfers'] || 0);
+        }
+        function calcBaselineTotalPassengers(s) {
+            return (s['Baseline Boarding'] || 0) + (s['Baseline Alighting'] || 0) + (s['Baseline Transfers'] || 0);
+        }
+        function calcTotalPassengersChange(s) {
+            return calcTotalPassengers(s) - calcBaselineTotalPassengers(s);
+        }
+
         // Compute scales for station metrics
         function computeStationScales() {
             if (!ibxStationRidershipData) return;
 
             const metrics = {
-                total_passengers: s => s['Total Passengers'],
-                change: s => s['Total Passengers Change'],
+                total_passengers: s => calcTotalPassengers(s),
+                change: s => calcTotalPassengersChange(s),
                 transfers: s => s['Transfers'],
                 boardings: s => s['Boarding'],
                 alightings: s => s['Alighting'],
-                baseline_total: s => s['Baseline Total Passengers'],
+                baseline_total: s => calcBaselineTotalPassengers(s),
                 baseline_transfers: s => s['Baseline Transfers'],
                 baseline_boardings: s => s['Baseline Boarding'],
                 baseline_alightings: s => s['Baseline Alighting']
@@ -1067,7 +1103,6 @@
             }
 
             const scale = COLOR_SCALES[metric];
-            const normalize = document.getElementById('normalize-scale').checked;
 
             // If redIfPositive flag is set, return red for any positive value
             if (scale.redIfPositive && value > 0) {
@@ -1079,8 +1114,9 @@
                 return '#e9ecef';
             }
 
+            // Always use local min/max when provided (selection mode), otherwise use global scales
             let min, max;
-            if (normalize && localMin !== undefined && localMax !== undefined) {
+            if (localMin !== undefined && localMax !== undefined) {
                 min = localMin;
                 max = localMax;
             } else {
@@ -1404,13 +1440,18 @@
         function onTractClick(geoid, properties) {
             const previousSelected = selectedTractId;
             selectedTractId = geoid;
+            selectedTractProps = properties;
 
-            const tractEl = document.getElementById('selected-tract');
-            tractEl.textContent = `${geoid} (${properties.BoroName})`;
-            tractEl.classList.remove('empty');
+            // In selection mode, don't update the "SELECTED TRACT" display - keep showing the origin/destination
+            // The clicked tract is for pinning/comparison, shown in the Statistics panel
+            if (tractsViewMode !== 'selection' || (!activeOrigin && !activeDestination)) {
+                const tractEl = document.getElementById('selected-tract');
+                tractEl.textContent = properties.NTAName || `${geoid} (${properties.BoroName})`;
+                tractEl.classList.remove('empty');
 
-            document.getElementById('btn-origin').disabled = false;
-            document.getElementById('btn-dest').disabled = false;
+                document.getElementById('btn-origin').disabled = false;
+                document.getElementById('btn-dest').disabled = false;
+            }
 
             // Handle pinning in selection mode (when origin/destination is set)
             if (tractsViewMode === 'selection' && (activeOrigin || activeDestination)) {
@@ -1469,12 +1510,8 @@
             if (!tractSummary || tractSummary.pairs === 0) {
                 hoverEl.innerHTML = `
                     <div class="info-row">
-                        <span class="info-label">Tract</span>
-                        <span class="info-value">${geoid}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Borough</span>
-                        <span class="info-value">${properties.BoroName}</span>
+                        <span class="info-label">Neighborhood</span>
+                        <span class="info-value">${properties.NTAName || geoid}</span>
                     </div>
                     <div style="margin-top: 8px; color: #6c757d; font-style: italic;">
                         No IBX impact data
@@ -1487,12 +1524,8 @@
 
             hoverEl.innerHTML = `
                 <div class="info-row">
-                    <span class="info-label">Tract</span>
-                    <span class="info-value">${geoid}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Borough</span>
-                    <span class="info-value">${properties.BoroName}</span>
+                    <span class="info-label">Neighborhood</span>
+                    <span class="info-value">${properties.NTAName || geoid}</span>
                 </div>
                 <div style="margin: 6px 0; padding: 4px 8px; background: #e9ecef; border-radius: 4px; font-size: 0.8rem; color: #495057;">
                     ${perspectiveLabel}
@@ -1548,12 +1581,8 @@
             if (!connectionData && geoid !== activeOrigin && geoid !== activeDestination) {
                 hoverEl.innerHTML = `
                     <div class="info-row">
-                        <span class="info-label">Tract</span>
-                        <span class="info-value">${geoid}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Borough</span>
-                        <span class="info-value">${properties.BoroName}</span>
+                        <span class="info-label">Neighborhood</span>
+                        <span class="info-value">${properties.NTAName || geoid}</span>
                     </div>
                     <div style="margin-top: 8px; color: #6c757d; font-style: italic;">
                         No connection data
@@ -1565,12 +1594,8 @@
             if (geoid === activeOrigin || geoid === activeDestination) {
                 hoverEl.innerHTML = `
                     <div class="info-row">
-                        <span class="info-label">Tract</span>
-                        <span class="info-value">${geoid}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Borough</span>
-                        <span class="info-value">${properties.BoroName}</span>
+                        <span class="info-label">Neighborhood</span>
+                        <span class="info-value">${properties.NTAName || geoid}</span>
                     </div>
                     <div style="margin-top: 8px; font-weight: 500; color: #0d6efd;">
                         ${geoid === activeOrigin ? 'Selected Origin' : 'Selected Destination'}
@@ -1592,12 +1617,8 @@
             hoverEl.innerHTML = `
                 ${pinnedIndicator}
                 <div class="info-row">
-                    <span class="info-label">Tract</span>
-                    <span class="info-value">${geoid}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Borough</span>
-                    <span class="info-value">${properties.BoroName}</span>
+                    <span class="info-label">Neighborhood</span>
+                    <span class="info-value">${properties.NTAName || geoid}</span>
                 </div>
                 ${isNewConnection ? '<div style="margin: 4px 0;"><span class="new-connection-badge">New Connection</span></div>' : ''}
                 <div class="info-row">
@@ -1624,11 +1645,11 @@
                 </div>
                 <div class="route-info">
                     <div class="route-label">Baseline Route:</div>
-                    <div>${connectionData.baseline_routes || 'N/A'}</div>
+                    <div>${formatRouteString(connectionData.baseline_routes)}</div>
                 </div>
                 <div class="route-info">
                     <div class="route-label">IBX Route:</div>
-                    <div>${connectionData.ibx_routes || 'N/A'}</div>
+                    <div>${formatRouteString(connectionData.ibx_routes)}</div>
                 </div>
             `;
         }
@@ -1819,14 +1840,18 @@
             const labelsEl = document.getElementById('legend-labels');
             const ss = summaryScales[metric];
             if (ss) {
+                // Show "+" suffix when scale uses percentiles and actual max exceeds displayed max
+                const maxSuffix = ss.actualMax > ss.max ? '+' : '';
+                const minSuffix = ss.actualMin < ss.min ? '−' : '';
+
                 if (scale.redIfPositive) {
                     // Show min, 0, and "+" for positive (red)
-                    labelsEl.innerHTML = `<span>${Math.round(ss.min)}</span><span>0</span><span style="color:#dc3545">+</span>`;
+                    labelsEl.innerHTML = `<span>${minSuffix}${Math.round(ss.min)}</span><span>0</span><span style="color:#dc3545">+</span>`;
                 } else if (scale.redIfNegative) {
                     // Show "-" for negative (red), 0, and max
-                    labelsEl.innerHTML = `<span style="color:#dc3545">−</span><span>0</span><span>${Math.round(ss.max)}</span>`;
+                    labelsEl.innerHTML = `<span style="color:#dc3545">−</span><span>0</span><span>${Math.round(ss.max)}${maxSuffix}</span>`;
                 } else {
-                    labelsEl.innerHTML = `<span>${ss.min.toFixed(0)}</span><span>${ss.max.toFixed(0)}</span>`;
+                    labelsEl.innerHTML = `<span>${ss.min.toFixed(0)}</span><span>${ss.max.toFixed(0)}${maxSuffix}</span>`;
                 }
             }
         }
@@ -1892,8 +1917,8 @@
             if (!data) return null;
 
             const metricMap = {
-                total_passengers: stationDataView === 'baseline' ? data['Baseline Total Passengers'] : data['Total Passengers'],
-                change: data['Total Passengers Change'],
+                total_passengers: stationDataView === 'baseline' ? calcBaselineTotalPassengers(data) : calcTotalPassengers(data),
+                change: calcTotalPassengersChange(data),
                 transfers: stationDataView === 'baseline' ? data['Baseline Transfers'] : data['Transfers'],
                 boardings: stationDataView === 'baseline' ? data['Baseline Boarding'] : data['Boarding'],
                 alightings: stationDataView === 'baseline' ? data['Baseline Alighting'] : data['Alighting']
@@ -1920,12 +1945,14 @@
 
             // Ridership data
             if (ridership) {
+                const totalPax = calcTotalPassengers(ridership);
+                const totalChange = calcTotalPassengersChange(ridership);
                 html += `
                 <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #dee2e6;">
                     <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; margin-bottom: 4px;">Ridership</div>
                     <div class="info-row">
                         <span class="info-label">Total Passengers</span>
-                        <span class="info-value">${Math.round(ridership['Total Passengers']).toLocaleString()}</span>
+                        <span class="info-value">${Math.round(totalPax).toLocaleString()}</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Boardings</span>
@@ -1941,8 +1968,8 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">vs Baseline</span>
-                        <span class="info-value" style="color: ${ridership['Total Passengers Change'] >= 0 ? '#198754' : '#dc3545'}">
-                            ${ridership['Total Passengers Change'] >= 0 ? '+' : ''}${Math.round(ridership['Total Passengers Change']).toLocaleString()}
+                        <span class="info-value" style="color: ${totalChange >= 0 ? '#198754' : '#dc3545'}">
+                            ${totalChange >= 0 ? '+' : ''}${Math.round(totalChange).toLocaleString()}
                         </span>
                     </div>
                 </div>`;
@@ -2371,11 +2398,11 @@
         function updateActiveSelection() {
             const el = document.getElementById('active-selection');
             if (activeOrigin) {
-                el.innerHTML = `<strong>Origin:</strong> ${activeOrigin}`;
+                el.innerHTML = `<strong>Origin:</strong> ${activeOriginName}`;
                 el.style.color = '#212529';
                 el.style.fontStyle = 'normal';
             } else if (activeDestination) {
-                el.innerHTML = `<strong>Destination:</strong> ${activeDestination}`;
+                el.innerHTML = `<strong>Destination:</strong> ${activeDestinationName}`;
                 el.style.color = '#212529';
                 el.style.fontStyle = 'normal';
             } else {
@@ -2388,8 +2415,11 @@
         // Clear selection and return to overview
         function clearSelection() {
             activeOrigin = null;
+            activeOriginName = null;
             activeDestination = null;
+            activeDestinationName = null;
             selectedTractId = null;
+            selectedTractProps = null;
             currentMode = null;
             tractsViewMode = 'overview';
             pinnedTractId = null;
@@ -2455,7 +2485,9 @@
         document.getElementById('btn-origin').addEventListener('click', () => {
             if (!selectedTractId) return;
             activeOrigin = selectedTractId;
+            activeOriginName = selectedTractProps?.NTAName || selectedTractId;
             activeDestination = null;
+            activeDestinationName = null;
             currentMode = 'origin';
             tractsViewMode = 'selection';
             pinnedTractId = null;
@@ -2472,7 +2504,9 @@
         document.getElementById('btn-dest').addEventListener('click', () => {
             if (!selectedTractId) return;
             activeDestination = selectedTractId;
+            activeDestinationName = selectedTractProps?.NTAName || selectedTractId;
             activeOrigin = null;
+            activeOriginName = null;
             currentMode = 'destination';
             tractsViewMode = 'selection';
             pinnedTractId = null;
@@ -2497,10 +2531,6 @@
         });
 
         document.getElementById('show-new-connections').addEventListener('change', () => {
-            renderTracts();
-        });
-
-        document.getElementById('normalize-scale').addEventListener('change', () => {
             renderTracts();
         });
 
@@ -2749,10 +2779,15 @@
         function renderStationBarChart() {
             if (!ibxStationRidershipData) return 'Loading station data...';
 
+            // Get IBX station names from the GeoJSON
+            const ibxStationNames = new Set(
+                ibxStationsData.features.map(f => f.properties.name)
+            );
+
             const getValue = (s) => {
                 const metricMap = {
-                    total_passengers: stationDataView === 'baseline' ? s['Baseline Total Passengers'] : s['Total Passengers'],
-                    change: s['Total Passengers Change'],
+                    total_passengers: stationDataView === 'baseline' ? calcBaselineTotalPassengers(s) : calcTotalPassengers(s),
+                    change: calcTotalPassengersChange(s),
                     transfers: stationDataView === 'baseline' ? s['Baseline Transfers'] : s['Transfers'],
                     boardings: stationDataView === 'baseline' ? s['Baseline Boarding'] : s['Boarding'],
                     alightings: stationDataView === 'baseline' ? s['Baseline Alighting'] : s['Alighting']
@@ -2760,7 +2795,9 @@
                 return metricMap[stationImpactMetric] || 0;
             };
 
-            const sorted = [...ibxStationRidershipData].sort((a, b) => getValue(b) - getValue(a));
+            // Filter to only IBX stations
+            const ibxOnly = ibxStationRidershipData.filter(s => ibxStationNames.has(s.Stop));
+            const sorted = [...ibxOnly].sort((a, b) => getValue(b) - getValue(a));
             const maxVal = Math.max(getValue(sorted[0]) || 1, 1);
 
             const metricLabels = {
@@ -2814,30 +2851,30 @@
             });
             html += `</tr>`;
 
-            // Data rows
+            // Data rows - using helper functions for Total and Change
             const metrics = [
-                ['Total', 'Total Passengers', 'Baseline Total Passengers'],
-                ['Boardings', 'Boarding', 'Baseline Boarding'],
-                ['Alightings', 'Alighting', 'Baseline Alighting'],
-                ['Transfers', 'Transfers', 'Baseline Transfers'],
-                ['Change', 'Total Passengers Change', null]
+                { label: 'Total', getIbx: d => calcTotalPassengers(d), getBaseline: d => calcBaselineTotalPassengers(d) },
+                { label: 'Boardings', getIbx: d => d['Boarding'], getBaseline: d => d['Baseline Boarding'] },
+                { label: 'Alightings', getIbx: d => d['Alighting'], getBaseline: d => d['Baseline Alighting'] },
+                { label: 'Transfers', getIbx: d => d['Transfers'], getBaseline: d => d['Baseline Transfers'] },
+                { label: 'Change', getIbx: d => calcTotalPassengersChange(d), getBaseline: null }
             ];
 
-            metrics.forEach(([label, ibxKey, baselineKey]) => {
+            metrics.forEach(({ label, getIbx, getBaseline }) => {
                 html += `<tr style="border-bottom: 1px solid #f1f3f5;">
                     <td style="padding: 4px; color: #6c757d;">${label}</td>`;
                 pinnedStations.forEach(name => {
                     const data = ridershipLookup[normalizeStationName(name)];
                     let val = '-';
                     if (data) {
-                        if (stationDataView === 'comparison' && baselineKey) {
-                            const baseline = Math.round(data[baselineKey] || 0);
-                            const ibx = Math.round(data[ibxKey] || 0);
+                        if (stationDataView === 'comparison' && getBaseline) {
+                            const baseline = Math.round(getBaseline(data) || 0);
+                            const ibx = Math.round(getIbx(data) || 0);
                             val = `<span style="font-size: 0.7rem;">${baseline.toLocaleString()}</span> → ${ibx.toLocaleString()}`;
-                        } else if (stationDataView === 'baseline' && baselineKey) {
-                            val = Math.round(data[baselineKey] || 0).toLocaleString();
+                        } else if (stationDataView === 'baseline' && getBaseline) {
+                            val = Math.round(getBaseline(data) || 0).toLocaleString();
                         } else {
-                            const value = Math.round(data[ibxKey] || 0);
+                            const value = Math.round(getIbx(data) || 0);
                             if (label === 'Change') {
                                 const color = value >= 0 ? '#198754' : '#dc3545';
                                 val = `<span style="color: ${color}">${value >= 0 ? '+' : ''}${value.toLocaleString()}</span>`;

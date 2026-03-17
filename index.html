@@ -530,6 +530,15 @@
                     <option value="transfer_change">Transfer Change</option>
                 </select>
             </div>
+
+            <!-- Export Button -->
+            <div class="control-group">
+                <h3>Export Data</h3>
+                <button id="btn-export-geojson" class="btn" style="width: 100%;">
+                    Export as GeoJSON
+                </button>
+                <div id="export-info" style="font-size: 0.75rem; color: #6c757d; margin-top: 6px;"></div>
+            </div>
         </div>
 
         <!-- ========== TRANSIT CONTROLS ========== -->
@@ -924,6 +933,7 @@
                 updateDataLayerUI();
                 renderAll();
                 updateLegend();
+                updateExportInfo();
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('loading').textContent = 'Error loading data';
@@ -2372,6 +2382,9 @@
             // Update perspective buttons
             document.getElementById('btn-perspective-origin').classList.toggle('active', tractsPerspective === 'origin');
             document.getElementById('btn-perspective-dest').classList.toggle('active', tractsPerspective === 'destination');
+
+            // Update export info
+            updateExportInfo();
         }
 
         // Update transit view mode UI
@@ -2447,6 +2460,7 @@
             updateDataLayerUI();
             renderAll();
             updateLegend();
+            updateExportInfo();
         });
 
         document.getElementById('btn-layer-transit').addEventListener('click', () => {
@@ -2455,6 +2469,7 @@
             renderAll();
             updateLegend();
             updateSelectedRouteInfo();
+            updateExportInfo();
         });
 
         // ========== TRACTS CONTROLS ==========
@@ -2465,6 +2480,7 @@
             document.getElementById('btn-perspective-dest').classList.remove('active');
             renderTracts();
             updateLegend();
+            updateExportInfo();
         });
 
         document.getElementById('btn-perspective-dest').addEventListener('click', () => {
@@ -2473,6 +2489,7 @@
             document.getElementById('btn-perspective-origin').classList.remove('active');
             renderTracts();
             updateLegend();
+            updateExportInfo();
         });
 
         // Overview metric change
@@ -3077,6 +3094,181 @@
             e.stopPropagation();
             clearMeasurement();
         });
+
+        // Export GeoJSON functionality
+        function exportGeoJSON() {
+            if (!tractData) {
+                alert('Data not loaded yet');
+                return;
+            }
+
+            let features = [];
+            let filename = '';
+            let description = '';
+
+            if (tractsViewMode === 'overview') {
+                // Overview mode: export all tracts with summary data
+                const metric = document.getElementById('overview-metric-select').value;
+                const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
+                const summaryLookup = summaryData[dataKey];
+
+                tractData.features.forEach(feature => {
+                    const geoid = feature.properties.GEOID;
+                    const tractSummary = summaryLookup[geoid];
+
+                    if (tractSummary && tractSummary.pairs > 0) {
+                        // Merge original properties with summary data
+                        const mergedProperties = {
+                            ...feature.properties,
+                            ...tractSummary,
+                            _view_mode: 'overview',
+                            _perspective: tractsPerspective,
+                            _metric_shown: metric
+                        };
+
+                        features.push({
+                            type: 'Feature',
+                            properties: mergedProperties,
+                            geometry: feature.geometry
+                        });
+                    }
+                });
+
+                filename = `nyc_tracts_overview_${tractsPerspective}_${new Date().toISOString().slice(0,10)}.geojson`;
+                description = `${features.length} tracts with IBX impact data (as ${tractsPerspective})`;
+
+            } else if (tractsViewMode === 'selection') {
+                // Selection mode: export connected tracts with comparison data
+                const metric = document.getElementById('metric-select').value;
+                const showNewConnections = document.getElementById('show-new-connections').checked;
+
+                // Build the connected tracts lookup (same logic as renderTractsSelection)
+                let connectedTracts = {};
+                let activeName = '';
+                let activeId = '';
+
+                if (activeOrigin) {
+                    activeId = activeOrigin;
+                    activeName = activeOriginName || activeOrigin;
+                    const dests = comparisonData.by_origin[activeOrigin] || [];
+                    dests.forEach(d => {
+                        if (!showNewConnections && d.baseline_time === 'NaN') return;
+                        connectedTracts[d.dest] = d;
+                    });
+                } else if (activeDestination) {
+                    activeId = activeDestination;
+                    activeName = activeDestinationName || activeDestination;
+                    const origins = comparisonData.by_destination[activeDestination] || [];
+                    origins.forEach(d => {
+                        if (!showNewConnections && d.baseline_time === 'NaN') return;
+                        connectedTracts[d.origin] = d;
+                    });
+                }
+
+                if (Object.keys(connectedTracts).length === 0) {
+                    alert('No connections to export. Please select an origin or destination first.');
+                    return;
+                }
+
+                // Add the active (selected) tract first
+                const activeTractFeature = tractData.features.find(f => f.properties.GEOID === activeId);
+                if (activeTractFeature) {
+                    features.push({
+                        type: 'Feature',
+                        properties: {
+                            ...activeTractFeature.properties,
+                            _role: activeOrigin ? 'origin' : 'destination',
+                            _view_mode: 'selection'
+                        },
+                        geometry: activeTractFeature.geometry
+                    });
+                }
+
+                // Add connected tracts with their comparison data
+                tractData.features.forEach(feature => {
+                    const geoid = feature.properties.GEOID;
+                    const connectionData = connectedTracts[geoid];
+
+                    if (connectionData) {
+                        const mergedProperties = {
+                            ...feature.properties,
+                            ...connectionData,
+                            _role: activeOrigin ? 'destination' : 'origin',
+                            _view_mode: 'selection',
+                            _metric_shown: metric
+                        };
+
+                        features.push({
+                            type: 'Feature',
+                            properties: mergedProperties,
+                            geometry: feature.geometry
+                        });
+                    }
+                });
+
+                const role = activeOrigin ? 'origin' : 'destination';
+                const safeName = activeName.replace(/[^a-z0-9]/gi, '_').substring(0, 30);
+                filename = `nyc_tracts_from_${role}_${safeName}_${new Date().toISOString().slice(0,10)}.geojson`;
+                description = `${features.length} tracts (1 ${role} + ${features.length - 1} connections)`;
+            }
+
+            if (features.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            // Create GeoJSON
+            const geojson = {
+                type: 'FeatureCollection',
+                name: 'nyc_ibx_analysis_export',
+                crs: { type: 'name', properties: { name: 'urn:ogc:def:crs:OGC:1.3:CRS84' } },
+                features: features,
+                _export_metadata: {
+                    exported_at: new Date().toISOString(),
+                    view_mode: tractsViewMode,
+                    perspective: tractsPerspective,
+                    feature_count: features.length
+                }
+            };
+
+            // Download
+            const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/geo+json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Update info text
+            document.getElementById('export-info').textContent = `Exported: ${description}`;
+        }
+
+        document.getElementById('btn-export-geojson').addEventListener('click', exportGeoJSON);
+
+        // Update export info text based on current view
+        function updateExportInfo() {
+            const infoEl = document.getElementById('export-info');
+            if (!infoEl) return;
+
+            if (dataLayer !== 'tracts') {
+                infoEl.textContent = '';
+                return;
+            }
+
+            if (tractsViewMode === 'overview') {
+                const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
+                const count = Object.keys(summaryData?.[dataKey] || {}).length;
+                infoEl.textContent = `Will export ${count} tracts with summary data`;
+            } else if (activeOrigin || activeDestination) {
+                const count = Object.keys(currentConnectedTracts).length;
+                infoEl.textContent = `Will export ${count + 1} tracts (selection + connections)`;
+            } else {
+                infoEl.textContent = 'Select an origin or destination first';
+            }
+        }
 
         // Initialize
         initMap();

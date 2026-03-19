@@ -441,6 +441,168 @@
             text-align: right;
             color: #6c757d;
         }
+        /* Help Modal Styles */
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 336px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .help-btn:hover {
+            background: #0b5ed7;
+            transform: scale(1.1);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 700px;
+            max-height: 85vh;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        .modal-header h2 {
+            font-size: 1.1rem;
+            color: #212529;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: #212529;
+        }
+        .modal-body {
+            padding: 24px 28px;
+            overflow-y: auto;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        .modal-body h1 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: #212529;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .modal-body h2 {
+            font-size: 1.15rem;
+            margin-top: 28px;
+            margin-bottom: 16px;
+            color: #0d6efd;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0d6efd;
+        }
+        .modal-body h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #212529;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #0d6efd;
+        }
+        .modal-body p {
+            margin-bottom: 14px;
+            color: #495057;
+        }
+        .modal-body ul, .modal-body ol {
+            margin-bottom: 16px;
+            padding-left: 8px;
+            list-style: none;
+        }
+        .modal-body li {
+            margin-bottom: 10px;
+            color: #495057;
+            padding-left: 20px;
+            position: relative;
+        }
+        .modal-body li::before {
+            content: "•";
+            color: #0d6efd;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        .modal-body ol li::before {
+            content: counter(list-item) ".";
+            color: #0d6efd;
+        }
+        .modal-body ol {
+            counter-reset: list-item;
+        }
+        .modal-body ol li {
+            counter-increment: list-item;
+        }
+        .modal-body strong {
+            color: #212529;
+            background: #e7f1ff;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+        .modal-body em {
+            color: #6c757d;
+            font-style: normal;
+            background: #f1f3f5;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+        .modal-body hr {
+            border: none;
+            border-top: 1px solid #dee2e6;
+            margin: 24px 0;
+        }
+        .modal-body code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -3347,6 +3509,100 @@
         // Initialize
         initMap();
         loadData();
+
+        // Help modal functionality
+        async function loadHelpContent() {
+            try {
+                const response = await fetch('data/help.md');
+                const markdown = await response.text();
+                const html = parseMarkdown(markdown);
+                document.getElementById('help-content').innerHTML = html;
+            } catch (error) {
+                console.error('Failed to load help content:', error);
+                document.getElementById('help-content').innerHTML = '<p>Failed to load help content.</p>';
+            }
+        }
+
+        // Simple markdown parser
+        function parseMarkdown(md) {
+            let html = md
+                // Escape HTML
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                // Headers
+                .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                // Horizontal rules
+                .replace(/^---$/gm, '<hr>')
+                // Bold and italic
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                // Inline code
+                .replace(/`(.+?)`/g, '<code>$1</code>')
+                // Lists
+                .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+                .replace(/^- (.+)$/gm, '<li>$1</li>')
+                // Paragraphs
+                .replace(/\n\n/g, '</p><p>')
+                // Line breaks within paragraphs
+                .replace(/\n/g, '<br>');
+
+            // Wrap in paragraph tags
+            html = '<p>' + html + '</p>';
+
+            // Clean up empty paragraphs and fix list wrapping
+            html = html
+                .replace(/<p><h/g, '<h')
+                .replace(/<\/h(\d)><\/p>/g, '</h$1>')
+                .replace(/<p><hr><\/p>/g, '<hr>')
+                .replace(/<p><li>/g, '<ul><li>')
+                .replace(/<\/li><\/p>/g, '</li></ul>')
+                .replace(/<\/li><br><li>/g, '</li><li>')
+                .replace(/<\/ul><br><ul>/g, '')
+                .replace(/<p><\/p>/g, '')
+                .replace(/<br><\/p>/g, '</p>')
+                .replace(/<p><br>/g, '<p>');
+
+            return html;
+        }
+
+        function openHelpModal() {
+            document.getElementById('help-modal').classList.add('active');
+            loadHelpContent();
+        }
+
+        function closeHelpModal() {
+            document.getElementById('help-modal').classList.remove('active');
+        }
+
+        // Help modal event listeners - use DOMContentLoaded to ensure elements exist
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('help-btn').addEventListener('click', openHelpModal);
+            document.getElementById('help-modal-close').addEventListener('click', closeHelpModal);
+            document.getElementById('help-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeHelpModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeHelpModal();
+            });
+        });
     </script>
+
+    <!-- Help Button -->
+    <button id="help-btn" class="help-btn" title="Help & Instructions">?</button>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Help & Instructions</h2>
+                <button id="help-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="help-content">
+                <p style="color: #6c757d;">Loading...</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

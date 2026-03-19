@@ -461,32 +461,7 @@
 
         <!-- ========== CENSUS TRACTS CONTROLS ========== -->
         <div id="tracts-controls">
-            <!-- Tracts View Mode -->
-            <div class="control-group" id="tracts-view-mode-group">
-                <h3>View Mode</h3>
-                <div id="tracts-view-indicator" style="font-weight: 500; margin-bottom: 8px;">Overview</div>
-                <div class="btn-group" id="tracts-perspective-group">
-                    <button id="btn-perspective-origin" class="btn active">As Origin</button>
-                    <button id="btn-perspective-dest" class="btn">As Destination</button>
-                </div>
-            </div>
-
-            <!-- Overview Metric (shown in overview mode) -->
-            <div class="control-group" id="overview-metric-group">
-                <h3>Overview Metric</h3>
-                <select id="overview-metric-select">
-                    <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
-                    <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
-                    <option value="total_trips">Total Trips</option>
-                    <!-- Hidden for now - debugging metrics
-                    <option value="pairs">Connection Pairs</option>
-                    <option value="time_improved_pairs">Time-Improved Pairs</option>
-                    <option value="trips_time_improved">Trips with Time Savings</option>
-                    -->
-                </select>
-            </div>
-
-            <!-- Tract Selection -->
+            <!-- Tract Selection - ALWAYS VISIBLE AT TOP -->
             <div class="control-group" id="tract-selection-group">
                 <h3>Selected Tract</h3>
                 <div id="selected-tract" class="selected-tract empty">Click a tract on the map</div>
@@ -496,7 +471,7 @@
                 </div>
             </div>
 
-            <!-- Active Selection (shown in selection mode) -->
+            <!-- Active Selection Info (shown in selection mode) -->
             <div class="control-group" id="selection-mode-group" style="display: none;">
                 <h3>Active Selection</h3>
                 <div id="active-selection" class="info-content" style="color: #6c757d; font-style: italic;">
@@ -517,10 +492,26 @@
                 </button>
             </div>
 
-            <!-- Selection Metric (shown in selection mode) -->
-            <div class="control-group" id="selection-metric-group" style="display: none;">
-                <h3>Connection Metric</h3>
-                <select id="metric-select">
+            <!-- Overview Perspective (shown in overview mode) -->
+            <div class="control-group" id="tracts-view-mode-group">
+                <h3>Overview Perspective</h3>
+                <div class="btn-group" id="tracts-perspective-group">
+                    <button id="btn-perspective-origin" class="btn active">As Origin</button>
+                    <button id="btn-perspective-dest" class="btn">As Destination</button>
+                </div>
+            </div>
+
+            <!-- Metric Selection - changes label based on mode -->
+            <div class="control-group" id="metric-group">
+                <h3 id="metric-label">Overview Metric</h3>
+                <!-- Overview metric dropdown -->
+                <select id="overview-metric-select">
+                    <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
+                    <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
+                    <option value="total_trips">Total Trips</option>
+                </select>
+                <!-- Selection metric dropdown (hidden by default) -->
+                <select id="metric-select" style="display: none;">
                     <option value="time_change" selected>Time Change (minutes)</option>
                     <option value="ibx_time">IBX Time (minutes)</option>
                     <option value="baseline_time">Baseline Time (minutes)</option>
@@ -602,6 +593,10 @@
             <label class="checkbox-group">
                 <input type="checkbox" id="show-ibx-route" checked>
                 IBX route & stations
+            </label>
+            <label class="checkbox-group" style="margin-top: 4px;">
+                <input type="checkbox" id="show-transit-background">
+                Transit lines
             </label>
             <label class="checkbox-group" style="margin-top: 4px;">
                 <input type="checkbox" id="show-tracts-layer" checked>
@@ -2129,7 +2124,16 @@
                 transitRoutesLayer = null;
             }
 
-            // Only show transit routes in transit data layer mode
+            // Check if we should show transit as background in tracts mode
+            const showTransitBackground = document.getElementById('show-transit-background')?.checked;
+
+            if (dataLayer === 'tracts' && showTransitBackground) {
+                // Render simplified transit lines as background
+                renderTransitBackground();
+                return;
+            }
+
+            // Only show full transit routes in transit data layer mode
             if (dataLayer !== 'transit') return;
 
             const showSubway = document.getElementById('show-subway').checked;
@@ -2329,6 +2333,65 @@
             if (ibxStationsLayer) ibxStationsLayer.bringToFront();
         }
 
+        // Render transit routes as simple background layer (for tracts mode)
+        function renderTransitBackground() {
+            if (!transitRoutesData) return;
+
+            // Filter to show only subway and rail (skip buses for cleaner view)
+            const filteredFeatures = transitRoutesData.features.filter(f => {
+                const type = f.properties.route_type;
+                return type === 1 || type === 2; // 1 = subway, 2 = rail
+            });
+
+            const filteredData = {
+                type: 'FeatureCollection',
+                features: filteredFeatures
+            };
+
+            transitRoutesLayer = L.geoJSON(filteredData, {
+                style: feature => {
+                    const props = feature.properties;
+                    const naturalColor = '#' + (props.route_colo || '888888');
+                    const type = props.route_type;
+
+                    return {
+                        color: naturalColor,
+                        weight: type === 2 ? 2 : 2.5,
+                        opacity: 0.5,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                    };
+                },
+                onEachFeature: (feature, layer) => {
+                    const props = feature.properties;
+                    const routeName = props.route_name || props.route_id;
+
+                    // Simple tooltip with route name only
+                    layer.bindTooltip(routeName, {
+                        permanent: false,
+                        direction: 'top',
+                        className: 'transit-tooltip'
+                    });
+
+                    // Subtle hover effect
+                    layer.on('mouseover', function() {
+                        this.setStyle({ opacity: 0.9, weight: 4 });
+                        this.bringToFront();
+                        // Keep IBX on top
+                        if (ibxRouteLayer) ibxRouteLayer.bringToFront();
+                        if (ibxStationsLayer) ibxStationsLayer.bringToFront();
+                    });
+                    layer.on('mouseout', function() {
+                        const type = props.route_type;
+                        this.setStyle({ opacity: 0.5, weight: type === 2 ? 2 : 2.5 });
+                    });
+                }
+            }).addTo(map);
+
+            // Ensure transit is below tracts and IBX
+            transitRoutesLayer.bringToBack();
+        }
+
         // Update data layer UI - show/hide appropriate control panels
         function updateDataLayerUI() {
             // Update data layer buttons
@@ -2371,11 +2434,16 @@
         function updateTractsViewModeUI() {
             const isOverview = tractsViewMode === 'overview';
 
-            document.getElementById('tracts-view-indicator').textContent = isOverview ? 'Overview' : 'Selection Mode';
-            document.getElementById('tracts-perspective-group').style.display = isOverview ? 'flex' : 'none';
-            document.getElementById('overview-metric-group').style.display = isOverview ? 'block' : 'none';
+            // Show/hide perspective group (overview only)
+            document.getElementById('tracts-view-mode-group').style.display = isOverview ? 'block' : 'none';
+
+            // Show/hide selection info panel
             document.getElementById('selection-mode-group').style.display = isOverview ? 'none' : 'block';
-            document.getElementById('selection-metric-group').style.display = isOverview ? 'none' : 'block';
+
+            // Update metric label and toggle dropdowns
+            document.getElementById('metric-label').textContent = isOverview ? 'Overview Metric' : 'Connection Metric';
+            document.getElementById('overview-metric-select').style.display = isOverview ? 'block' : 'none';
+            document.getElementById('metric-select').style.display = isOverview ? 'none' : 'block';
 
             // Update perspective buttons
             document.getElementById('btn-perspective-origin').classList.toggle('active', tractsPerspective === 'origin');
@@ -2991,6 +3059,10 @@
         // ========== COMMON CONTROLS ==========
         document.getElementById('show-ibx-route').addEventListener('change', () => {
             renderIBXLayers();
+        });
+
+        document.getElementById('show-transit-background').addEventListener('change', () => {
+            renderTransitRoutes();
         });
 
         document.getElementById('show-tracts-layer').addEventListener('change', () => {

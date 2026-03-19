@@ -531,14 +531,6 @@
                 </select>
             </div>
 
-            <!-- Export Button -->
-            <div class="control-group">
-                <h3>Export Data</h3>
-                <button id="btn-export-geojson" class="btn" style="width: 100%;">
-                    Export as GeoJSON
-                </button>
-                <div id="export-info" style="font-size: 0.75rem; color: #6c757d; margin-top: 6px;"></div>
-            </div>
         </div>
 
         <!-- ========== TRANSIT CONTROLS ========== -->
@@ -645,6 +637,12 @@
                 <button id="btn-clear-measure" class="btn" style="width: 100%; margin-top: 6px; font-size: 0.75rem; padding: 4px 8px;">
                     Clear
                 </button>
+            </div>
+            <div id="export-panel" style="margin-top: 8px;">
+                <button id="btn-export-geojson" class="btn" style="width: 100%; font-size: 0.8rem;">
+                    📥 Export GeoJSON
+                </button>
+                <div id="export-info" style="font-size: 0.7rem; color: #6c757d; margin-top: 4px;"></div>
             </div>
         </div>
     </div>
@@ -1749,15 +1747,15 @@
             labelsEl.innerHTML += `
                 <div class="station-size-legend" style="width: 100%; margin-top: 10px; justify-content: space-around;">
                     <div class="size-item">
-                        <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#dc3545" stroke="#fff" stroke-width="1.5"/></svg>
+                        <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#212529" stroke="#fff" stroke-width="1.5"/></svg>
                         <span>Low</span>
                     </div>
                     <div class="size-item">
-                        <svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="#dc3545" stroke="#fff" stroke-width="1.5"/></svg>
+                        <svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="#212529" stroke="#fff" stroke-width="1.5"/></svg>
                         <span>Med</span>
                     </div>
                     <div class="size-item">
-                        <svg width="34" height="34"><circle cx="17" cy="17" r="15" fill="#dc3545" stroke="#fff" stroke-width="1.5"/></svg>
+                        <svg width="34" height="34"><circle cx="17" cy="17" r="15" fill="#212529" stroke="#fff" stroke-width="1.5"/></svg>
                         <span>High</span>
                     </div>
                 </div>
@@ -2009,7 +2007,7 @@
             // Add route layer
             ibxRouteLayer = L.geoJSON(ibxRouteData, {
                 style: {
-                    color: '#dc3545',
+                    color: '#212529',
                     weight: 4,
                     opacity: 0.9,
                     lineCap: 'round',
@@ -2047,7 +2045,7 @@
 
                         return L.circleMarker(latlng, {
                             radius: radius,
-                            fillColor: '#dc3545',
+                            fillColor: '#212529',
                             color: isPinned ? '#0d6efd' : '#fff',
                             weight: isPinned ? 3 : 2,
                             opacity: 1,
@@ -2057,7 +2055,7 @@
                         // Default mode - fixed size circles
                         return L.circleMarker(latlng, {
                             radius: 7,
-                            fillColor: '#dc3545',
+                            fillColor: '#212529',
                             color: '#fff',
                             weight: 2,
                             opacity: 1,
@@ -2093,13 +2091,13 @@
                         // Hover effects
                         const baseRadius = layer.options.radius;
                         layer.on('mouseover', function() {
-                            this.setStyle({ radius: baseRadius + 3, fillColor: '#b02a37' });
+                            this.setStyle({ radius: baseRadius + 3, fillColor: '#495057' });
                         });
                         layer.on('mouseout', function() {
                             const isPinned = pinnedStations.includes(name);
                             this.setStyle({
                                 radius: baseRadius,
-                                fillColor: '#dc3545',
+                                fillColor: '#212529',
                                 color: isPinned ? '#0d6efd' : '#fff',
                                 weight: isPinned ? 3 : 2
                             });
@@ -2110,10 +2108,10 @@
                         layer.bindPopup(popupContent);
 
                         layer.on('mouseover', function() {
-                            this.setStyle({ radius: 9, fillColor: '#b02a37' });
+                            this.setStyle({ radius: 9, fillColor: '#495057' });
                         });
                         layer.on('mouseout', function() {
-                            this.setStyle({ radius: 7, fillColor: '#dc3545' });
+                            this.setStyle({ radius: 7, fillColor: '#212529' });
                         });
                     }
                 }
@@ -3250,23 +3248,27 @@
 
         // Update export info text based on current view
         function updateExportInfo() {
+            const exportPanel = document.getElementById('export-panel');
             const infoEl = document.getElementById('export-info');
-            if (!infoEl) return;
+            if (!exportPanel || !infoEl) return;
 
+            // Only show export panel in tracts mode
             if (dataLayer !== 'tracts') {
-                infoEl.textContent = '';
+                exportPanel.style.display = 'none';
                 return;
             }
+
+            exportPanel.style.display = 'block';
 
             if (tractsViewMode === 'overview') {
                 const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
                 const count = Object.keys(summaryData?.[dataKey] || {}).length;
-                infoEl.textContent = `Will export ${count} tracts with summary data`;
+                infoEl.textContent = `${count} tracts`;
             } else if (activeOrigin || activeDestination) {
                 const count = Object.keys(currentConnectedTracts).length;
-                infoEl.textContent = `Will export ${count + 1} tracts (selection + connections)`;
+                infoEl.textContent = `${count + 1} tracts`;
             } else {
-                infoEl.textContent = 'Select an origin or destination first';
+                infoEl.textContent = 'Select origin/destination first';
             }
         }
 

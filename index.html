@@ -1381,6 +1381,8 @@
                     <option value="avg_time_change_min" selected>Avg Time Change (min)</option>
                     <option value="total_time_saved_hours">Total Time Saved (hrs)</option>
                     <option value="total_trips">Total Trips</option>
+                    <option value="svi">Vulnerability (SVI)</option>
+                    <option value="bivariate">Vulnerability + Benefit</option>
                 </select>
                 <!-- Selection metric dropdown (hidden by default) -->
                 <select id="metric-select" style="display: none;">
@@ -1685,8 +1687,42 @@
                 colors: ['#f7fcf5', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
                 reverse: false,
                 unit: ''
+            },
+            svi: {
+                // Purple scale: low vulnerability (light) to high vulnerability (dark)
+                colors: ['#f2f0f7', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3'],
+                reverse: false,
+                unit: ''
             }
         };
+
+        // Bivariate color matrix (3x3)
+        // Rows: SVI vulnerability (low=0, med=1, high=2)
+        // Cols: Time savings benefit (low=0, med=1, high=2)
+        const BIVARIATE_COLORS = [
+            // Low vulnerability row
+            ['#e8e8e8', '#ace4e4', '#5ac8c8'],  // low benefit -> high benefit
+            // Medium vulnerability row
+            ['#dfb0d6', '#a5add3', '#5698b9'],  // low benefit -> high benefit
+            // High vulnerability row
+            ['#be64ac', '#8c62aa', '#3b4994']   // low benefit -> high benefit (most equitable = dark blue)
+        ];
+
+        // Get bivariate color based on SVI and time savings
+        function getBivariateColor(sviValue, timeChange) {
+            if (sviValue === undefined || sviValue === null) return '#e9ecef';
+            if (timeChange === undefined || timeChange === null || isNaN(timeChange)) return '#e9ecef';
+
+            // SVI: 0-1 scale, divide into 3 bins
+            const sviRow = sviValue < 0.33 ? 0 : sviValue < 0.67 ? 1 : 2;
+
+            // Time change: negative is benefit, use absolute value
+            // Bin by magnitude: 0-8 min = low, 8-15 = medium, 15+ = high benefit
+            const benefit = Math.abs(timeChange);
+            const benefitCol = benefit < 8 ? 0 : benefit < 15 ? 1 : 2;
+
+            return BIVARIATE_COLORS[sviRow][benefitCol];
+        }
 
         // Initialize map
         function initMap() {
@@ -1756,7 +1792,7 @@
                 // Cache-busting: append timestamp to force fresh data
                 const cacheBust = `?v=${Date.now()}`;
 
-                const [tractData_, comparisonData_, summaryData_, ibxRouteData_, ibxStationsData_, transitRoutesData_, routeSummaryData_, ibxStationRidershipData_] = await Promise.all([
+                const [tractData_, comparisonData_, summaryData_, ibxRouteData_, ibxStationsData_, transitRoutesData_, routeSummaryData_, ibxStationRidershipData_, sviData_] = await Promise.all([
                     fetch('data/census/nyc_census.geojson' + cacheBust).then(r => r.json()),
                     fetchGzippedJson('data/tract_comparison_data.json.gz' + cacheBust),
                     fetchGzippedJson('data/tract_summary_data.json.gz' + cacheBust),
@@ -1764,7 +1800,8 @@
                     fetch('data/IBX/stations.geojson' + cacheBust).then(r => r.json()),
                     fetch('data/transit/NYC_routes.geojson' + cacheBust).then(r => r.json()),
                     fetchGzippedJson('data/route_summary.json.gz' + cacheBust),
-                    fetchGzippedJson('data/ibx_stops.json.gz' + cacheBust)
+                    fetchGzippedJson('data/ibx_stops.json.gz' + cacheBust),
+                    fetch('data/svi_analysis.json' + cacheBust).then(r => r.json())
                 ]);
                 tractData = tractData_;
                 comparisonData = comparisonData_;
@@ -1774,6 +1811,7 @@
                 transitRoutesData = transitRoutesData_;
                 routeSummaryData = routeSummaryData_;
                 ibxStationRidershipData = ibxStationRidershipData_;
+                sviData = sviData_;
 
                 // Build route summary lookup by route name
                 routeSummaryData.lookup = {};
@@ -1873,6 +1911,14 @@
                     };
                 }
             });
+
+            // SVI has a fixed 0-1 scale
+            summaryScales['svi'] = {
+                min: 0,
+                max: 1,
+                actualMin: 0,
+                actualMax: 1
+            };
         }
 
         // Compute scales for route impact metrics
@@ -2189,7 +2235,22 @@
                     let fillColor = '#e9ecef';
                     let fillOpacity = 0.3;
 
-                    if (tractSummary && tractSummary.pairs > 0) {
+                    // Handle SVI metric specially - uses sviData.tracts lookup
+                    if (metric === 'svi') {
+                        const sviValue = sviData?.tracts?.[geoid];
+                        if (sviValue !== undefined) {
+                            fillColor = getColorSummary(sviValue, metric);
+                            fillOpacity = 0.7;
+                        }
+                    } else if (metric === 'bivariate') {
+                        // Bivariate: combine SVI and time savings
+                        const sviValue = sviData?.tracts?.[geoid];
+                        const timeChange = tractSummary?.avg_time_change_min;
+                        if (sviValue !== undefined && timeChange !== undefined) {
+                            fillColor = getBivariateColor(sviValue, timeChange);
+                            fillOpacity = 0.75;
+                        }
+                    } else if (tractSummary && tractSummary.pairs > 0) {
                         const value = tractSummary[metric];
                         fillColor = getColorSummary(value, metric);
                         fillOpacity = 0.7;
@@ -2372,8 +2433,10 @@
         // Handle tract hover in overview mode
         function onTractHoverOverview(geoid, properties, e) {
             const hoverEl = document.getElementById('hover-info');
+            const metric = document.getElementById('overview-metric-select').value;
             const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
             const tractSummary = summaryData[dataKey][geoid];
+            const sviValue = sviData?.tracts?.[geoid];
 
             const formatValue = (val, suffix = '') => {
                 if (val === null || val === undefined || (typeof val === 'number' && isNaN(val))) {
@@ -2381,6 +2444,90 @@
                 }
                 return typeof val === 'number' ? Math.round(val) + suffix : val;
             };
+
+            // For SVI metric, show SVI-focused info even without IBX data
+            if (metric === 'svi') {
+                const sviLabel = sviValue !== undefined ?
+                    (sviValue < 0.25 ? 'Low' : sviValue < 0.5 ? 'Moderate' : sviValue < 0.75 ? 'High' : 'Very High') : 'N/A';
+                const sviColor = sviValue !== undefined ?
+                    (sviValue < 0.5 ? '#6a51a3' : '#6a51a3') : '#6c757d';
+
+                hoverEl.innerHTML = `
+                    <div class="info-row">
+                        <span class="info-label">Neighborhood</span>
+                        <span class="info-value">${properties.NTAName || geoid}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">SVI Score</span>
+                        <span class="info-value" style="color: ${sviColor}">
+                            ${sviValue !== undefined ? sviValue.toFixed(2) : 'N/A'} (${sviLabel})
+                        </span>
+                    </div>
+                    ${tractSummary && tractSummary.pairs > 0 ? `
+                    <div style="margin: 8px 0 4px 0; border-top: 1px solid #dee2e6; padding-top: 8px; font-size: 0.75rem; color: #6c757d;">IBX Impact</div>
+                    <div class="info-row">
+                        <span class="info-label">Avg Time Change</span>
+                        <span class="info-value" style="color: ${tractSummary.avg_time_change_min < 0 ? '#198754' : '#dc3545'}">
+                            ${formatValue(tractSummary.avg_time_change_min, ' min')}
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Total Hours Saved</span>
+                        <span class="info-value">${formatValue(tractSummary.total_time_saved_hours, ' hrs')}</span>
+                    </div>
+                    ` : `
+                    <div style="margin-top: 8px; color: #6c757d; font-style: italic; font-size: 0.8rem;">
+                        No IBX impact data
+                    </div>
+                    `}
+                `;
+                e.target.setStyle({ weight: 2, color: '#000' });
+                return;
+            }
+
+            // For bivariate metric, show both SVI and benefit
+            if (metric === 'bivariate') {
+                const sviLabel = sviValue !== undefined ?
+                    (sviValue < 0.33 ? 'Low' : sviValue < 0.67 ? 'Medium' : 'High') : 'N/A';
+                const timeChange = tractSummary?.avg_time_change_min;
+                const benefit = timeChange !== undefined ? Math.abs(timeChange) : null;
+                const benefitLabel = benefit !== null ?
+                    (benefit < 8 ? 'Low' : benefit < 15 ? 'Medium' : 'High') : 'N/A';
+
+                // Get the bivariate color for this tract
+                const bivColor = (sviValue !== undefined && timeChange !== undefined) ?
+                    getBivariateColor(sviValue, timeChange) : '#e9ecef';
+
+                hoverEl.innerHTML = `
+                    <div class="info-row">
+                        <span class="info-label">Neighborhood</span>
+                        <span class="info-value">${properties.NTAName || geoid}</span>
+                    </div>
+                    <div style="margin: 8px 0; padding: 8px; background: ${bivColor}; border-radius: 4px; text-align: center;">
+                        <div style="font-size: 0.75rem; color: ${sviValue >= 0.5 && benefit >= 10 ? '#fff' : '#333'}; font-weight: 500;">
+                            ${sviLabel} Vulnerability + ${benefitLabel} Benefit
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">SVI Score</span>
+                        <span class="info-value">${sviValue !== undefined ? sviValue.toFixed(2) : 'N/A'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Time Savings</span>
+                        <span class="info-value" style="color: ${timeChange < 0 ? '#198754' : '#6c757d'}">
+                            ${timeChange !== undefined ? Math.round(Math.abs(timeChange)) + ' min' : 'N/A'}
+                        </span>
+                    </div>
+                    ${tractSummary ? `
+                    <div class="info-row">
+                        <span class="info-label">Hours Saved/Year</span>
+                        <span class="info-value">${formatValue(tractSummary.total_time_saved_hours, ' hrs')}</span>
+                    </div>
+                    ` : ''}
+                `;
+                e.target.setStyle({ weight: 2, color: '#000' });
+                return;
+            }
 
             if (!tractSummary || tractSummary.pairs === 0) {
                 hoverEl.innerHTML = `
@@ -2685,6 +2832,27 @@
 
         function updateLegendOverview() {
             const metric = document.getElementById('overview-metric-select').value;
+            const scaleEl = document.getElementById('legend-scale');
+            const labelsEl = document.getElementById('legend-labels');
+
+            // Handle bivariate legend - simplified with link to guide
+            if (metric === 'bivariate') {
+                document.getElementById('legend-title').textContent = 'Equity Map';
+                scaleEl.style.display = 'block';
+                scaleEl.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(3, 16px); grid-template-rows: repeat(3, 16px); gap: 1px;">
+                        ${BIVARIATE_COLORS[2].map(c => `<div style="background:${c};"></div>`).join('')}
+                        ${BIVARIATE_COLORS[1].map(c => `<div style="background:${c};"></div>`).join('')}
+                        ${BIVARIATE_COLORS[0].map(c => `<div style="background:${c};"></div>`).join('')}
+                    </div>
+                `;
+                labelsEl.innerHTML = `<div style="font-size: 9px; color: #6a51a3; margin-top: 6px; cursor: pointer;" onclick="openBivariateModal()">Click ? for guide</div>`;
+                return;
+            } else {
+                // Reset to flex for other metrics
+                scaleEl.style.display = 'flex';
+            }
+
             const scale = SUMMARY_COLOR_SCALES[metric];
             const labels = {
                 avg_time_change_min: 'Avg Time Change (min)',
@@ -2692,12 +2860,12 @@
                 pairs: 'Connection Pairs',
                 total_trips: 'Total Trips',
                 time_improved_pairs: 'Time-Improved Pairs',
-                trips_time_improved: 'Trips Improved'
+                trips_time_improved: 'Trips Improved',
+                svi: 'Social Vulnerability Index'
             };
 
             document.getElementById('legend-title').textContent = labels[metric];
 
-            const scaleEl = document.getElementById('legend-scale');
             let scaleHtml = '';
             // Add red box at the start if redIfNegative
             if (scale.redIfNegative) {
@@ -2712,14 +2880,16 @@
             }
             scaleEl.innerHTML = scaleHtml;
 
-            const labelsEl = document.getElementById('legend-labels');
             const ss = summaryScales[metric];
             if (ss) {
                 // Show "+" suffix when scale uses percentiles and actual max exceeds displayed max
                 const maxSuffix = ss.actualMax > ss.max ? '+' : '';
                 const minSuffix = ss.actualMin < ss.min ? '−' : '';
 
-                if (scale.redIfPositive) {
+                if (metric === 'svi') {
+                    // SVI: 0 = Low vulnerability, 1 = High vulnerability
+                    labelsEl.innerHTML = `<span>Low</span><span>High</span>`;
+                } else if (scale.redIfPositive) {
                     // Show min, 0, and "+" for positive (red)
                     labelsEl.innerHTML = `<span>${minSuffix}${Math.round(ss.min)}</span><span>0</span><span style="color:#dc3545">+</span>`;
                 } else if (scale.redIfNegative) {
@@ -3434,6 +3604,7 @@
         document.getElementById('overview-metric-select').addEventListener('change', () => {
             updateLegend();
             renderTracts();
+            updateBivariateUI();
         });
 
         // Set as origin (enters selection mode)
@@ -4313,6 +4484,13 @@
             document.getElementById('svi-modal').addEventListener('click', function(e) {
                 if (e.target === this) closeSviModal();
             });
+
+            // Bivariate guide event listeners
+            document.getElementById('bivariate-info-btn').addEventListener('click', openBivariateModal);
+            document.getElementById('bivariate-modal-close').addEventListener('click', closeBivariateModal);
+            document.getElementById('bivariate-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeBivariateModal();
+            });
         });
 
         // Demographics Dashboard
@@ -4796,6 +4974,217 @@
         function closeSviModal() {
             document.getElementById('svi-modal').classList.remove('active');
         }
+
+        // Bivariate Map Guide
+        let bivariateModalShown = false;
+
+        function openBivariateModal() {
+            document.getElementById('bivariate-modal').classList.add('active');
+            renderBivariateGuide();
+        }
+
+        function closeBivariateModal() {
+            document.getElementById('bivariate-modal').classList.remove('active');
+        }
+
+        function renderBivariateGuide() {
+            const container = document.getElementById('bivariate-content');
+            if (!sviData || !summaryData) {
+                container.innerHTML = '<p style="color: #dc3545;">Data not loaded yet.</p>';
+                return;
+            }
+
+            // Calculate quadrant counts using all tracts
+            const dataKey = tractsPerspective === 'origin' ? 'by_origin' : 'by_destination';
+            let quadrants = {
+                highVulnHighBen: { count: 0, pop: 0 },
+                highVulnLowBen: { count: 0, pop: 0 },
+                lowVulnHighBen: { count: 0, pop: 0 },
+                lowVulnLowBen: { count: 0, pop: 0 }
+            };
+
+            // Threshold for "high benefit" - align with visual quadrant
+            const benefitThreshold = 10;
+
+            Object.keys(sviData.tracts).forEach(geoid => {
+                const svi = sviData.tracts[geoid];
+                const tractData = summaryData[dataKey][geoid];
+                if (!tractData) return;
+
+                const benefit = Math.abs(tractData.avg_time_change_min || 0);
+                const isHighVuln = svi >= 0.5;
+                const isHighBen = benefit >= benefitThreshold;
+
+                if (isHighVuln && isHighBen) {
+                    quadrants.highVulnHighBen.count++;
+                } else if (isHighVuln && !isHighBen) {
+                    quadrants.highVulnLowBen.count++;
+                } else if (!isHighVuln && isHighBen) {
+                    quadrants.lowVulnHighBen.count++;
+                } else {
+                    quadrants.lowVulnLowBen.count++;
+                }
+            });
+
+            const total = quadrants.highVulnHighBen.count + quadrants.highVulnLowBen.count +
+                         quadrants.lowVulnHighBen.count + quadrants.lowVulnLowBen.count;
+
+            const pct = (q) => total > 0 ? Math.round((q.count / total) * 100) : 0;
+
+            // Use pre-computed scatter data from svi_analysis.json (properly sampled across SVI range)
+            const scatterPoints = sviData.scatter?.points || [];
+
+            // Build scatter plot SVG - LARGER size, x-axis 0-25 min, divider at 10 min
+            const plotW = 500, plotH = 340;
+            const pad = { top: 35, right: 30, bottom: 50, left: 60 };
+            const w = plotW - pad.left - pad.right;
+            const h = plotH - pad.top - pad.bottom;
+            const maxBenefit = 25;  // x-axis max
+            const dividerX = pad.left + (benefitThreshold / maxBenefit) * w;  // Align with threshold
+
+            let scatterSvg = `<svg width="${plotW}" height="${plotH}" style="font-family: system-ui, sans-serif;">
+                <!-- Background quadrants -->
+                <rect x="${pad.left}" y="${pad.top}" width="${dividerX - pad.left}" height="${h/2}" fill="#f3e8f3" opacity="0.5"/>
+                <rect x="${dividerX}" y="${pad.top}" width="${pad.left + w - dividerX}" height="${h/2}" fill="#e8eef8" opacity="0.5"/>
+                <rect x="${pad.left}" y="${pad.top + h/2}" width="${dividerX - pad.left}" height="${h/2}" fill="#f5f5f5" opacity="0.5"/>
+                <rect x="${dividerX}" y="${pad.top + h/2}" width="${pad.left + w - dividerX}" height="${h/2}" fill="#e8f5f5" opacity="0.5"/>
+
+                <!-- Quadrant labels -->
+                <text x="${pad.left + (dividerX - pad.left)/2}" y="${pad.top + 18}" text-anchor="middle" font-size="13" font-weight="500" fill="#9e4a8a" opacity="0.9">Equity Gap</text>
+                <text x="${dividerX + (pad.left + w - dividerX)/2}" y="${pad.top + 18}" text-anchor="middle" font-size="13" font-weight="500" fill="#3b4994" opacity="0.9">Equitable</text>
+
+                <!-- Axes -->
+                <line x1="${pad.left}" y1="${pad.top + h/2}" x2="${pad.left + w}" y2="${pad.top + h/2}" stroke="#adb5bd" stroke-dasharray="4,4"/>
+                <line x1="${dividerX}" y1="${pad.top}" x2="${dividerX}" y2="${pad.top + h}" stroke="#adb5bd" stroke-dasharray="4,4"/>
+
+                <!-- Border -->
+                <rect x="${pad.left}" y="${pad.top}" width="${w}" height="${h}" fill="none" stroke="#dee2e6"/>
+
+                <!-- Points -->`;
+
+            scatterPoints.forEach(p => {
+                const benefit = Math.abs(p.time);  // time is negative in the data
+                const x = pad.left + Math.min(benefit / maxBenefit, 1) * w;
+                const y = pad.top + h - (p.svi * h);
+                const color = getBivariateColor(p.svi, p.time);
+                scatterSvg += `<circle cx="${x}" cy="${y}" r="5" fill="${color}" opacity="0.65"/>`;
+            });
+
+            scatterSvg += `
+                <!-- Axis labels -->
+                <text x="${pad.left + w/2}" y="${plotH - 10}" text-anchor="middle" font-size="14" fill="#495057">Time Savings (minutes)</text>
+                <text x="18" y="${pad.top + h/2}" text-anchor="middle" font-size="14" fill="#495057" transform="rotate(-90, 18, ${pad.top + h/2})">Vulnerability (SVI)</text>
+
+                <!-- Tick labels -->
+                <text x="${pad.left}" y="${pad.top + h + 20}" text-anchor="middle" font-size="12" fill="#6c757d">0</text>
+                <text x="${dividerX}" y="${pad.top + h + 20}" text-anchor="middle" font-size="12" fill="#6c757d">${benefitThreshold}</text>
+                <text x="${pad.left + w}" y="${pad.top + h + 20}" text-anchor="middle" font-size="12" fill="#6c757d">${maxBenefit}+</text>
+                <text x="${pad.left - 10}" y="${pad.top + h + 4}" text-anchor="end" font-size="12" fill="#6c757d">0</text>
+                <text x="${pad.left - 10}" y="${pad.top + h/2 + 4}" text-anchor="end" font-size="12" fill="#6c757d">0.5</text>
+                <text x="${pad.left - 10}" y="${pad.top + 4}" text-anchor="end" font-size="12" fill="#6c757d">1.0</text>
+            </svg>`;
+
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: 380px 1fr; gap: 40px; align-items: start;">
+                    <!-- Left: Explanation + Colour Guide -->
+                    <div>
+                        <p style="margin: 0 0 24px 0; color: #495057; line-height: 1.7; font-size: 1.05rem;">
+                            This map shows how IBX benefits relate to community vulnerability.
+                            Each tract is coloured based on <strong>two dimensions</strong>:
+                        </p>
+
+                        <div style="margin-bottom: 28px; font-size: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <div style="width: 24px; height: 24px; background: linear-gradient(to right, #e8e8e8, #5ac8c8); border-radius: 3px; flex-shrink: 0;"></div>
+                                <span style="color: #495057;"><strong>Benefit</strong> — Time savings from IBX</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 24px; height: 24px; background: linear-gradient(to bottom, #e8e8e8, #be64ac); border-radius: 3px; flex-shrink: 0;"></div>
+                                <span style="color: #495057;"><strong>Vulnerability</strong> — CDC Social Vulnerability Index</span>
+                            </div>
+                        </div>
+
+                        <!-- Colour Matrix - Redesigned -->
+                        <div style="background: #f8f9fa; padding: 24px; border-radius: 12px;">
+                            <div style="font-size: 1rem; font-weight: 600; color: #495057; margin-bottom: 20px; text-align: center;">Colour Guide</div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 16px;">
+                                <!-- Y-axis label -->
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                                    <span style="font-size: 12px; color: #6c757d;">High</span>
+                                    <div style="writing-mode: vertical-rl; transform: rotate(180deg); font-size: 13px; font-weight: 500; color: #6c757d; letter-spacing: 1px;">VULNERABILITY</div>
+                                    <span style="font-size: 12px; color: #6c757d;">Low</span>
+                                </div>
+                                <!-- Grid -->
+                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                    <div style="display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px); gap: 3px;">
+                                        ${BIVARIATE_COLORS[2].map(c => `<div style="background:${c}; border-radius: 4px;"></div>`).join('')}
+                                        ${BIVARIATE_COLORS[1].map(c => `<div style="background:${c}; border-radius: 4px;"></div>`).join('')}
+                                        ${BIVARIATE_COLORS[0].map(c => `<div style="background:${c}; border-radius: 4px;"></div>`).join('')}
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 8px; padding: 0 4px;">
+                                        <span style="font-size: 12px; color: #6c757d;">Low</span>
+                                        <span style="font-size: 13px; font-weight: 500; color: #6c757d;">BENEFIT</span>
+                                        <span style="font-size: 12px; color: #6c757d;">High</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quadrant Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                            <div style="background: #f3e8f3; padding: 14px; border-radius: 8px; text-align: center;">
+                                <strong style="color: #9e4a8a; font-size: 1.4rem;">${pct(quadrants.highVulnLowBen)}%</strong>
+                                <div style="color: #6c757d; font-size: 0.85rem; margin-top: 4px;">High Need, Low Benefit</div>
+                            </div>
+                            <div style="background: #e8eef8; padding: 14px; border-radius: 8px; text-align: center;">
+                                <strong style="color: #3b4994; font-size: 1.4rem;">${pct(quadrants.highVulnHighBen)}%</strong>
+                                <div style="color: #6c757d; font-size: 0.85rem; margin-top: 4px;">High Need, High Benefit</div>
+                            </div>
+                        </div>
+
+                        <div style="background: #e7f5e7; border-left: 4px solid #198754; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-top: 16px;">
+                            <div style="font-size: 0.95rem; color: #155724;">
+                                <strong>${pct(quadrants.highVulnHighBen)}%</strong> of tracts are high-vulnerability communities
+                                receiving significant IBX benefits (equitable outcome).
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Scatter Plot -->
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem; color: #212529; margin-bottom: 12px;">Tract Distribution</div>
+                        <div style="background: #fff; border: 1px solid #dee2e6; border-radius: 12px; padding: 12px;">
+                            ${scatterSvg}
+                        </div>
+                        <p style="margin: 12px 0 0 0; color: #6c757d; font-size: 0.9rem; line-height: 1.5;">
+                            Each dot represents a census tract. Tracts in the <strong style="color: #3b4994;">upper-right</strong> quadrant
+                            are high-vulnerability communities receiving significant time savings — an equitable outcome.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #dee2e6; font-size: 0.9rem; color: #6c757d; text-align: center;">
+                    Close this guide and explore the map. Click the <strong>?</strong> button to reopen anytime.
+                </div>
+            `;
+        }
+
+        // Show/hide bivariate info button based on metric
+        function updateBivariateUI() {
+            const metric = document.getElementById('overview-metric-select').value;
+            const infoBtn = document.getElementById('bivariate-info-btn');
+
+            if (metric === 'bivariate') {
+                infoBtn.style.display = 'block';
+                // Auto-show modal first time
+                if (!bivariateModalShown) {
+                    bivariateModalShown = true;
+                    setTimeout(() => openBivariateModal(), 300);
+                }
+            } else {
+                infoBtn.style.display = 'none';
+            }
+        }
     </script>
 
     <!-- Help Button -->
@@ -4856,5 +5245,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Bivariate Map Guide Modal -->
+    <div id="bivariate-modal" class="modal-overlay dashboard-modal">
+        <div class="modal-content" style="max-width: 95vw; width: 1100px; max-height: 90vh;">
+            <div class="modal-header">
+                <h2>Equity Map Guide</h2>
+                <button id="bivariate-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="bivariate-content" style="padding: 28px;">
+                <p style="color: #6c757d;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bivariate Info Button (shown when equity map is active) -->
+    <button id="bivariate-info-btn" class="floating-btn" style="display: none; position: fixed; bottom: 20px; right: 20px; background: #6a51a3; color: white; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 20px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 1000;" title="Show equity map guide">?</button>
 </body>
 </html>

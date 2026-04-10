@@ -213,6 +213,11 @@ def main():
         'y_label': 'Time Savings (minutes)',
     }
 
+    # --- Per-Tract SVI Lookup (for map coloring) ---
+    analysis['tracts'] = {}
+    for t in tracts_with_svi:
+        analysis['tracts'][t['geoid']] = round(t['svi'], 3)
+
     # --- Equity Spotlight ---
     very_high = [t for t in tracts_with_svi if t['svi'] >= 0.75]
     very_high_big_benefit = [t for t in very_high if t['time_change'] <= -10]

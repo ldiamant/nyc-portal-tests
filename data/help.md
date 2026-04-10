@@ -33,6 +33,8 @@ Available metrics:
 - *Avg Time Change* — Average minutes saved per trip
 - *Total Time Saved* — Cumulative hours saved
 - *Total Trips* — Number of trips affected
+- *Vulnerability (SVI)* — CDC Social Vulnerability Index score
+- *Vulnerability + Benefit* — Bivariate equity map (see below)
 
 ### Selection Mode
 
@@ -42,6 +44,32 @@ After setting an origin or destination, connected tracts show:
 - *IBX Time* — Travel time with IBX
 - *Baseline Time* — Current travel time
 - *Transfers* — Number of transfers required
+
+### Equity Analysis
+
+Two special metrics help assess whether IBX benefits reach vulnerable communities:
+
+**Vulnerability (SVI)** — Shows the CDC/ATSDR Social Vulnerability Index for each tract. SVI measures a community's vulnerability to stressors like disease outbreaks or natural disasters, based on:
+
+- Socioeconomic status (poverty, unemployment, education)
+- Household composition (elderly, children, disabled, single parents)
+- Minority status and language barriers
+- Housing type and transportation access
+
+Scores range from 0 (low vulnerability) to 1 (high vulnerability). Darker purple = higher vulnerability.
+
+**Vulnerability + Benefit (Equity Map)** — A bivariate choropleth showing two dimensions simultaneously:
+
+- **Vulnerability** (vertical axis) — SVI score
+- **Benefit** (horizontal axis) — Time savings from IBX
+
+Tracts are coloured using a 3×3 matrix:
+
+- **Purple** = High vulnerability, low benefit (equity gap)
+- **Teal** = Low vulnerability, high benefit
+- **Dark blue** = High vulnerability, high benefit (equitable outcome)
+
+Click the **?** button to open the Equity Map Guide with a detailed explanation and scatter plot showing tract distribution across quadrants.
 
 ---
 
@@ -109,4 +137,33 @@ Station circles are sized by the selected metric. Click stations to pin them for
 
 ## About the Data
 
-....
+### Travel Time Analysis
+
+-----
+
+### Census Data
+
+Demographic data is sourced from the **American Community Survey (ACS) 5-Year Estimates** at the census tract level, including:
+
+- Population by age, race, and ethnicity
+- Median household income and poverty rates
+- Commute patterns and travel times
+- Vehicle ownership and transit usage
+
+### Social Vulnerability Index (SVI)
+
+SVI data comes from the **CDC/ATSDR Social Vulnerability Index 2022**, which ranks census tracts on 16 social factors grouped into four themes:
+
+1. **Socioeconomic Status** — Below poverty, unemployment, housing cost burden, no health insurance, no high school diploma
+2. **Household Characteristics** — Aged 65+, aged 17 and younger, civilian with disability, single-parent households, English language proficiency
+3. **Racial & Ethnic Minority Status** — Minority populations, limited English speakers
+4. **Housing Type & Transportation** — Multi-unit structures, mobile homes, crowding, no vehicle, group quarters
+
+Higher SVI scores (closer to 1) indicate greater vulnerability.
+
+### Data Sources
+
+- **MTA** — Transit network and ridership data
+- **US Census Bureau** — American Community Survey 5-Year Estimates
+- **CDC/ATSDR** — Social Vulnerability Index 2022
+- **NYC Open Data** — Geographic boundaries and infrastructure

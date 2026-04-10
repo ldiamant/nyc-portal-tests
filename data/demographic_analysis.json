@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-10T09:53:48.918110",
+  "generated": "2026-04-10T10:33:21.676256",
   "overview": {
     "affected_tracts": 1856,
     "total_tracts": 2327,
@@ -17,7 +17,8 @@
         "income_max": 65722,
         "tract_count": 439,
         "population": 1806038,
-        "avg_time_change": -12.0
+        "avg_time_change": -12.0,
+        "total_hours_saved": 63465
       },
       {
         "key": "q2",
@@ -26,7 +27,8 @@
         "income_max": 84846,
         "tract_count": 439,
         "population": 1602386,
-        "avg_time_change": -12.5
+        "avg_time_change": -12.5,
+        "total_hours_saved": 64977
       },
       {
         "key": "q3",
@@ -35,7 +37,8 @@
         "income_max": 112030,
         "tract_count": 439,
         "population": 1511292,
-        "avg_time_change": -13.3
+        "avg_time_change": -13.3,
+        "total_hours_saved": 49933
       },
       {
         "key": "q4",
@@ -44,7 +47,8 @@
         "income_max": 250001,
         "tract_count": 439,
         "population": 1707203,
-        "avg_time_change": -9.7
+        "avg_time_change": -9.7,
+        "total_hours_saved": 21946
       }
     ]
   },
@@ -56,7 +60,8 @@
         "avg_current_commute": 17.1,
         "tract_count": 301,
         "population": 961284,
-        "avg_time_change": -10.3
+        "avg_time_change": -10.3,
+        "total_hours_saved": 24498
       },
       {
         "key": "medium",
@@ -64,7 +69,8 @@
         "avg_current_commute": 37.0,
         "tract_count": 199,
         "population": 693053,
-        "avg_time_change": -10.5
+        "avg_time_change": -10.5,
+        "total_hours_saved": 23556
       },
       {
         "key": "long",
@@ -72,7 +78,8 @@
         "avg_current_commute": 51.5,
         "tract_count": 167,
         "population": 568246,
-        "avg_time_change": -11.7
+        "avg_time_change": -11.7,
+        "total_hours_saved": 18293
       },
       {
         "key": "very_long",
@@ -80,7 +87,8 @@
         "avg_current_commute": 151.2,
         "tract_count": 967,
         "population": 3921984,
-        "avg_time_change": -12.8
+        "avg_time_change": -12.8,
+        "total_hours_saved": 127488
       }
     ]
   },
@@ -91,28 +99,32 @@
         "label": "Hispanic/Latino",
         "population": 1598293,
         "pct_of_total": 23.9,
-        "avg_time_change": -11.5
+        "avg_time_change": -11.5,
+        "total_hours_saved": 45068
       },
       {
         "key": "black",
         "label": "Black",
         "population": 1424745,
         "pct_of_total": 21.3,
-        "avg_time_change": -11.9
+        "avg_time_change": -11.9,
+        "total_hours_saved": 46337
       },
       {
         "key": "asian",
         "label": "Asian",
         "population": 1119247,
         "pct_of_total": 16.8,
-        "avg_time_change": -14.1
+        "avg_time_change": -14.1,
+        "total_hours_saved": 40083
       },
       {
         "key": "white",
         "label": "White",
         "population": 2539643,
         "pct_of_total": 38.1,
-        "avg_time_change": -10.8
+        "avg_time_change": -10.8,
+        "total_hours_saved": 71333
       }
     ]
   },
@@ -125,7 +137,8 @@
         "pct_noveh_max": 37.4,
         "tract_count": 593,
         "population": 1736628,
-        "avg_time_change": -15.5
+        "avg_time_change": -15.5,
+        "total_hours_saved": 69049
       },
       {
         "key": "medium",
@@ -134,7 +147,8 @@
         "pct_noveh_max": 62.6,
         "tract_count": 593,
         "population": 2171268,
-        "avg_time_change": -12.2
+        "avg_time_change": -12.2,
+        "total_hours_saved": 94133
       },
       {
         "key": "high",
@@ -143,7 +157,8 @@
         "pct_noveh_max": 100.0,
         "tract_count": 594,
         "population": 2760584,
-        "avg_time_change": -9.1
+        "avg_time_change": -9.1,
+        "total_hours_saved": 39387
       }
     ]
   },
@@ -155,7 +170,8 @@
         "tract_count": 713,
         "population": 2298490,
         "avg_time_change": -15.7,
-        "median_income": 90304
+        "median_income": 90304,
+        "total_hours_saved": 63929
       },
       {
         "key": "brooklyn",
@@ -163,7 +179,8 @@
         "tract_count": 803,
         "population": 2646306,
         "avg_time_change": -11.1,
-        "median_income": 86579
+        "median_income": 86579,
+        "total_hours_saved": 142499
       },
       {
         "key": "manhattan",
@@ -171,7 +188,8 @@
         "tract_count": 307,
         "population": 1623868,
         "avg_time_change": -7.9,
-        "median_income": 121533
+        "median_income": 121533,
+        "total_hours_saved": 1769
       },
       {
         "key": "bronx",
@@ -179,7 +197,8 @@
         "tract_count": 33,
         "population": 104982,
         "avg_time_change": -4.0,
-        "median_income": 64210
+        "median_income": 64210,
+        "total_hours_saved": 37
       }
     ]
   },
@@ -190,21 +209,88 @@
         "label": "Under 18",
         "population": 1305219,
         "pct_of_total": 19.6,
-        "avg_time_change": -12.1
+        "avg_time_change": -12.1,
+        "total_hours_saved": 44400
       },
       {
         "key": "working_age",
         "label": "Working Age (18-64)",
         "population": 4273694,
         "pct_of_total": 64.0,
-        "avg_time_change": -11.6
+        "avg_time_change": -11.6,
+        "total_hours_saved": 124063
       },
       {
         "key": "seniors",
         "label": "Seniors (65+)",
         "population": 1094746,
         "pct_of_total": 16.4,
-        "avg_time_change": -12.2
+        "avg_time_change": -12.2,
+        "total_hours_saved": 34430
+      }
+    ]
+  },
+  "distribution": {
+    "buckets": [
+      {
+        "key": "0-5",
+        "label": "0-5 min",
+        "min": 0,
+        "max": 5,
+        "population": 326839,
+        "pct_of_total": 4.9,
+        "tract_count": 84,
+        "total_hours_saved": 788
+      },
+      {
+        "key": "5-10",
+        "label": "5-10 min",
+        "min": 5,
+        "max": 10,
+        "population": 2567160,
+        "pct_of_total": 38.5,
+        "tract_count": 643,
+        "total_hours_saved": 32871
+      },
+      {
+        "key": "10-15",
+        "label": "10-15 min",
+        "min": 10,
+        "max": 15,
+        "population": 2313747,
+        "pct_of_total": 34.7,
+        "tract_count": 683,
+        "total_hours_saved": 99305
+      },
+      {
+        "key": "15-20",
+        "label": "15-20 min",
+        "min": 15,
+        "max": 20,
+        "population": 1039296,
+        "pct_of_total": 15.6,
+        "tract_count": 314,
+        "total_hours_saved": 56671
+      },
+      {
+        "key": "20-25",
+        "label": "20-25 min",
+        "min": 20,
+        "max": 25,
+        "population": 227800,
+        "pct_of_total": 3.4,
+        "tract_count": 72,
+        "total_hours_saved": 11662
+      },
+      {
+        "key": "25+",
+        "label": "25+ min",
+        "min": 25,
+        "max": null,
+        "population": 198804,
+        "pct_of_total": 3.0,
+        "tract_count": 60,
+        "total_hours_saved": 6937
       }
     ]
   },

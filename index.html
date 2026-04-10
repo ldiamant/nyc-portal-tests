@@ -486,6 +486,152 @@
             background: #157347;
             transform: scale(1.1);
         }
+        .svi-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 432px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #6f42c1;
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .svi-btn:hover {
+            background: #5a32a3;
+            transform: scale(1.1);
+        }
+        /* SVI Dashboard specific styles */
+        .svi-modal .modal-content {
+            max-width: 900px;
+        }
+        .svi-correlation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .svi-correlation-badge.equitable {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+        .svi-correlation-badge.inequitable {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .theme-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .theme-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #212529;
+        }
+        .theme-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .theme-badge.positive {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+        .theme-badge.negative {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .theme-description {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+        .theme-comparison {
+            display: flex;
+            gap: 10px;
+        }
+        .theme-group {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        .theme-group.high {
+            background: #e9d5ff;
+        }
+        .theme-group.low {
+            background: #e9ecef;
+        }
+        .theme-group-label {
+            font-size: 0.65rem;
+            color: #6c757d;
+            margin-bottom: 2px;
+        }
+        .theme-group-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #198754;
+        }
+        .theme-group-pop {
+            font-size: 0.65rem;
+            color: #6c757d;
+        }
+        .spotlight-stat {
+            background: linear-gradient(135deg, #6f42c1 0%, #9f7aea 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .spotlight-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .spotlight-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .spotlight-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .spotlight-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .spotlight-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6f42c1;
+        }
+        .spotlight-card-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
         /* Dashboard Modal Styles */
         .dashboard-modal .modal-content {
             max-width: 900px;
@@ -760,6 +906,62 @@
         .delta-number.nyc {
             color: #6c757d;
         }
+        /* Distribution Histogram */
+        .distribution-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 120px;
+            gap: 6px;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 6px;
+        }
+        .dist-bar-container {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .dist-bar-value {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 3px;
+        }
+        .dist-bar {
+            width: 100%;
+            background: #198754;
+            border-radius: 3px 3px 0 0;
+            min-height: 4px;
+            flex-shrink: 0;
+        }
+        .dist-labels {
+            display: flex;
+            gap: 6px;
+        }
+        .dist-label-item {
+            flex: 1;
+            text-align: center;
+        }
+        .dist-bar-label {
+            font-size: 0.72rem;
+            color: #495057;
+            font-weight: 500;
+        }
+        .dist-bar-hours {
+            font-size: 0.62rem;
+            color: #6c757d;
+        }
+        .distribution-summary {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #198754;
+            font-weight: 500;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e9ecef;
+        }
         /* Baseline Comparison Chart */
         .baseline-chart {
             display: flex;
@@ -898,12 +1100,18 @@
             gap: 8px;
             margin-bottom: 10px;
         }
-        .age-label {
+        .age-label-group {
             width: 100px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .age-label {
             font-size: 0.8rem;
             color: #495057;
-            text-align: center;
-            flex-shrink: 0;
+        }
+        .age-hours {
+            font-size: 0.65rem;
+            color: #6c757d;
         }
         .age-bar-left, .age-bar-right {
             flex: 1;
@@ -4098,6 +4306,13 @@
             document.getElementById('demographics-modal').addEventListener('click', function(e) {
                 if (e.target === this) closeDemographicsModal();
             });
+
+            // SVI dashboard event listeners
+            document.getElementById('svi-btn').addEventListener('click', openSviModal);
+            document.getElementById('svi-modal-close').addEventListener('click', closeSviModal);
+            document.getElementById('svi-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeSviModal();
+            });
         });
 
         // Demographics Dashboard
@@ -4166,7 +4381,7 @@
                                             <span class="chart-bar-value">${q.avg_time_change} min</span>
                                         </div>
                                     </div>
-                                    <div class="chart-bar-meta">$${(q.income_min/1000).toFixed(0)}k-${(q.income_max/1000).toFixed(0)}k</div>
+                                    <div class="chart-bar-meta">${formatNumber(q.total_hours_saved)} hrs</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -4187,7 +4402,7 @@
                                             <span class="chart-bar-value">${g.avg_time_change} min</span>
                                         </div>
                                     </div>
-                                    <div class="chart-bar-meta">${formatNumber(g.population)}</div>
+                                    <div class="chart-bar-meta">${formatNumber(g.total_hours_saved)} hrs</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -4208,7 +4423,7 @@
                                             <span class="chart-bar-value">${g.avg_time_change} min</span>
                                         </div>
                                     </div>
-                                    <div class="chart-bar-meta">${g.pct_of_total}%</div>
+                                    <div class="chart-bar-meta">${formatNumber(g.total_hours_saved)} hrs</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -4229,7 +4444,7 @@
                                             <span class="chart-bar-value">${g.avg_time_change} min</span>
                                         </div>
                                     </div>
-                                    <div class="chart-bar-meta">${g.pct_noveh_min.toFixed(0)}-${g.pct_noveh_max.toFixed(0)}%</div>
+                                    <div class="chart-bar-meta">${formatNumber(g.total_hours_saved)} hrs</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -4251,7 +4466,7 @@
                                     <div class="borough-name">${b.label}</div>
                                     <div class="borough-time">${b.avg_time_change} min</div>
                                     <div class="borough-stats">
-                                        <span>${formatNumber(b.population)} people</span>
+                                        <span>${formatNumber(b.total_hours_saved)} hrs saved</span>
                                         <span>${b.tract_count} tracts</span>
                                     </div>
                                 </div>
@@ -4270,7 +4485,10 @@
                                 <div class="age-bar-left">
                                     <div class="age-fill pop" style="width: ${popPct}%">${g.pct_of_total}%</div>
                                 </div>
-                                <div class="age-label">${g.label.replace('Working Age ', '').replace('(', '').replace(')', '')}</div>
+                                <div class="age-label-group">
+                                    <div class="age-label">${g.label.replace('Working Age ', '').replace('(', '').replace(')', '')}</div>
+                                    <div class="age-hours">${formatNumber(g.total_hours_saved)} hrs</div>
+                                </div>
                                 <div class="age-bar-right">
                                     <div class="age-fill time" style="width: ${timePct}%">${g.avg_time_change} min</div>
                                 </div>
@@ -4280,6 +4498,39 @@
                             <span>% of Population</span>
                             <span>Time Saved</span>
                         </div>
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">Time Savings Distribution</h4>
+
+                <div class="dashboard-card full-width">
+                    <h3>Population by Average Time Saved</h3>
+                    ${(() => {
+                        const maxPop = Math.max(...data.distribution.buckets.map(b => b.population));
+                        const maxBarHeight = 95; // pixels
+                        return `
+                            <div class="distribution-chart">
+                                ${data.distribution.buckets.map(b => {
+                                    const barHeight = Math.max(4, (b.population / maxPop) * maxBarHeight);
+                                    return `
+                                    <div class="dist-bar-container">
+                                        <div class="dist-bar-value">${(b.population / 1000000).toFixed(1)}M</div>
+                                        <div class="dist-bar" style="height: ${barHeight}px"></div>
+                                    </div>
+                                `}).join('')}
+                            </div>
+                            <div class="dist-labels">
+                                ${data.distribution.buckets.map(b => `
+                                    <div class="dist-label-item">
+                                        <div class="dist-bar-label">${b.label}</div>
+                                        <div class="dist-bar-hours">${formatNumber(b.total_hours_saved)} hrs</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    })()}
+                    <div class="distribution-summary">
+                        ${data.distribution.buckets.filter(b => b.min >= 10).reduce((sum, b) => sum + b.pct_of_total, 0).toFixed(0)}% of population saves 10+ minutes
                     </div>
                 </div>
 
@@ -4341,6 +4592,210 @@
         function closeDemographicsModal() {
             document.getElementById('demographics-modal').classList.remove('active');
         }
+
+        // SVI Dashboard
+        let sviData = null;
+
+        async function loadSviData() {
+            if (sviData) return sviData;
+            try {
+                const response = await fetch('data/svi_analysis.json');
+                sviData = await response.json();
+                return sviData;
+            } catch (error) {
+                console.error('Failed to load SVI data:', error);
+                return null;
+            }
+        }
+
+        function renderSviDashboard(data) {
+            const container = document.getElementById('svi-content');
+            const ov = data.overview;
+            const spot = data.spotlight;
+            const corr = data.correlation;
+
+            // Find max time for bar scaling
+            const maxTime = Math.max(...data.quartiles.map(q => Math.abs(q.avg_time_change)));
+
+            // Scatter plot dimensions
+            const scatterWidth = 750;
+            const scatterHeight = 320;
+            const padding = { top: 20, right: 30, bottom: 45, left: 55 };
+            const plotWidth = scatterWidth - padding.left - padding.right;
+            const plotHeight = scatterHeight - padding.top - padding.bottom;
+
+            // Scale functions for scatter plot
+            const xScale = (svi) => padding.left + (svi * plotWidth);
+            const yScale = (time) => padding.top + plotHeight - ((time + 40) / 40 * plotHeight); // -40 to 0 range
+
+            let html = `
+                <!-- Correlation Hero -->
+                <div class="dashboard-card full-width" style="text-align: center; padding: 20px;">
+                    <div class="svi-correlation-badge ${corr.interpretation}">
+                        <span style="font-size: 1.2rem;">${corr.value < 0 ? '✓' : '!'}</span>
+                        <span>${corr.description}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #6c757d; margin-top: 8px;">
+                        Correlation: ${corr.value} (${corr.value < 0 ? 'negative = equitable' : 'positive = concerning'})
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">Impact by Vulnerability Level</h4>
+
+                <div class="dashboard-card full-width">
+                    <div class="chart-bar-group">
+                        ${data.quartiles.map(q => `
+                            <div class="chart-bar-row">
+                                <div class="chart-bar-label" style="width: 180px;">
+                                    <span>${q.label}</span>
+                                    <span style="font-size: 0.65rem; color: #6c757d; display: block;">SVI ${q.svi_min.toFixed(2)} - ${q.svi_max.toFixed(2)}</span>
+                                </div>
+                                <div class="chart-bar-track">
+                                    <div class="chart-bar-fill" style="width: ${(Math.abs(q.avg_time_change) / maxTime) * 100}%">
+                                        <span class="chart-bar-value">${q.avg_time_change} min</span>
+                                    </div>
+                                </div>
+                                <div class="chart-bar-meta">${formatNumber(q.total_hours_saved)} hrs</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">Vulnerability vs Time Savings</h4>
+
+                <div class="dashboard-card full-width" style="display: flex; justify-content: center;">
+                    <svg width="${scatterWidth}" height="${scatterHeight}" style="overflow: visible;">
+                        <!-- Grid lines -->
+                        <g stroke="#e9ecef" stroke-width="1">
+                            ${[0, 0.25, 0.5, 0.75, 1].map(v => `<line x1="${xScale(v)}" y1="${padding.top}" x2="${xScale(v)}" y2="${padding.top + plotHeight}"/>`).join('')}
+                            ${[-40, -30, -20, -10, 0].map(v => `<line x1="${padding.left}" y1="${yScale(v)}" x2="${padding.left + plotWidth}" y2="${yScale(v)}"/>`).join('')}
+                        </g>
+                        <!-- Axes -->
+                        <line x1="${padding.left}" y1="${padding.top + plotHeight}" x2="${padding.left + plotWidth}" y2="${padding.top + plotHeight}" stroke="#495057" stroke-width="2"/>
+                        <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${padding.top + plotHeight}" stroke="#495057" stroke-width="2"/>
+                        <!-- X axis labels -->
+                        <text x="${padding.left}" y="${scatterHeight - 5}" font-size="10" fill="#6c757d" text-anchor="middle">0</text>
+                        <text x="${padding.left + plotWidth/2}" y="${scatterHeight - 5}" font-size="10" fill="#6c757d" text-anchor="middle">0.5</text>
+                        <text x="${padding.left + plotWidth}" y="${scatterHeight - 5}" font-size="10" fill="#6c757d" text-anchor="middle">1.0</text>
+                        <text x="${scatterWidth/2}" y="${scatterHeight + 5}" font-size="11" fill="#495057" text-anchor="middle">Social Vulnerability Index</text>
+                        <!-- Y axis labels -->
+                        <text x="${padding.left - 8}" y="${yScale(0)}" font-size="10" fill="#6c757d" text-anchor="end" dominant-baseline="middle">0</text>
+                        <text x="${padding.left - 8}" y="${yScale(-20)}" font-size="10" fill="#6c757d" text-anchor="end" dominant-baseline="middle">-20</text>
+                        <text x="${padding.left - 8}" y="${yScale(-40)}" font-size="10" fill="#6c757d" text-anchor="end" dominant-baseline="middle">-40</text>
+                        <text x="12" y="${scatterHeight/2}" font-size="11" fill="#495057" text-anchor="middle" transform="rotate(-90, 12, ${scatterHeight/2})">Time Saved (min)</text>
+                        <!-- Data points -->
+                        ${data.scatter.points.map(p => {
+                            const x = xScale(p.svi);
+                            const y = yScale(Math.max(-40, Math.min(0, p.time)));
+                            const r = Math.max(2, Math.min(6, p.pop / 2));
+                            return `<circle cx="${x}" cy="${y}" r="${r}" fill="#6f42c1" fill-opacity="0.4" stroke="#6f42c1" stroke-width="0.5"/>`;
+                        }).join('')}
+                        <!-- Trend indicator -->
+                        <line x1="${xScale(0.1)}" y1="${yScale(-10)}" x2="${xScale(0.9)}" y2="${yScale(-12.5)}" stroke="#198754" stroke-width="2" stroke-dasharray="4"/>
+                    </svg>
+                    <!-- Legend below chart -->
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 24px; margin-top: 12px; font-size: 0.75rem; color: #6c757d;">
+                        <span style="font-weight: 500; color: #495057;">Population:</span>
+                        <span style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="8" height="8"><circle cx="4" cy="4" r="2" fill="#6f42c1" fill-opacity="0.6"/></svg>
+                            &lt; 2k
+                        </span>
+                        <span style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="#6f42c1" fill-opacity="0.6"/></svg>
+                            2k - 5k
+                        </span>
+                        <span style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#6f42c1" fill-opacity="0.6"/></svg>
+                            &gt; 5k
+                        </span>
+                        <span style="display: flex; align-items: center; gap: 4px; margin-left: 16px;">
+                            <svg width="30" height="4"><line x1="0" y1="2" x2="30" y2="2" stroke="#198754" stroke-width="2" stroke-dasharray="4"/></svg>
+                            Trend
+                        </span>
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">Analysis by Vulnerability Theme</h4>
+
+                <div class="dashboard-grid">
+                    ${data.themes.map(theme => `
+                        <div class="theme-card">
+                            <div class="theme-header">
+                                <span class="theme-title">${theme.label}</span>
+                                <span class="theme-badge ${theme.equitable ? 'positive' : 'negative'}">
+                                    ${theme.equitable ? 'Equitable' : 'Gap'}
+                                </span>
+                            </div>
+                            <div class="theme-description">${theme.description}</div>
+                            <div class="theme-comparison">
+                                <div class="theme-group high">
+                                    <div class="theme-group-label">High Vulnerability</div>
+                                    <div class="theme-group-value">${theme.high_vulnerability.avg_time_change} min</div>
+                                    <div class="theme-group-pop">${formatNumber(theme.high_vulnerability.population)} people</div>
+                                </div>
+                                <div class="theme-group low">
+                                    <div class="theme-group-label">Low Vulnerability</div>
+                                    <div class="theme-group-value">${theme.low_vulnerability.avg_time_change} min</div>
+                                    <div class="theme-group-pop">${formatNumber(theme.low_vulnerability.population)} people</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-top: 8px; font-size: 0.75rem; color: ${theme.equitable ? '#198754' : '#dc3545'};">
+                                ${theme.equitable ? 'High vulnerability saves ' + Math.abs(theme.difference).toFixed(1) + ' min more' : 'Low vulnerability saves ' + Math.abs(theme.difference).toFixed(1) + ' min more'}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <h4 class="dashboard-section-title">Equity Spotlight: Very High Vulnerability Areas</h4>
+
+                <div class="dashboard-grid">
+                    <div class="spotlight-stat">
+                        <div class="spotlight-stat-value">${spot.very_high_vulnerability.pop_10plus_pct}%</div>
+                        <div class="spotlight-stat-label">of high-vulnerability population saves 10+ minutes</div>
+                    </div>
+                    <div class="spotlight-grid">
+                        <div class="spotlight-card">
+                            <div class="spotlight-card-value">${formatNumber(spot.very_high_vulnerability.population)}</div>
+                            <div class="spotlight-card-label">People in Very High SVI Areas</div>
+                        </div>
+                        <div class="spotlight-card">
+                            <div class="spotlight-card-value">${spot.very_high_vulnerability.tract_count}</div>
+                            <div class="spotlight-card-label">Census Tracts</div>
+                        </div>
+                        <div class="spotlight-card">
+                            <div class="spotlight-card-value">${formatNumber(spot.very_high_vulnerability.total_hours_saved)}</div>
+                            <div class="spotlight-card-label">Hours Saved Daily</div>
+                        </div>
+                        <div class="spotlight-card">
+                            <div class="spotlight-card-value">${spot.very_high_vulnerability.tracts_10plus_pct}%</div>
+                            <div class="spotlight-card-label">Tracts with 10+ min savings</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 0.75rem; color: #6c757d;">
+                    <strong>About CDC Social Vulnerability Index (SVI):</strong> The SVI uses census data to identify communities that may need support before, during, or after disasters.
+                    Scores range from 0 (least vulnerable) to 1 (most vulnerable). Data source: CDC/ATSDR SVI 2022.
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        async function openSviModal() {
+            document.getElementById('svi-modal').classList.add('active');
+            const data = await loadSviData();
+            if (data) {
+                renderSviDashboard(data);
+            } else {
+                document.getElementById('svi-content').innerHTML =
+                    '<p style="color: #dc3545;">Failed to load SVI data.</p>';
+            }
+        }
+
+        function closeSviModal() {
+            document.getElementById('svi-modal').classList.remove('active');
+        }
     </script>
 
     <!-- Help Button -->
@@ -4369,6 +4824,13 @@
         </svg>
     </button>
 
+    <!-- SVI Button -->
+    <button id="svi-btn" class="svi-btn" title="Social Vulnerability Analysis">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+    </button>
+
     <!-- Demographics Modal -->
     <div id="demographics-modal" class="modal-overlay dashboard-modal">
         <div class="modal-content">
@@ -4378,6 +4840,19 @@
             </div>
             <div class="modal-body" id="demographics-content">
                 <p style="color: #6c757d;">Loading demographic analysis...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SVI Modal -->
+    <div id="svi-modal" class="modal-overlay dashboard-modal svi-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Social Vulnerability Analysis</h2>
+                <button id="svi-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="svi-content">
+                <p style="color: #6c757d;">Loading vulnerability analysis...</p>
             </div>
         </div>
     </div>

@@ -96,12 +96,14 @@ def main():
             continue
         tract_ids = [t for t, _ in quartile]
         time_changes = [summary['by_origin'][t]['avg_time_change_min'] for t in tract_ids]
+        hours_saved = [summary['by_origin'][t]['total_time_saved_hours'] for t in tract_ids]
         populations = [safe_float(census[t]['pop_total']) or 0 for t in tract_ids]
 
         # Population-weighted average
         weighted = sum(tc * p for tc, p in zip(time_changes, populations))
         total_p = sum(populations)
         avg_tc = weighted / total_p if total_p > 0 else sum(time_changes) / len(time_changes)
+        total_hours = sum(hours_saved)
 
         analysis['income']['quartiles'].append({
             'key': key,
@@ -111,6 +113,7 @@ def main():
             'tract_count': len(quartile),
             'population': round(total_p),
             'avg_time_change': round(avg_tc, 1),
+            'total_hours_saved': round(total_hours),
         })
 
     # --- Commute Length ---
@@ -131,6 +134,7 @@ def main():
             continue
         tract_ids = [t for t, _, _ in group]
         populations = [safe_float(census[t]['pop_total']) or 0 for t in tract_ids]
+        hours_saved = [summary['by_origin'][t]['total_time_saved_hours'] for t in tract_ids]
         time_changes = [tc for _, _, tc in group]
         avg_commute = sum(c for _, c, _ in group) / len(group)
 
@@ -138,6 +142,7 @@ def main():
         weighted = sum(tc * p for tc, p in zip(time_changes, populations))
         total_p = sum(populations)
         avg_tc = weighted / total_p if total_p > 0 else sum(time_changes) / len(time_changes)
+        total_hours = sum(hours_saved)
 
         analysis['commute']['groups'].append({
             'key': key,
@@ -146,6 +151,7 @@ def main():
             'tract_count': len(group),
             'population': round(total_p),
             'avg_time_change': round(avg_tc, 1),
+            'total_hours_saved': round(total_hours),
         })
 
     # --- Race/Ethnicity ---
@@ -160,12 +166,16 @@ def main():
     for key, label, field in race_fields:
         total_pop_group = 0
         weighted_time = 0
+        weighted_hours = 0
         for t in ibx_tracts:
             pop = safe_float(census[t]['pop_total']) or 0
             pct = safe_float(census[t][field]) or 0
             group_pop = pop * (pct / 100)
             time_change = summary['by_origin'][t]['avg_time_change_min']
+            hours_saved = summary['by_origin'][t]['total_time_saved_hours']
             weighted_time += group_pop * time_change
+            # Attribute hours saved proportionally to demographic share
+            weighted_hours += hours_saved * (pct / 100)
             total_pop_group += group_pop
 
         if total_pop_group > 0:
@@ -176,6 +186,7 @@ def main():
                 'population': round(total_pop_group),
                 'pct_of_total': round((total_pop_group / total_pop) * 100, 1),
                 'avg_time_change': round(avg_time, 1),
+                'total_hours_saved': round(weighted_hours),
             })
 
     # --- Transit Dependence (No Vehicle %) ---
@@ -196,11 +207,13 @@ def main():
             continue
         tract_ids = [t for t, _ in group]
         populations = [safe_float(census[t]['pop_total']) or 0 for t in tract_ids]
+        hours_saved = [summary['by_origin'][t]['total_time_saved_hours'] for t in tract_ids]
         time_changes = [summary['by_origin'][t]['avg_time_change_min'] for t in tract_ids]
 
         weighted = sum(tc * p for tc, p in zip(time_changes, populations))
         total_p = sum(populations)
         avg_tc = weighted / total_p if total_p > 0 else sum(time_changes) / len(time_changes)
+        total_hours = sum(hours_saved)
 
         analysis['transit_dependence']['groups'].append({
             'key': key,
@@ -210,6 +223,7 @@ def main():
             'tract_count': len(group),
             'population': round(total_p),
             'avg_time_change': round(avg_tc, 1),
+            'total_hours_saved': round(total_hours),
         })
 
     # --- Borough ---
@@ -217,10 +231,11 @@ def main():
     for t in ibx_tracts:
         b = census[t]['BOROUGH']
         if b not in boroughs_data:
-            boroughs_data[b] = {'tracts': [], 'time_changes': [], 'populations': [], 'incomes': []}
+            boroughs_data[b] = {'tracts': [], 'time_changes': [], 'populations': [], 'incomes': [], 'hours_saved': []}
         boroughs_data[b]['tracts'].append(t)
         boroughs_data[b]['time_changes'].append(summary['by_origin'][t]['avg_time_change_min'])
         boroughs_data[b]['populations'].append(safe_float(census[t]['pop_total']) or 0)
+        boroughs_data[b]['hours_saved'].append(summary['by_origin'][t]['total_time_saved_hours'])
         inc = safe_float(census[t]['med_hhinc'])
         if inc and inc > 0:
             boroughs_data[b]['incomes'].append(inc)
@@ -234,6 +249,7 @@ def main():
         weighted = sum(tc * p for tc, p in zip(data['time_changes'], data['populations']))
         avg_tc = weighted / total_p if total_p > 0 else sum(data['time_changes']) / len(data['time_changes'])
         avg_inc = sum(data['incomes']) / len(data['incomes']) if data['incomes'] else 0
+        total_hours = sum(data['hours_saved'])
 
         analysis['borough']['groups'].append({
             'key': b.lower().replace(' ', '_'),
@@ -242,6 +258,7 @@ def main():
             'population': round(total_p),
             'avg_time_change': round(avg_tc, 1),
             'median_income': round(avg_inc),
+            'total_hours_saved': round(total_hours),
         })
 
     # --- Age Groups ---
@@ -255,12 +272,15 @@ def main():
     for key, label, field in age_fields:
         total_pop_group = 0
         weighted_time = 0
+        weighted_hours = 0
         for t in ibx_tracts:
             pop = safe_float(census[t]['pop_total']) or 0
             pct = safe_float(census[t][field]) or 0
             group_pop = pop * (pct / 100)
             time_change = summary['by_origin'][t]['avg_time_change_min']
+            hours_saved = summary['by_origin'][t]['total_time_saved_hours']
             weighted_time += group_pop * time_change
+            weighted_hours += hours_saved * (pct / 100)
             total_pop_group += group_pop
 
         if total_pop_group > 0:
@@ -271,7 +291,44 @@ def main():
                 'population': round(total_pop_group),
                 'pct_of_total': round((total_pop_group / total_pop) * 100, 1),
                 'avg_time_change': round(avg_time, 1),
+                'total_hours_saved': round(weighted_hours),
             })
+
+    # --- Time Savings Distribution ---
+    # Create histogram buckets of time savings
+    buckets = [
+        ('0-5', '0-5 min', 0, 5),
+        ('5-10', '5-10 min', 5, 10),
+        ('10-15', '10-15 min', 10, 15),
+        ('15-20', '15-20 min', 15, 20),
+        ('20-25', '20-25 min', 20, 25),
+        ('25+', '25+ min', 25, float('inf')),
+    ]
+
+    analysis['distribution'] = {'buckets': []}
+    for key, label, min_val, max_val in buckets:
+        bucket_pop = 0
+        bucket_hours = 0
+        bucket_tracts = 0
+        for t in ibx_tracts:
+            tc = abs(summary['by_origin'][t]['avg_time_change_min'])  # Use absolute value
+            if min_val <= tc < max_val:
+                pop = safe_float(census[t]['pop_total']) or 0
+                hours = summary['by_origin'][t]['total_time_saved_hours']
+                bucket_pop += pop
+                bucket_hours += hours
+                bucket_tracts += 1
+
+        analysis['distribution']['buckets'].append({
+            'key': key,
+            'label': label,
+            'min': min_val,
+            'max': max_val if max_val != float('inf') else None,
+            'population': round(bucket_pop),
+            'pct_of_total': round((bucket_pop / total_pop) * 100, 1) if total_pop > 0 else 0,
+            'tract_count': bucket_tracts,
+            'total_hours_saved': round(bucket_hours),
+        })
 
     # --- Comparison with NYC overall ---
     def nyc_weighted_avg(field, weight_field='pop_total'):

@@ -463,6 +463,508 @@
             background: #0b5ed7;
             transform: scale(1.1);
         }
+        .demographics-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 386px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #198754;
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.15s, background 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .demographics-btn:hover {
+            background: #157347;
+            transform: scale(1.1);
+        }
+        /* Dashboard Modal Styles */
+        .dashboard-modal .modal-content {
+            max-width: 900px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .dashboard-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0 14px 12px 14px;
+            display: flex;
+            flex-direction: column;
+        }
+        .dashboard-card.full-width {
+            grid-column: 1 / -1;
+        }
+        .dashboard-card h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin: 0 0 8px 0;
+            letter-spacing: 0.5px;
+        }
+        .dashboard-card .chart-bar-group {
+            flex: 1;
+        }
+        .stat-hero {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .stat-hero-item {
+            text-align: center;
+            padding: 12px 24px;
+            background: white;
+            border-radius: 8px;
+            min-width: 140px;
+        }
+        .stat-hero-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #198754;
+        }
+        .stat-hero-value.negative {
+            color: #198754;
+        }
+        .stat-hero-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .chart-bar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chart-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-bar-label {
+            width: 100px;
+            font-size: 0.8rem;
+            color: #495057;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .chart-bar-track {
+            flex: 1;
+            height: 24px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .chart-bar-fill {
+            height: 100%;
+            background: #198754;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            min-width: 40px;
+        }
+        .chart-bar-fill.secondary {
+            background: #6c757d;
+        }
+        .chart-bar-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+        .chart-bar-meta {
+            width: 80px;
+            font-size: 0.7rem;
+            color: #6c757d;
+            flex-shrink: 0;
+        }
+        .equity-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 5px 10px;
+            background: #d1e7dd;
+            color: #0f5132;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-top: 12px;
+            align-self: center;
+        }
+        .equity-indicator.neutral {
+            background: #e9ecef;
+            color: #495057;
+        }
+        /* Donut Chart */
+        .donut-chart-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .donut-chart {
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+        .donut-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+        .donut-legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .donut-legend-label {
+            flex: 1;
+            color: #495057;
+        }
+        .donut-legend-value {
+            font-weight: 600;
+            color: #212529;
+        }
+        /* Lollipop Chart */
+        .lollipop-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px 0;
+        }
+        .lollipop-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .lollipop-label {
+            width: 90px;
+            font-size: 0.75rem;
+            color: #495057;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .lollipop-track {
+            flex: 1;
+            height: 2px;
+            background: #e9ecef;
+            position: relative;
+            border-radius: 1px;
+        }
+        .lollipop-line {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 2px;
+            background: #198754;
+            border-radius: 1px;
+        }
+        .lollipop-dot {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: #198754;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .lollipop-meta {
+            width: 70px;
+            font-size: 0.7rem;
+            color: #6c757d;
+            flex-shrink: 0;
+        }
+        /* Comparison Delta Bars */
+        .delta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .delta-row:last-child {
+            border-bottom: none;
+        }
+        .delta-label {
+            width: 120px;
+            font-size: 0.85rem;
+            color: #495057;
+            flex-shrink: 0;
+        }
+        .delta-values {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .delta-bar-container {
+            flex: 1;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .delta-bar {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .delta-bar.ibx {
+            background: #198754;
+        }
+        .delta-bar.nyc {
+            background: #6c757d;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+        }
+        .delta-number {
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: right;
+        }
+        .delta-number.ibx {
+            color: #198754;
+        }
+        .delta-number.nyc {
+            color: #6c757d;
+        }
+        /* Baseline Comparison Chart */
+        .baseline-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .baseline-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .baseline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .baseline-label {
+            font-size: 0.85rem;
+            color: #495057;
+            font-weight: 500;
+        }
+        .baseline-values {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+        .baseline-values .ibx-val {
+            color: #198754;
+            font-weight: 600;
+        }
+        .baseline-track {
+            height: 28px;
+            background: #f1f3f5;
+            border-radius: 4px;
+            position: relative;
+            overflow: visible;
+        }
+        .baseline-marker {
+            position: absolute;
+            top: -2px;
+            bottom: -2px;
+            width: 3px;
+            background: #495057;
+            border-radius: 2px;
+            z-index: 3;
+        }
+        .baseline-marker::after {
+            content: 'NYC';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.55rem;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+        .baseline-fill {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 0;
+            border-radius: 3px;
+            z-index: 1;
+        }
+        .baseline-fill.above {
+            background: #198754;
+        }
+        .baseline-fill.below {
+            background: #dc3545;
+        }
+        .baseline-diff {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0 8px;
+            white-space: nowrap;
+            z-index: 2;
+        }
+        .baseline-diff.above {
+            color: #198754;
+        }
+        .baseline-diff.below {
+            color: #dc3545;
+        }
+        .baseline-diff {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            padding: 0 6px;
+            white-space: nowrap;
+        }
+        /* Borough Cards */
+        .borough-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .borough-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        .borough-card.highlight {
+            border-color: #198754;
+            background: #f8fff9;
+        }
+        .borough-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+        .borough-time {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #198754;
+        }
+        .borough-stats {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+        /* Age Pyramid */
+        .age-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .age-label {
+            width: 100px;
+            font-size: 0.8rem;
+            color: #495057;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .age-bar-left, .age-bar-right {
+            flex: 1;
+            height: 28px;
+            background: #e9ecef;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .age-bar-left {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .age-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+            border-radius: 4px;
+        }
+        .age-fill.pop {
+            background: #6c757d;
+            justify-content: flex-end;
+        }
+        .age-fill.time {
+            background: #198754;
+            justify-content: flex-start;
+        }
+        .dashboard-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 20px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #198754;
+        }
+        .dashboard-section-title:first-child {
+            margin-top: 0;
+        }
+        .comparison-table {
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        .comparison-table th {
+            text-align: left;
+            font-weight: 500;
+            color: #6c757d;
+            padding: 6px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .comparison-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .comparison-table td:not(:first-child) {
+            text-align: right;
+            font-weight: 500;
+        }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -3584,9 +4086,261 @@
                 if (e.target === this) closeHelpModal();
             });
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') closeHelpModal();
+                if (e.key === 'Escape') {
+                    closeHelpModal();
+                    closeDemographicsModal();
+                }
+            });
+
+            // Demographics dashboard event listeners
+            document.getElementById('demographics-btn').addEventListener('click', openDemographicsModal);
+            document.getElementById('demographics-modal-close').addEventListener('click', closeDemographicsModal);
+            document.getElementById('demographics-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeDemographicsModal();
             });
         });
+
+        // Demographics Dashboard
+        let demographicsData = null;
+
+        async function loadDemographicsData() {
+            if (demographicsData) return demographicsData;
+            try {
+                const response = await fetch('data/demographic_analysis.json');
+                demographicsData = await response.json();
+                return demographicsData;
+            } catch (error) {
+                console.error('Failed to load demographics data:', error);
+                return null;
+            }
+        }
+
+        function formatNumber(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(0) + 'k';
+            return n.toLocaleString();
+        }
+
+        function renderDemographicsDashboard(data) {
+            const container = document.getElementById('demographics-content');
+            const ov = data.overview;
+
+            const maxIncomeTime = Math.max(...data.income.quartiles.map(q => Math.abs(q.avg_time_change)));
+            const maxRaceTime = Math.max(...data.race_ethnicity.groups.map(g => Math.abs(g.avg_time_change)));
+
+            let html = `
+                <!-- Hero Stats -->
+                <div class="dashboard-card full-width">
+                    <div class="stat-hero">
+                        <div class="stat-hero-item">
+                            <div class="stat-hero-value">${formatNumber(ov.population)}</div>
+                            <div class="stat-hero-label">People in Affected Areas</div>
+                        </div>
+                        <div class="stat-hero-item">
+                            <div class="stat-hero-value negative">${ov.avg_time_change_min} min</div>
+                            <div class="stat-hero-label">Avg Time Change</div>
+                        </div>
+                        <div class="stat-hero-item">
+                            <div class="stat-hero-value">${formatNumber(ov.total_hours_saved)}</div>
+                            <div class="stat-hero-label">Hours Saved Daily</div>
+                        </div>
+                        <div class="stat-hero-item">
+                            <div class="stat-hero-value">${formatNumber(ov.total_trips)}</div>
+                            <div class="stat-hero-label">Trips Affected</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">Equity Analysis</h4>
+
+                <div class="dashboard-grid">
+                    <!-- Income Quartiles - Bar Chart -->
+                    <div class="dashboard-card">
+                        <h3>By Household Income</h3>
+                        <div class="chart-bar-group">
+                            ${data.income.quartiles.map(q => `
+                                <div class="chart-bar-row">
+                                    <div class="chart-bar-label">${q.label}</div>
+                                    <div class="chart-bar-track">
+                                        <div class="chart-bar-fill" style="width: ${(Math.abs(q.avg_time_change) / maxIncomeTime) * 100}%">
+                                            <span class="chart-bar-value">${q.avg_time_change} min</span>
+                                        </div>
+                                    </div>
+                                    <div class="chart-bar-meta">$${(q.income_min/1000).toFixed(0)}k-${(q.income_max/1000).toFixed(0)}k</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="equity-indicator">
+                            Progressive: Lower income areas benefit more
+                        </div>
+                    </div>
+
+                    <!-- Commute Length - Bar Chart -->
+                    <div class="dashboard-card">
+                        <h3>By Current Commute Length</h3>
+                        <div class="chart-bar-group">
+                            ${data.commute.groups.map(g => `
+                                <div class="chart-bar-row">
+                                    <div class="chart-bar-label">${g.label.split('(')[0].trim()}</div>
+                                    <div class="chart-bar-track">
+                                        <div class="chart-bar-fill" style="width: ${(Math.abs(g.avg_time_change) / 15) * 100}%">
+                                            <span class="chart-bar-value">${g.avg_time_change} min</span>
+                                        </div>
+                                    </div>
+                                    <div class="chart-bar-meta">${formatNumber(g.population)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="equity-indicator">
+                            Long commuters benefit most
+                        </div>
+                    </div>
+
+                    <!-- Race/Ethnicity - Bar Chart -->
+                    <div class="dashboard-card">
+                        <h3>By Race/Ethnicity</h3>
+                        <div class="chart-bar-group">
+                            ${data.race_ethnicity.groups.map(g => `
+                                <div class="chart-bar-row">
+                                    <div class="chart-bar-label">${g.label}</div>
+                                    <div class="chart-bar-track">
+                                        <div class="chart-bar-fill" style="width: ${(Math.abs(g.avg_time_change) / maxRaceTime) * 100}%">
+                                            <span class="chart-bar-value">${g.avg_time_change} min</span>
+                                        </div>
+                                    </div>
+                                    <div class="chart-bar-meta">${g.pct_of_total}%</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="equity-indicator neutral">
+                            Relatively equitable across groups
+                        </div>
+                    </div>
+
+                    <!-- Transit Dependence - Bar Chart with arrows -->
+                    <div class="dashboard-card">
+                        <h3>By Transit Dependence</h3>
+                        <div class="chart-bar-group">
+                            ${data.transit_dependence.groups.map(g => `
+                                <div class="chart-bar-row">
+                                    <div class="chart-bar-label">${g.label}</div>
+                                    <div class="chart-bar-track">
+                                        <div class="chart-bar-fill ${g.key === 'high' ? 'secondary' : ''}" style="width: ${(Math.abs(g.avg_time_change) / 16) * 100}%">
+                                            <span class="chart-bar-value">${g.avg_time_change} min</span>
+                                        </div>
+                                    </div>
+                                    <div class="chart-bar-meta">${g.pct_noveh_min.toFixed(0)}-${g.pct_noveh_max.toFixed(0)}%</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="equity-indicator neutral">
+                            Car-owning areas see larger gains
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">Geographic Distribution</h4>
+
+                <div class="dashboard-grid">
+                    <!-- Borough Cards -->
+                    <div class="dashboard-card">
+                        <h3>By Borough</h3>
+                        <div class="borough-grid">
+                            ${data.borough.groups.map((b, i) => `
+                                <div class="borough-card ${i === 0 ? 'highlight' : ''}">
+                                    <div class="borough-name">${b.label}</div>
+                                    <div class="borough-time">${b.avg_time_change} min</div>
+                                    <div class="borough-stats">
+                                        <span>${formatNumber(b.population)} people</span>
+                                        <span>${b.tract_count} tracts</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Age Groups - Pyramid style -->
+                    <div class="dashboard-card">
+                        <h3>By Age Group</h3>
+                        ${data.age.groups.map(g => {
+                            const popPct = g.pct_of_total;
+                            const timePct = (Math.abs(g.avg_time_change) / 13) * 100;
+                            return `
+                            <div class="age-row">
+                                <div class="age-bar-left">
+                                    <div class="age-fill pop" style="width: ${popPct}%">${g.pct_of_total}%</div>
+                                </div>
+                                <div class="age-label">${g.label.replace('Working Age ', '').replace('(', '').replace(')', '')}</div>
+                                <div class="age-bar-right">
+                                    <div class="age-fill time" style="width: ${timePct}%">${g.avg_time_change} min</div>
+                                </div>
+                            </div>
+                        `}).join('')}
+                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6c757d; margin-top: 8px;">
+                            <span>% of Population</span>
+                            <span>Time Saved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="dashboard-section-title">IBX Areas vs NYC Overall</h4>
+
+                <div class="dashboard-card full-width">
+                    <div class="baseline-chart">
+                        ${data.comparison.ibx_vs_nyc.map(c => {
+                            // Calculate positions - scale so max value fits
+                            const maxVal = Math.max(c.ibx, c.nyc) * 1.15;
+                            const nycPos = (c.nyc / maxVal) * 100;
+                            const ibxPos = (c.ibx / maxVal) * 100;
+                            const isAbove = c.ibx >= c.nyc;
+                            const diff = c.ibx - c.nyc;
+                            const diffStr = c.unit === '$' ? (diff >= 0 ? '+$' : '-$') + Math.abs(diff).toLocaleString()
+                                          : (diff >= 0 ? '+' : '') + diff.toFixed(1) + (c.unit === '%' ? '%' : '');
+                            // Position diff in the empty space (after the bar ends)
+                            const diffLeft = ibxPos + 1;
+
+                            return `
+                            <div class="baseline-row">
+                                <div class="baseline-header">
+                                    <span class="baseline-label">${c.label}</span>
+                                    <span class="baseline-values">
+                                        <span class="ibx-val">${c.unit === '$' ? '$' : ''}${c.ibx.toLocaleString()}${c.unit === '%' ? '%' : ''}</span>
+                                        vs ${c.unit === '$' ? '$' : ''}${c.nyc.toLocaleString()}${c.unit === '%' ? '%' : ''}
+                                    </span>
+                                </div>
+                                <div class="baseline-track">
+                                    <div class="baseline-marker" style="left: ${nycPos}%"></div>
+                                    <div class="baseline-fill ${isAbove ? 'above' : 'below'}" style="width: ${ibxPos}%"></div>
+                                    <span class="baseline-diff ${isAbove ? 'above' : 'below'}" style="left: ${diffLeft}%">${diffStr}</span>
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 0.7rem; color: #6c757d; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e9ecef;">
+                        <span><span style="display: inline-block; width: 12px; height: 12px; background: #198754; border-radius: 2px; vertical-align: middle; margin-right: 4px;"></span>IBX exceeds NYC</span>
+                        <span><span style="display: inline-block; width: 12px; height: 12px; background: #dc3545; border-radius: 2px; vertical-align: middle; margin-right: 4px;"></span>IBX below NYC</span>
+                        <span><span style="display: inline-block; width: 3px; height: 12px; background: #495057; border-radius: 1px; vertical-align: middle; margin-right: 4px;"></span>NYC baseline</span>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        async function openDemographicsModal() {
+            document.getElementById('demographics-modal').classList.add('active');
+            const data = await loadDemographicsData();
+            if (data) {
+                renderDemographicsDashboard(data);
+            } else {
+                document.getElementById('demographics-content').innerHTML =
+                    '<p style="color: #dc3545;">Failed to load demographic data.</p>';
+            }
+        }
+
+        function closeDemographicsModal() {
+            document.getElementById('demographics-modal').classList.remove('active');
+        }
     </script>
 
     <!-- Help Button -->
@@ -3601,6 +4355,29 @@
             </div>
             <div class="modal-body" id="help-content">
                 <p style="color: #6c757d;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demographics Button -->
+    <button id="demographics-btn" class="demographics-btn" title="Demographic Impact Dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+    </button>
+
+    <!-- Demographics Modal -->
+    <div id="demographics-modal" class="modal-overlay dashboard-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Demographic Impact Dashboard</h2>
+                <button id="demographics-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="demographics-content">
+                <p style="color: #6c757d;">Loading demographic analysis...</p>
             </div>
         </div>
     </div>

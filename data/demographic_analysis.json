@@ -1,0 +1,239 @@
+{
+  "generated": "2026-04-10T09:53:48.918110",
+  "overview": {
+    "affected_tracts": 1856,
+    "total_tracts": 2327,
+    "population": 6673646,
+    "total_trips": 968819,
+    "total_hours_saved": 208234,
+    "avg_time_change_min": -11.8
+  },
+  "income": {
+    "quartiles": [
+      {
+        "key": "q1",
+        "label": "Lowest Income",
+        "income_min": 11612,
+        "income_max": 65722,
+        "tract_count": 439,
+        "population": 1806038,
+        "avg_time_change": -12.0
+      },
+      {
+        "key": "q2",
+        "label": "Lower-Middle",
+        "income_min": 65766,
+        "income_max": 84846,
+        "tract_count": 439,
+        "population": 1602386,
+        "avg_time_change": -12.5
+      },
+      {
+        "key": "q3",
+        "label": "Upper-Middle",
+        "income_min": 84848,
+        "income_max": 112030,
+        "tract_count": 439,
+        "population": 1511292,
+        "avg_time_change": -13.3
+      },
+      {
+        "key": "q4",
+        "label": "Highest Income",
+        "income_min": 112034,
+        "income_max": 250001,
+        "tract_count": 439,
+        "population": 1707203,
+        "avg_time_change": -9.7
+      }
+    ]
+  },
+  "commute": {
+    "groups": [
+      {
+        "key": "short",
+        "label": "Short (<30 min)",
+        "avg_current_commute": 17.1,
+        "tract_count": 301,
+        "population": 961284,
+        "avg_time_change": -10.3
+      },
+      {
+        "key": "medium",
+        "label": "Medium (30-45 min)",
+        "avg_current_commute": 37.0,
+        "tract_count": 199,
+        "population": 693053,
+        "avg_time_change": -10.5
+      },
+      {
+        "key": "long",
+        "label": "Long (45-60 min)",
+        "avg_current_commute": 51.5,
+        "tract_count": 167,
+        "population": 568246,
+        "avg_time_change": -11.7
+      },
+      {
+        "key": "very_long",
+        "label": "Very Long (60+ min)",
+        "avg_current_commute": 151.2,
+        "tract_count": 967,
+        "population": 3921984,
+        "avg_time_change": -12.8
+      }
+    ]
+  },
+  "race_ethnicity": {
+    "groups": [
+      {
+        "key": "hispanic",
+        "label": "Hispanic/Latino",
+        "population": 1598293,
+        "pct_of_total": 23.9,
+        "avg_time_change": -11.5
+      },
+      {
+        "key": "black",
+        "label": "Black",
+        "population": 1424745,
+        "pct_of_total": 21.3,
+        "avg_time_change": -11.9
+      },
+      {
+        "key": "asian",
+        "label": "Asian",
+        "population": 1119247,
+        "pct_of_total": 16.8,
+        "avg_time_change": -14.1
+      },
+      {
+        "key": "white",
+        "label": "White",
+        "population": 2539643,
+        "pct_of_total": 38.1,
+        "avg_time_change": -10.8
+      }
+    ]
+  },
+  "transit_dependence": {
+    "groups": [
+      {
+        "key": "low",
+        "label": "Car-Owning",
+        "pct_noveh_min": 0.0,
+        "pct_noveh_max": 37.4,
+        "tract_count": 593,
+        "population": 1736628,
+        "avg_time_change": -15.5
+      },
+      {
+        "key": "medium",
+        "label": "Mixed",
+        "pct_noveh_min": 37.4,
+        "pct_noveh_max": 62.6,
+        "tract_count": 593,
+        "population": 2171268,
+        "avg_time_change": -12.2
+      },
+      {
+        "key": "high",
+        "label": "Transit-Dependent",
+        "pct_noveh_min": 62.6,
+        "pct_noveh_max": 100.0,
+        "tract_count": 594,
+        "population": 2760584,
+        "avg_time_change": -9.1
+      }
+    ]
+  },
+  "borough": {
+    "groups": [
+      {
+        "key": "queens",
+        "label": "Queens",
+        "tract_count": 713,
+        "population": 2298490,
+        "avg_time_change": -15.7,
+        "median_income": 90304
+      },
+      {
+        "key": "brooklyn",
+        "label": "Brooklyn",
+        "tract_count": 803,
+        "population": 2646306,
+        "avg_time_change": -11.1,
+        "median_income": 86579
+      },
+      {
+        "key": "manhattan",
+        "label": "Manhattan",
+        "tract_count": 307,
+        "population": 1623868,
+        "avg_time_change": -7.9,
+        "median_income": 121533
+      },
+      {
+        "key": "bronx",
+        "label": "Bronx",
+        "tract_count": 33,
+        "population": 104982,
+        "avg_time_change": -4.0,
+        "median_income": 64210
+      }
+    ]
+  },
+  "age": {
+    "groups": [
+      {
+        "key": "under_18",
+        "label": "Under 18",
+        "population": 1305219,
+        "pct_of_total": 19.6,
+        "avg_time_change": -12.1
+      },
+      {
+        "key": "working_age",
+        "label": "Working Age (18-64)",
+        "population": 4273694,
+        "pct_of_total": 64.0,
+        "avg_time_change": -11.6
+      },
+      {
+        "key": "seniors",
+        "label": "Seniors (65+)",
+        "population": 1094746,
+        "pct_of_total": 16.4,
+        "avg_time_change": -12.2
+      }
+    ]
+  },
+  "comparison": {
+    "ibx_vs_nyc": [
+      {
+        "label": "Median HH Income",
+        "ibx": 93635,
+        "nyc": 88016,
+        "unit": "$"
+      },
+      {
+        "label": "Poverty Rate",
+        "ibx": 15.7,
+        "nyc": 17.1,
+        "unit": "%"
+      },
+      {
+        "label": "No Vehicle HH",
+        "ibx": 56.2,
+        "nyc": 54.9,
+        "unit": "%"
+      },
+      {
+        "label": "Transit Commuters",
+        "ibx": 1062,
+        "nyc": 1032,
+        "unit": ""
+      }
+    ]
+  }
+}

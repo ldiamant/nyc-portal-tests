@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-10T10:33:21.676256",
+  "generated": "2026-04-13T10:44:58.957266",
   "overview": {
     "affected_tracts": 1856,
     "total_tracts": 2327,
@@ -315,10 +315,10 @@
         "unit": "%"
       },
       {
-        "label": "Transit Commuters",
-        "ibx": 1062,
-        "nyc": 1032,
-        "unit": ""
+        "label": "Transit Commute",
+        "ibx": 56.1,
+        "nyc": 55.1,
+        "unit": "%"
       }
     ]
   }

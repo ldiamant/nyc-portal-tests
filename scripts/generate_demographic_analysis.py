@@ -353,12 +353,26 @@ def main():
                 total_weight += weight
         return weighted_sum / total_weight if total_weight > 0 else None
 
+    # Calculate % of workers using transit
+    def calc_transit_pct(tracts):
+        total_transit = 0
+        total_workers = 0
+        for t in tracts:
+            transit = safe_float(census[t].get('cmut_trans', 0)) or 0
+            car = safe_float(census[t].get('cmut_car', 0)) or 0
+            bike = safe_float(census[t].get('cmut_bike', 0)) or 0
+            walk = safe_float(census[t].get('cmut_walk', 0)) or 0
+            workers = transit + car + bike + walk
+            total_transit += transit
+            total_workers += workers
+        return (total_transit / total_workers * 100) if total_workers > 0 else 0
+
     analysis['comparison'] = {
         'ibx_vs_nyc': [
             {'label': 'Median HH Income', 'ibx': round(ibx_weighted_avg('med_hhinc') or 0), 'nyc': round(nyc_weighted_avg('med_hhinc') or 0), 'unit': '$'},
             {'label': 'Poverty Rate', 'ibx': round(ibx_weighted_avg('pct_povty') or 0, 1), 'nyc': round(nyc_weighted_avg('pct_povty') or 0, 1), 'unit': '%'},
             {'label': 'No Vehicle HH', 'ibx': round(ibx_weighted_avg('pct_noveh', 'hh_total') or 0, 1), 'nyc': round(nyc_weighted_avg('pct_noveh', 'hh_total') or 0, 1), 'unit': '%'},
-            {'label': 'Transit Commuters', 'ibx': round(ibx_weighted_avg('cmut_trans') or 0), 'nyc': round(nyc_weighted_avg('cmut_trans') or 0), 'unit': ''},
+            {'label': 'Transit Commute', 'ibx': round(calc_transit_pct(ibx_tracts), 1), 'nyc': round(calc_transit_pct(all_tracts), 1), 'unit': '%'},
         ]
     }
 

@@ -1,0 +1,315 @@
+{
+  "generated": "2026-04-13T10:34:14.496645",
+  "ibx": {
+    "projected_ridership": 994652,
+    "station_count": 19,
+    "total_boarding": 154554.63782799963,
+    "total_alighting": 306036.2969091972,
+    "total_transfers": 83097.40399218079
+  },
+  "stations": {
+    "top_10": [
+      {
+        "name": "Myrtle Avenue",
+        "total": 57520,
+        "boarding": 26480,
+        "alighting": 31040,
+        "transfers": 0
+      },
+      {
+        "name": "Eighth Avenue",
+        "total": 43945,
+        "boarding": 21324,
+        "alighting": 22622,
+        "transfers": 373
+      },
+      {
+        "name": "Remsen Avenue",
+        "total": 32931,
+        "boarding": 16609,
+        "alighting": 16322,
+        "transfers": 0
+      },
+      {
+        "name": "McDonald Avenue",
+        "total": 32297,
+        "boarding": 9487,
+        "alighting": 22810,
+        "transfers": 5703
+      },
+      {
+        "name": "Flatbush Avenue\u2013Nostrand Avenue",
+        "total": 32029,
+        "boarding": 2006,
+        "alighting": 30023,
+        "transfers": 14715
+      },
+      {
+        "name": "Fourth Avenue",
+        "total": 30019,
+        "boarding": 16169,
+        "alighting": 13850,
+        "transfers": 957
+      },
+      {
+        "name": "Metropolitan Avenue",
+        "total": 29959,
+        "boarding": 12698,
+        "alighting": 17261,
+        "transfers": 1295
+      },
+      {
+        "name": "New Utrecht Avenue",
+        "total": 28391,
+        "boarding": 9382,
+        "alighting": 19010,
+        "transfers": 6734
+      },
+      {
+        "name": "Atlantic Avenue",
+        "total": 26582,
+        "boarding": 385,
+        "alighting": 26197,
+        "transfers": 25051
+      },
+      {
+        "name": "Eliot Avenue",
+        "total": 25673,
+        "boarding": 10244,
+        "alighting": 15429,
+        "transfers": 0
+      }
+    ],
+    "all": [
+      {
+        "name": "Myrtle Avenue",
+        "total": 57520
+      },
+      {
+        "name": "Eighth Avenue",
+        "total": 43945
+      },
+      {
+        "name": "Remsen Avenue",
+        "total": 32931
+      },
+      {
+        "name": "McDonald Avenue",
+        "total": 32297
+      },
+      {
+        "name": "Flatbush Avenue\u2013Nostrand Avenue",
+        "total": 32029
+      },
+      {
+        "name": "Fourth Avenue",
+        "total": 30019
+      },
+      {
+        "name": "Metropolitan Avenue",
+        "total": 29959
+      },
+      {
+        "name": "New Utrecht Avenue",
+        "total": 28391
+      },
+      {
+        "name": "Atlantic Avenue",
+        "total": 26582
+      },
+      {
+        "name": "Eliot Avenue",
+        "total": 25673
+      },
+      {
+        "name": "East 16th Street",
+        "total": 19457
+      },
+      {
+        "name": "Sutter Avenue",
+        "total": 17472
+      },
+      {
+        "name": "Wilson Avenue",
+        "total": 15201
+      },
+      {
+        "name": "Grand Avenue",
+        "total": 13970
+      },
+      {
+        "name": "Brooklyn Army Terminal",
+        "total": 13345
+      },
+      {
+        "name": "Utica Avenue",
+        "total": 12942
+      },
+      {
+        "name": "Livonia Avenue",
+        "total": 12803
+      },
+      {
+        "name": "Roosevelt Avenue",
+        "total": 9967
+      },
+      {
+        "name": "Linden Boulevard",
+        "total": 6085
+      }
+    ]
+  },
+  "network_effects": {
+    "routes_gaining": 10,
+    "routes_losing": 42,
+    "total_passengers_gained": 274939,
+    "total_passengers_lost": 923313,
+    "net_redistribution": -648374
+  },
+  "top_gainers": [
+    {
+      "route": "7",
+      "type": "subway",
+      "baseline": 1038602,
+      "new": 1156864,
+      "change": 118262,
+      "pct_change": 11.4
+    },
+    {
+      "route": "Q",
+      "type": "subway",
+      "baseline": 597115,
+      "new": 659632,
+      "change": 62517,
+      "pct_change": 10.5
+    },
+    {
+      "route": "D",
+      "type": "subway",
+      "baseline": 437817,
+      "new": 481435,
+      "change": 43618,
+      "pct_change": 10.0
+    },
+    {
+      "route": "LIRR_12",
+      "type": "bus",
+      "baseline": 68829,
+      "new": 87809,
+      "change": 18980,
+      "pct_change": 27.6
+    },
+    {
+      "route": "B46",
+      "type": "bus",
+      "baseline": 397787,
+      "new": 410701,
+      "change": 12914,
+      "pct_change": 3.2
+    },
+    {
+      "route": "7X",
+      "type": "bus",
+      "baseline": 222766,
+      "new": 230729,
+      "change": 7963,
+      "pct_change": 3.6
+    },
+    {
+      "route": "B41",
+      "type": "bus",
+      "baseline": 177972,
+      "new": 183622,
+      "change": 5650,
+      "pct_change": 3.2
+    },
+    {
+      "route": "Z",
+      "type": "subway",
+      "baseline": 87179,
+      "new": 91849,
+      "change": 4670,
+      "pct_change": 5.4
+    }
+  ],
+  "top_losers": [
+    {
+      "route": "B82",
+      "type": "bus",
+      "baseline": 404488,
+      "new": 298207,
+      "change": -106281,
+      "pct_change": -26.3
+    },
+    {
+      "route": "N",
+      "type": "subway",
+      "baseline": 512327,
+      "new": 412633,
+      "change": -99694,
+      "pct_change": -19.5
+    },
+    {
+      "route": "L",
+      "type": "subway",
+      "baseline": 856681,
+      "new": 759225,
+      "change": -97456,
+      "pct_change": -11.4
+    },
+    {
+      "route": "R",
+      "type": "subway",
+      "baseline": 808201,
+      "new": 739493,
+      "change": -68708,
+      "pct_change": -8.5
+    },
+    {
+      "route": "B6",
+      "type": "bus",
+      "baseline": 375882,
+      "new": 307990,
+      "change": -67892,
+      "pct_change": -18.1
+    },
+    {
+      "route": "Q58",
+      "type": "bus",
+      "baseline": 442934,
+      "new": 378561,
+      "change": -64373,
+      "pct_change": -14.5
+    },
+    {
+      "route": "G",
+      "type": "subway",
+      "baseline": 538727,
+      "new": 478953,
+      "change": -59774,
+      "pct_change": -11.1
+    },
+    {
+      "route": "B35",
+      "type": "bus",
+      "baseline": 357037,
+      "new": 301868,
+      "change": -55169,
+      "pct_change": -15.4
+    }
+  ],
+  "by_type": {
+    "subway": {
+      "gaining": 229264,
+      "losing": -558537,
+      "routes_gaining": 5,
+      "routes_losing": 17
+    },
+    "bus": {
+      "gaining": 45675,
+      "losing": -364776,
+      "routes_gaining": 5,
+      "routes_losing": 27
+    }
+  }
+}

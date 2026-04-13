@@ -125,6 +125,47 @@ Station circles are sized by the selected metric. Click stations to pin them for
 
 ---
 
+## Dashboards
+
+Access detailed analysis dashboards from the **Dashboards** section at the bottom of the sidebar.
+
+### Impact Summary
+
+Overview of IBX's city-wide impact:
+
+- **Headline stats** — Population benefiting, hours saved daily, average time savings
+- **Time savings distribution** — How many people save 5-10 min, 10-15 min, etc.
+- **Borough breakdown** — Which boroughs benefit most
+- **Income equity analysis** — Impact by household income quartile
+
+### Transit Analysis
+
+Analysis of IBX's effect on the transit network:
+
+- **IBX stats** — Projected daily ridership, station count
+- **Station rankings** — Busiest IBX stations by passenger volume
+- **Routes gaining** — Feeder routes that gain passengers connecting to IBX
+- **Routes relieved** — Parallel routes with reduced crowding as riders shift to IBX
+
+### Demographic Impact
+
+Breakdown of IBX benefits across demographic groups:
+
+- **By income** — Impact on low vs high income communities
+- **By race/ethnicity** — Distribution across demographic groups
+- **By transit dependence** — Benefits for car-free households
+- **By commute length** — Impact on short vs long commuters
+
+### Social Vulnerability
+
+Analysis using the CDC Social Vulnerability Index:
+
+- **Correlation analysis** — Relationship between vulnerability and time savings
+- **Quartile breakdown** — Benefits by vulnerability level
+- **Equity metrics** — Ensuring high-need communities receive benefits
+
+---
+
 ## Quick Tips
 
 - **Green** = time savings (faster with IBX)

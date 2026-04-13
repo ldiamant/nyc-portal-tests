@@ -548,6 +548,13 @@
             background: #f3eef8;
             border-color: #6f42c1;
         }
+        #transit-analysis-btn {
+            border-left: 3px solid #fd7e14;
+        }
+        #transit-analysis-btn:hover {
+            background: #fff4e6;
+            border-color: #fd7e14;
+        }
 
         /* Impact Summary Dashboard Styles */
         .impact-modal .modal-content {
@@ -650,6 +657,132 @@
             width: 80px;
             text-align: right;
             flex-shrink: 0;
+        }
+
+        /* Transit Analysis Dashboard Styles */
+        .transit-modal .modal-content {
+            max-width: 1100px;
+        }
+        .transit-headline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .transit-stat-card {
+            background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+            border: 1px solid #fd7e14;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .transit-stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #212529;
+        }
+        .transit-stat-card .label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+        .transit-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .transit-panel {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .transit-panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .transit-route-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .transit-route-row:last-child {
+            border-bottom: none;
+        }
+        .transit-route-badge {
+            min-width: 45px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-right: 12px;
+        }
+        .transit-route-badge.subway {
+            background: #0039a6;
+            color: white;
+        }
+        .transit-route-badge.bus {
+            background: #006bb6;
+            color: white;
+        }
+        .transit-route-change {
+            margin-left: auto;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .transit-route-change.positive {
+            color: #198754;
+        }
+        .transit-route-change.negative {
+            color: #dc3545;
+        }
+        .transit-route-pct {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-left: 8px;
+            min-width: 50px;
+            text-align: right;
+        }
+        .station-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .station-name {
+            width: 160px;
+            font-size: 0.85rem;
+            color: #495057;
+            flex-shrink: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .station-bar-track {
+            flex: 1;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .station-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fd7e14, #ffc107);
+            border-radius: 4px;
+        }
+        .station-value {
+            width: 70px;
+            text-align: right;
+            font-size: 0.85rem;
+            color: #495057;
+            margin-left: 12px;
         }
 
         /* SVI Dashboard specific styles */
@@ -1631,6 +1764,14 @@
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                     <span>Social Vulnerability</span>
+                </button>
+                <button id="transit-analysis-btn" class="dashboard-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 12h8"></path>
+                        <path d="M12 8v8"></path>
+                    </svg>
+                    <span>Transit Analysis</span>
                 </button>
             </div>
         </div>
@@ -4654,6 +4795,13 @@
                 if (e.target === this) closeImpactModal();
             });
 
+            // Transit Analysis dashboard event listeners
+            document.getElementById('transit-analysis-btn').addEventListener('click', openTransitModal);
+            document.getElementById('transit-modal-close').addEventListener('click', closeTransitModal);
+            document.getElementById('transit-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeTransitModal();
+            });
+
             // Demographics dashboard event listeners
             document.getElementById('demographics-btn').addEventListener('click', openDemographicsModal);
             document.getElementById('demographics-modal-close').addEventListener('click', closeDemographicsModal);
@@ -4749,12 +4897,13 @@
                     const pct = (b.total_hours_saved / maxBoroughHours) * 100;
                     const colors = { queens: '#0d6efd', brooklyn: '#6f42c1', manhattan: '#fd7e14', bronx: '#20c997' };
                     return `
-                        <div class="impact-bar">
-                            <div class="impact-bar-label">${b.label}</div>
+                        <div class="impact-bar" style="margin-bottom: 14px;">
+                            <div class="impact-bar-label" style="width: 120px;">
+                                <div style="font-weight: 500;">${b.label}</div>
+                                <div style="font-size: 0.7rem; color: #6c757d; font-weight: 400;">avg ${Math.round(b.avg_time_change * -1)} min saved</div>
+                            </div>
                             <div class="impact-bar-track">
-                                <div class="impact-bar-fill" style="width: ${pct}%; background: ${colors[b.key] || '#6c757d'};">
-                                    ${Math.round(b.avg_time_change * -1)} min
-                                </div>
+                                <div class="impact-bar-fill" style="width: ${pct}%; background: ${colors[b.key] || '#6c757d'};"></div>
                             </div>
                             <div class="impact-bar-value">${formatK(b.total_hours_saved)} hrs</div>
                         </div>
@@ -4768,12 +4917,13 @@
                 const pct = (g.total_hours_saved / maxIncomeHours) * 100;
                 const colors = { q1: '#198754', q2: '#20c997', q3: '#0dcaf0', q4: '#6c757d' };
                 return `
-                    <div class="impact-bar">
-                        <div class="impact-bar-label">${g.label}</div>
+                    <div class="impact-bar" style="margin-bottom: 14px;">
+                        <div class="impact-bar-label" style="width: 120px;">
+                            <div style="font-weight: 500;">${g.label}</div>
+                            <div style="font-size: 0.7rem; color: #6c757d; font-weight: 400;">avg ${Math.round(g.avg_time_change * -1)} min saved</div>
+                        </div>
                         <div class="impact-bar-track">
-                            <div class="impact-bar-fill" style="width: ${pct}%; background: ${colors[g.key]};">
-                                ${Math.round(g.avg_time_change * -1)} min
-                            </div>
+                            <div class="impact-bar-fill" style="width: ${pct}%; background: ${colors[g.key]};"></div>
                         </div>
                         <div class="impact-bar-value">${formatK(g.total_hours_saved)} hrs</div>
                     </div>
@@ -4859,6 +5009,167 @@
                     <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; text-align: center;">
                         <div style="font-size: 1.5rem; font-weight: 700; color: #212529;">${Math.round(ov.affected_tracts / ov.total_tracts * 100)}%</div>
                         <div style="font-size: 0.8rem; color: #6c757d;">Coverage of City</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Transit Analysis Dashboard
+        let transitAnalysisData = null;
+
+        async function loadTransitData() {
+            if (transitAnalysisData) return transitAnalysisData;
+            try {
+                const response = await fetch('data/transit_analysis.json');
+                transitAnalysisData = await response.json();
+                return transitAnalysisData;
+            } catch (error) {
+                console.error('Failed to load transit data:', error);
+                return null;
+            }
+        }
+
+        async function openTransitModal() {
+            document.getElementById('transit-modal').classList.add('active');
+            const data = await loadTransitData();
+            if (data) {
+                renderTransitDashboard(data);
+            } else {
+                document.getElementById('transit-content').innerHTML = '<p style="color: #dc3545;">Failed to load transit data.</p>';
+            }
+        }
+
+        function closeTransitModal() {
+            document.getElementById('transit-modal').classList.remove('active');
+        }
+
+        function renderTransitDashboard(data) {
+            const container = document.getElementById('transit-content');
+            const ibx = data.ibx;
+            const stations = data.stations.top_10;
+            const gainers = data.top_gainers;
+            const losers = data.top_losers;
+            const effects = data.network_effects;
+
+            const formatK = (n) => n >= 1000 ? (n/1000).toFixed(0) + 'K' : n.toString();
+            const formatNum = (n) => Math.abs(n).toLocaleString();
+
+            // Build station bars
+            const maxStation = Math.max(...stations.map(s => s.total));
+            const stationBars = stations.map(s => {
+                const pct = (s.total / maxStation) * 100;
+                return `
+                    <div class="station-bar">
+                        <div class="station-name" title="${s.name}">${s.name}</div>
+                        <div class="station-bar-track">
+                            <div class="station-bar-fill" style="width: ${pct}%;"></div>
+                        </div>
+                        <div class="station-value">${formatK(s.total)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Build route gainers
+            const gainerRows = gainers.slice(0, 6).map(r => `
+                <div class="transit-route-row">
+                    <div class="transit-route-badge ${r.type}">${r.route}</div>
+                    <div style="font-size: 0.85rem; color: #6c757d;">${formatK(r.baseline)} → ${formatK(r.new)}</div>
+                    <div class="transit-route-change positive">+${formatK(r.change)}</div>
+                    <div class="transit-route-pct">+${r.pct_change}%</div>
+                </div>
+            `).join('');
+
+            // Build route losers
+            const loserRows = losers.slice(0, 6).map(r => `
+                <div class="transit-route-row">
+                    <div class="transit-route-badge ${r.type}">${r.route}</div>
+                    <div style="font-size: 0.85rem; color: #6c757d;">${formatK(r.baseline)} → ${formatK(r.new)}</div>
+                    <div class="transit-route-change negative">${formatK(r.change)}</div>
+                    <div class="transit-route-pct">${r.pct_change}%</div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <!-- IBX Headline Stats -->
+                <div class="transit-headline">
+                    <div class="transit-stat-card">
+                        <div class="value">${formatK(ibx.projected_ridership)}</div>
+                        <div class="label">Daily IBX Ridership</div>
+                    </div>
+                    <div class="transit-stat-card">
+                        <div class="value">${ibx.station_count}</div>
+                        <div class="label">IBX Stations</div>
+                    </div>
+                    <div class="transit-stat-card">
+                        <div class="value">${effects.routes_gaining}</div>
+                        <div class="label">Routes Gaining</div>
+                    </div>
+                    <div class="transit-stat-card">
+                        <div class="value">${effects.routes_losing}</div>
+                        <div class="label">Routes Relieved</div>
+                    </div>
+                </div>
+
+                <!-- Network Effect Summary -->
+                <div style="background: linear-gradient(135deg, #e7f5ed 0%, #d4edda 100%); border-radius: 12px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 1.8rem; font-weight: 700; color: #198754;">+${formatK(effects.total_passengers_gained)}</div>
+                        <div style="font-size: 0.85rem; color: #155724;">Passengers to feeder routes</div>
+                    </div>
+                    <div style="border-left: 2px solid #c3e6cb; padding-left: 40px;">
+                        <div style="font-size: 1.8rem; font-weight: 700; color: #0d6efd;">-${formatK(effects.total_passengers_lost)}</div>
+                        <div style="font-size: 0.85rem; color: #0c5460;">Passengers from parallel routes</div>
+                    </div>
+                </div>
+
+                <div class="transit-two-col">
+                    <!-- Top IBX Stations -->
+                    <div class="transit-panel">
+                        <div class="transit-panel-title">
+                            <span style="font-size: 1.2rem;">🚉</span>
+                            Busiest IBX Stations
+                        </div>
+                        ${stationBars}
+                    </div>
+
+                    <!-- Route Changes -->
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Gainers -->
+                        <div class="transit-panel" style="flex: 1;">
+                            <div class="transit-panel-title">
+                                <span style="color: #198754;">▲</span>
+                                Routes Gaining Passengers
+                            </div>
+                            ${gainerRows}
+                        </div>
+
+                        <!-- Losers -->
+                        <div class="transit-panel" style="flex: 1;">
+                            <div class="transit-panel-title">
+                                <span style="color: #dc3545;">▼</span>
+                                Routes Relieved (Less Crowding)
+                            </div>
+                            ${loserRows}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Insights -->
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-top: 8px;">
+                    <div style="font-weight: 600; color: #212529; margin-bottom: 12px;">Key Insights</div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 0.9rem;">
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="color: #198754; font-size: 1.2rem;">✓</span>
+                            <div><strong>Feeder effect:</strong> Routes like the 7 and Q gain passengers connecting to IBX</div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="color: #0d6efd; font-size: 1.2rem;">↔</span>
+                            <div><strong>Parallel relief:</strong> B82, L, N see reduced crowding as riders shift to IBX</div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="color: #fd7e14; font-size: 1.2rem;">⭐</span>
+                            <div><strong>Top hub:</strong> ${stations[0].name} is the busiest with ${formatK(stations[0].total)} daily passengers</div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -5574,6 +5885,19 @@
         </div>
     </div>
 
+
+    <!-- Transit Analysis Modal -->
+    <div id="transit-modal" class="modal-overlay dashboard-modal transit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Transit Network Analysis</h2>
+                <button id="transit-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="transit-content">
+                <p style="color: #6c757d;">Loading transit analysis...</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Impact Summary Modal -->
     <div id="impact-modal" class="modal-overlay dashboard-modal impact-modal">

@@ -463,52 +463,195 @@
             background: #0b5ed7;
             transform: scale(1.1);
         }
-        .demographics-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 386px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #198754;
-            color: white;
-            border: none;
-            font-size: 1.1rem;
+        /* Dashboards Section */
+        .dashboards-section {
+            margin-top: 16px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 12px;
+        }
+        .dashboards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            z-index: 1000;
-            transition: transform 0.15s, background 0.15s;
+            padding: 8px 0;
+            user-select: none;
+        }
+        .dashboards-header h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        .dashboards-chevron {
+            font-size: 0.7rem;
+            color: #6c757d;
+            transition: transform 0.2s;
+        }
+        .dashboards-header.collapsed .dashboards-chevron {
+            transform: rotate(-90deg);
+        }
+        .dashboards-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 8px;
+            overflow: hidden;
+            transition: max-height 0.25s ease, opacity 0.2s ease;
+            max-height: 200px;
+            opacity: 1;
+        }
+        .dashboards-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+        }
+        .dashboard-btn {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-        .demographics-btn:hover {
-            background: #157347;
-            transform: scale(1.1);
-        }
-        .svi-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 432px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #6f42c1;
-            color: white;
-            border: none;
-            font-size: 1.1rem;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #495057;
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            z-index: 1000;
+            transition: all 0.15s;
+        }
+        .dashboard-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        .dashboard-btn svg {
+            flex-shrink: 0;
+        }
+        #impact-summary-btn {
+            border-left: 3px solid #0d6efd;
+        }
+        #impact-summary-btn:hover {
+            background: #e7f1ff;
+            border-color: #0d6efd;
+        }
+        #demographics-btn {
+            border-left: 3px solid #198754;
+        }
+        #demographics-btn:hover {
+            background: #e7f5ed;
+            border-color: #198754;
+        }
+        #svi-btn {
+            border-left: 3px solid #6f42c1;
+        }
+        #svi-btn:hover {
+            background: #f3eef8;
+            border-color: #6f42c1;
+        }
+
+        /* Impact Summary Dashboard Styles */
+        .impact-modal .modal-content {
+            max-width: 1000px;
+        }
+        .impact-headline-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .impact-stat-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .impact-stat-card.highlight {
+            background: linear-gradient(135deg, #e7f1ff 0%, #cfe2ff 100%);
+            border-color: #0d6efd;
+        }
+        .impact-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #212529;
+            line-height: 1.2;
+        }
+        .impact-stat-value.positive {
+            color: #198754;
+        }
+        .impact-stat-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+        .impact-section {
+            margin-bottom: 28px;
+        }
+        .impact-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .impact-chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .impact-chart-container {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .impact-chart-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 16px;
+        }
+        .impact-bar {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            margin-bottom: 10px;
         }
-        .svi-btn:hover {
-            background: #5a32a3;
-            transform: scale(1.1);
+        .impact-bar-label {
+            width: 100px;
+            font-size: 0.85rem;
+            color: #495057;
+            flex-shrink: 0;
         }
+        .impact-bar-track {
+            flex: 1;
+            height: 24px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .impact-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            min-width: 40px;
+        }
+        .impact-bar-value {
+            margin-left: 12px;
+            font-size: 0.85rem;
+            color: #495057;
+            width: 80px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
         /* SVI Dashboard specific styles */
         .svi-modal .modal-content {
             max-width: 900px;
@@ -1456,6 +1599,39 @@
             <h3>Statistics</h3>
             <div id="hover-info" class="info-content" style="color: #6c757d; font-style: italic;">
                 Hover over a tract for details
+            </div>
+        </div>
+
+        <!-- Dashboards Section -->
+        <div class="dashboards-section">
+            <div class="dashboards-header" id="dashboards-toggle">
+                <h3>Dashboards</h3>
+                <span class="dashboards-chevron">▼</span>
+            </div>
+            <div class="dashboards-content" id="dashboards-content">
+                <button id="impact-summary-btn" class="dashboard-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20V10"></path>
+                        <path d="M18 20V4"></path>
+                        <path d="M6 20v-4"></path>
+                    </svg>
+                    <span>Impact Summary</span>
+                </button>
+                <button id="demographics-btn" class="dashboard-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Demographic Impact</span>
+                </button>
+                <button id="svi-btn" class="dashboard-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span>Social Vulnerability</span>
+                </button>
             </div>
         </div>
     </div>
@@ -4471,6 +4647,13 @@
                 }
             });
 
+            // Impact Summary dashboard event listeners
+            document.getElementById('impact-summary-btn').addEventListener('click', openImpactModal);
+            document.getElementById('impact-modal-close').addEventListener('click', closeImpactModal);
+            document.getElementById('impact-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeImpactModal();
+            });
+
             // Demographics dashboard event listeners
             document.getElementById('demographics-btn').addEventListener('click', openDemographicsModal);
             document.getElementById('demographics-modal-close').addEventListener('click', closeDemographicsModal);
@@ -4485,6 +4668,12 @@
                 if (e.target === this) closeSviModal();
             });
 
+            // Dashboards section collapsible toggle
+            document.getElementById('dashboards-toggle').addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+                document.getElementById('dashboards-content').classList.toggle('collapsed');
+            });
+
             // Bivariate guide event listeners
             document.getElementById('bivariate-info-btn').addEventListener('click', openBivariateModal);
             document.getElementById('bivariate-modal-close').addEventListener('click', closeBivariateModal);
@@ -4492,6 +4681,188 @@
                 if (e.target === this) closeBivariateModal();
             });
         });
+
+        // Impact Summary Dashboard
+        let impactData = null;
+
+        async function loadImpactData() {
+            if (impactData) return impactData;
+            try {
+                const response = await fetch('data/demographic_analysis.json');
+                impactData = await response.json();
+                return impactData;
+            } catch (error) {
+                console.error('Failed to load impact data:', error);
+                return null;
+            }
+        }
+
+        async function openImpactModal() {
+            document.getElementById('impact-modal').classList.add('active');
+            const data = await loadImpactData();
+            if (data) {
+                renderImpactDashboard(data);
+            } else {
+                document.getElementById('impact-content').innerHTML = '<p style="color: #dc3545;">Failed to load impact data.</p>';
+            }
+        }
+
+        function closeImpactModal() {
+            document.getElementById('impact-modal').classList.remove('active');
+        }
+
+        function renderImpactDashboard(data) {
+            const container = document.getElementById('impact-content');
+            const ov = data.overview;
+            const dist = data.distribution.buckets;
+            const boroughs = data.borough.groups;
+
+            // Format numbers
+            const formatNum = (n) => n.toLocaleString();
+            const formatK = (n) => n >= 1000 ? (n/1000).toFixed(0) + 'K' : n.toString();
+
+            // Calculate annual hours (assuming daily data, 250 work days)
+            const annualHours = ov.total_hours_saved * 250;
+            const annualDays = Math.round(annualHours / 24);
+
+            // Build distribution chart
+            const maxPop = Math.max(...dist.map(d => d.population));
+            const distBars = dist.map(d => {
+                const pct = (d.population / maxPop) * 100;
+                const color = d.min >= 15 ? '#198754' : d.min >= 10 ? '#20c997' : d.min >= 5 ? '#6edea6' : '#adb5bd';
+                return `
+                    <div class="impact-bar">
+                        <div class="impact-bar-label">${d.label}</div>
+                        <div class="impact-bar-track">
+                            <div class="impact-bar-fill" style="width: ${pct}%; background: ${color};">${d.pct_of_total}%</div>
+                        </div>
+                        <div class="impact-bar-value">${formatK(d.population)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Build borough chart
+            const maxBoroughHours = Math.max(...boroughs.map(b => b.total_hours_saved));
+            const boroughBars = boroughs
+                .sort((a, b) => b.total_hours_saved - a.total_hours_saved)
+                .map(b => {
+                    const pct = (b.total_hours_saved / maxBoroughHours) * 100;
+                    const colors = { queens: '#0d6efd', brooklyn: '#6f42c1', manhattan: '#fd7e14', bronx: '#20c997' };
+                    return `
+                        <div class="impact-bar">
+                            <div class="impact-bar-label">${b.label}</div>
+                            <div class="impact-bar-track">
+                                <div class="impact-bar-fill" style="width: ${pct}%; background: ${colors[b.key] || '#6c757d'};">
+                                    ${Math.round(b.avg_time_change * -1)} min
+                                </div>
+                            </div>
+                            <div class="impact-bar-value">${formatK(b.total_hours_saved)} hrs</div>
+                        </div>
+                    `;
+                }).join('');
+
+            // Build income equity chart
+            const incomeGroups = data.income.quartiles;
+            const maxIncomeHours = Math.max(...incomeGroups.map(g => g.total_hours_saved));
+            const incomeBars = incomeGroups.map(g => {
+                const pct = (g.total_hours_saved / maxIncomeHours) * 100;
+                const colors = { q1: '#198754', q2: '#20c997', q3: '#0dcaf0', q4: '#6c757d' };
+                return `
+                    <div class="impact-bar">
+                        <div class="impact-bar-label">${g.label}</div>
+                        <div class="impact-bar-track">
+                            <div class="impact-bar-fill" style="width: ${pct}%; background: ${colors[g.key]};">
+                                ${Math.round(g.avg_time_change * -1)} min
+                            </div>
+                        </div>
+                        <div class="impact-bar-value">${formatK(g.total_hours_saved)} hrs</div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Headline Stats -->
+                <div class="impact-headline-stats">
+                    <div class="impact-stat-card highlight">
+                        <div class="impact-stat-value">${formatNum(ov.population)}</div>
+                        <div class="impact-stat-label">People Benefiting</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-value positive">${formatNum(ov.total_hours_saved)}</div>
+                        <div class="impact-stat-label">Hours Saved Daily</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-value positive">${Math.abs(ov.avg_time_change_min).toFixed(1)} min</div>
+                        <div class="impact-stat-label">Avg Time Saved</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-value">${formatNum(ov.affected_tracts)}</div>
+                        <div class="impact-stat-label">Tracts Affected</div>
+                    </div>
+                </div>
+
+                <!-- Annual Impact Callout -->
+                <div style="background: linear-gradient(135deg, #e7f5ed 0%, #d1f2eb 100%); border-radius: 12px; padding: 20px; margin-bottom: 24px; border-left: 4px solid #198754;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="font-size: 2.5rem;">⏱️</div>
+                        <div>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: #155724;">
+                                ${formatNum(annualDays)} days of commute time saved annually
+                            </div>
+                            <div style="color: #198754; font-size: 0.95rem;">
+                                That's ${formatNum(Math.round(annualHours))} hours returned to NYC residents each year
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="impact-chart-row">
+                    <div class="impact-chart-container">
+                        <div class="impact-chart-title">Time Savings Distribution</div>
+                        <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 12px;">Population by time saved per trip</div>
+                        ${distBars}
+                    </div>
+                    <div class="impact-chart-container">
+                        <div class="impact-chart-title">Borough Impact</div>
+                        <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 12px;">Total hours saved daily</div>
+                        ${boroughBars}
+                    </div>
+                </div>
+
+                <!-- Income Equity Section -->
+                <div class="impact-section" style="margin-top: 24px;">
+                    <div class="impact-section-title">Equity Analysis: Impact by Income</div>
+                    <div class="impact-chart-container">
+                        <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 12px;">
+                            Hours saved daily by household income quartile
+                        </div>
+                        ${incomeBars}
+                        <div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 0.85rem; color: #495057;">
+                            <strong style="color: #198754;">✓ Equitable distribution:</strong>
+                            Lower-income communities receive ${Math.round((incomeGroups[0].total_hours_saved + incomeGroups[1].total_hours_saved) / ov.total_hours_saved * 100)}%
+                            of total time savings despite comprising ${Math.round((incomeGroups[0].population + incomeGroups[1].population) / ov.population * 100)}% of affected population.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Stats -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px;">
+                    <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #212529;">${formatNum(ov.total_trips)}</div>
+                        <div style="font-size: 0.8rem; color: #6c757d;">Daily Trips Improved</div>
+                    </div>
+                    <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #212529;">${ov.affected_tracts}/${ov.total_tracts}</div>
+                        <div style="font-size: 0.8rem; color: #6c757d;">NYC Tracts Affected</div>
+                    </div>
+                    <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #212529;">${Math.round(ov.affected_tracts / ov.total_tracts * 100)}%</div>
+                        <div style="font-size: 0.8rem; color: #6c757d;">Coverage of City</div>
+                    </div>
+                </div>
+            `;
+        }
 
         // Demographics Dashboard
         let demographicsData = null;
@@ -5203,22 +5574,19 @@
         </div>
     </div>
 
-    <!-- Demographics Button -->
-    <button id="demographics-btn" class="demographics-btn" title="Demographic Impact Dashboard">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-    </button>
 
-    <!-- SVI Button -->
-    <button id="svi-btn" class="svi-btn" title="Social Vulnerability Analysis">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        </svg>
-    </button>
+    <!-- Impact Summary Modal -->
+    <div id="impact-modal" class="modal-overlay dashboard-modal impact-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>IBX Impact Summary</h2>
+                <button id="impact-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="impact-content">
+                <p style="color: #6c757d;">Loading impact analysis...</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Demographics Modal -->
     <div id="demographics-modal" class="modal-overlay dashboard-modal">
